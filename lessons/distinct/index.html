@@ -1,0 +1,288 @@
+---
+layout: lesson
+title: DISTINCT
+previous_lesson: /lessons/having/
+next_lesson: /lessons/main-data-types-and-type-conversion/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p>If we display the values of the browsers column in the events table, we get something like this:</p>
+<pre>
+  <code class="language-sql">
+SELECT  browser
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+<p>We get more than 24 millions results!</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p>What if we want to display the list of the different browsers that show up in the events table but without duplicates? Each browser should appear only once. In this case, we need to use the <code>DISTINCT</code> keyword with our <code>SELECT</code> clause.</p>
+<pre>
+  <code class="language-sql">
+SELECT  DISTINCT browser
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+  </code>
+</pre>
+<p><img src="images/example-2.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<p>We can also use several columns in our <code>SELECT DISTINCT</code> statement. When doing this, only unique combinations of the selected column values will be returned:</p>
+<pre>
+  <code class="language-sql">
+SELECT  DISTINCT  browser,
+                  traffic_source
+            FROM  bigquery-public-data.thelook_ecommerce.events;
+  </code>
+</pre>
+<p><img src="images/example-3.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<p>We can use <code>DISTINCT</code> to count unique values.</p>
+<pre>
+  <code class="language-sql">
+SELECT  COUNT(browser) AS browser,
+        COUNT(DISTINCT browser) AS unique_browsers
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>browser</th><th>unique_browsers</th></thead>
+  <tbody>
+    <tr><td>2424442</td><td>5</td></tr>
+  </tbody>
+</table>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of unique customers</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of unique users that have made a purchase.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>unique_customers</th></thead>
+      <tbody>
+        <tr><td>80174</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(DISTINCT user_id) AS unique_customers
+  FROM  bigquery-public-data.thelook_ecommerce.orders;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Unique countries users are coming from</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the list of unique countries the users are coming from.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT DISTINCT CASE
+                  WHEN country = 'España' THEN 'Spain'
+                  WHEN country = 'Deutschland' THEN 'Germany'
+                  ELSE country
+                END AS clean_country
+          FROM  bigquery-public-data.thelook_ecommerce.users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Average number of orders by unique customer</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the average number of orders by unique customer.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>avg_orders_per_unique_customer</th></thead>
+      <tbody>
+        <tr><td>1.5658442886721382</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(order_id) / COUNT(DISTINCT user_id) AS avg_orders_per_unique_customer
+FROM    bigquery-public-data.thelook_ecommerce.orders;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Checkout starters, buyers and checkout conversion rate</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <p>Write a query that shows:</p>
+  <ul>
+    <li>the number of unique users that have started the checkout process</li>
+    <li>the number of unique users who made purchase</li>
+    <li>the user conversion rate of the checkout process</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>checkout_starters</th><th>buyers</th><th>checkout_conversion_rate</th></thead>
+      <tbody>
+        <tr><td>54</td><td>17</td><td>31.481481481481481</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(DISTINCT(CASE WHEN event_name = 'begin_checkout' THEN user_pseudo_id END)) AS checkout_starters,
+        COUNT(DISTINCT(CASE WHEN event_name = 'purchase' THEN user_pseudo_id END)) AS buyers,
+        (COUNT(DISTINCT(CASE WHEN event_name = 'purchase' THEN user_pseudo_id END))
+          / COUNT(DISTINCT(CASE WHEN event_name = 'begin_checkout' THEN user_pseudo_id END))) * 100
+          AS checkout_conversion_rate
+  
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Checkout starters, buyers and checkout conversion rate by platform</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <p>Write a query that shows:</p>
+  <ul>
+    <li>the number of unique users that have started the checkout process</li>
+    <li>the number of unique users who made purchase</li>
+    <li>the user conversion rate of the checkout process</li>
+    <li>all broken down by platform</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>platform</th><th>checkout_starters</th><th>buyers</th><th>checkout_conversion_rate</th></thead>
+      <tbody>
+        <tr><td>WEB</td><td>54</td><td>17</td><td>31.481481481481481</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      platform,
+            COUNT(DISTINCT(CASE WHEN event_name = 'begin_checkout' THEN user_pseudo_id END)) AS checkout_starters,
+            COUNT(DISTINCT(CASE WHEN event_name = 'purchase' THEN user_pseudo_id END)) AS buyers,
+            (COUNT(DISTINCT(CASE WHEN event_name = 'purchase' THEN user_pseudo_id END))
+              / COUNT(DISTINCT(CASE WHEN event_name = 'begin_checkout' THEN user_pseudo_id END))) * 100
+              AS checkout_conversion_rate
+  
+  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  GROUP BY  platform;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Firefox share of unique user traffic on the home page</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that shows:</p>
+  <ul>
+    <li>the number of unique users that have seen the home page using Firefox</li>
+    <li>the number of unique users that have seen the home page in total</li>
+    <li>the user conversion rate of the checkout process</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>firefox_home_unique_user_traffic</th><th>home_unique_user_traffic</th><th>firefox_share_of_home_unique_user_traffic</th></thead>
+      <tbody>
+        <tr><td>16399</td><td>63134</td><td>25.974910507808787</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(DISTINCT(CASE WHEN event_type = 'home' AND browser = 'Firefox' THEN user_id END))
+          AS firefox_home_unique_user_traffic,
+        
+        COUNT(DISTINCT(CASE WHEN event_type = 'home' THEN user_id END)) AS home_unique_user_traffic,
+        
+        (COUNT(DISTINCT(CASE WHEN event_type = 'home' AND browser = 'Firefox' THEN user_id END))
+          / COUNT(DISTINCT(CASE WHEN event_type = 'home' THEN user_id END))) * 100
+          AS firefox_share_of_home_unique_user_traffic
+  
+  FROM bigquery-public-data.thelook_ecommerce.events;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

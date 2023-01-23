@@ -1,0 +1,163 @@
+---
+layout: lesson
+title: Arrays
+previous_lesson: /lessons/record/
+next_lesson: /lessons/subqueries-and-common-table-expressions/
+---
+
+<p>An array is an ordered list of zero or more elements.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Basic array</span></h3>
+<pre><code class="language-sql">SELECT ['United States', 'Belgium', 'Cyprus'] as column_of_one_array;</code></pre>
+<p><img src="images/basic-array.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Accessing array elements</span></h3>
+<pre><code class="language-sql">SELECT ['United States', 'Belgium', 'Cyprus'][OFFSET(0)];</code></pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody><td>United States</td></tbody>
+  </table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Array of records</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  event_params
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131;
+  </code>
+</pre>
+<p><img src="images/array-of-records.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">GENERATE_DATE_ARRAY</span></h3>
+<pre><code class="language-sql">SELECT GENERATE_DATE_ARRAY('2023-01-01', '2023-01-15');</code></pre>
+<p><img src="images/generate-date-array.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">ARRAY_LENGTH</span></h3>
+<pre><code class="language-sql">SELECT ARRAY_LENGTH(['United States', 'Belgium', 'Cyprus']);</code></pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody><td>3</td></tbody>
+  </table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">UNNEST</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  CONCAT(user_pseudo_id, '.', event_timestamp) AS event_identifier,
+        unnested_params
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
+        UNNEST(event_params) AS unnested_params;
+  </code>
+</pre>
+<p><img src="images/unnest.png" class="lesson-img" /></p>
+<p>Here, you must have noticed that we used two items in the FROM clause. This is called a JOIN, something we’ll see in the very next lesson. 😉</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics number of sessions per date</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>A session is uniquely defined by the combination of the pseudo_user_id and the ga_session_id event parameter</li>
+    <li>Write a query that will display the number of sessions per date for all days for which we have data</li>
+    <li>Sort the result set by session date in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      PARSE_DATE('%Y%m%d', _table_suffix) AS session_date,
+            COUNT(CONCAT(user_pseudo_id, '.', unnested_params.value.int_value)) AS sessions
+  
+  FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`,
+            UNNEST(event_params) AS unnested_params
+  WHERE     unnested_params.key = 'ga_session_id'
+  
+  GROUP BY  session_date
+  ORDER BY  session_date ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Anonymized ip address using the SPLIT function</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will add an anonymized ip address column using the SPLIT function.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        event_type,
+        ip_address,
+        CONCAT(SPLIT(ip_address, '.')[OFFSET(0)], '.', SPLIT(ip_address, '.')[OFFSET(1)], '.', SPLIT(ip_address, '.')[OFFSET(2)])
+        AS anonymized_ip_address
+  
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Google Analytics number of scroll events by page location</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of scroll events by page location</li>
+    <li>The results should be sorted by the number of scroll events in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      unnested_params.value.string_value AS page_location,
+            COUNT(*) AS scrolls
+  
+  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
+            UNNEST(event_params) AS unnested_params
+  WHERE     event_name = 'scroll'
+            AND unnested_params.key = 'page_location'
+  
+  GROUP BY  page_location
+  ORDER BY  scrolls DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

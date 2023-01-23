@@ -1,0 +1,227 @@
+---
+layout: lesson
+title: LEAD
+previous_lesson: /lessons/lag/
+next_lesson: /lessons/first-value/
+---
+
+<p><code>LEAD</code> allows us to display values from subsequent rows. It takes up to 3 parameters:</p>
+<ol>
+  <li>The column whose value we want to display.</li>
+  <li>The offset, how are many rows further we want to go. By default, this is equal to 1.</li>
+  <li>The default output to return if the offset is outside the bond of the window. By default, this is NULL.</li>
+</ol>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT    id,
+          created_at AS signup_date,
+          CONCAT(first_name, ' ', last_name) AS user,
+          LEAD(CONCAT(first_name, ' ', last_name)) OVER(ORDER BY created_at ASC) AS next_signed_up_user
+  
+  FROM    bigquery-public-data.thelook_ecommerce.users
+ORDER BY  signup_date DESC;
+  </code>
+</pre>
+<p><img src="images/lead.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#lead" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°1 — Path exploration of a Google Analytics unique session</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display a path exploration for a unique Google Analytics 4 session defined by user_pseudo_id '1065673.0722289663’ and the session id 8521814404, for January 4th, 2021.</p>
+  <p><strong>Notes:</strong></p>
+  <ul>
+    <li>Only the page paths (i.e the page location without the domain, protocol and query parameters) should be displayed. You can use one of the user-defined functions we created earlier to help.</li>
+    <li>If the previous page is NULL, replace it with the following string: <i>(entrance)</i></li>
+    <li>If the next page is NULL, replace it with the following string: <i>(exit)</i></li>
+    <li>Look at Google Analytics 4 documentation in the <a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset" target="_blank">GA4 Ecommerce dataset</a> to find what event parameters you need to manipulate.</li>
+    <li>The event time should be in the <i>hour:minute:second</i> format (we don’t need to display the date since we already know the date, and we don’t need to display  microseconds and smaller units of time).</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH page_views AS
+  ( SELECT  user_pseudo_id,
+            ( SELECT value.int_value FROM UNNEST(event_params) WHERE event_name = 'page_view' AND key = 'ga_session_id' ) AS session_id,
+            ( SELECT value.string_value FROM UNNEST(event_params) WHERE event_name = 'page_view' AND key = 'page_location' ) AS page,
+            event_timestamp
+      FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104
+      WHERE event_name = 'page_view'
+  ),
+
+  pathing AS
+  ( SELECT    LAG(page) OVER (PARTITION BY CONCAT(user_pseudo_id, '.', session_id) ORDER BY event_timestamp ASC) AS previous_page,
+              page,
+              LEAD(page) OVER (PARTITION BY CONCAT(user_pseudo_id, '.', session_id) ORDER BY event_timestamp ASC) AS next_page,
+              event_timestamp
+      FROM    page_views
+      WHERE   user_pseudo_id = '1065673.0722289663'
+              AND session_id = 8521814404
+  )
+
+SELECT      example_dataset.strip_url(previous_page, 'all') AS previous_page,
+            example_dataset.strip_url(page, 'all') AS page,
+            example_dataset.strip_url(next_page, 'all') AS next_page,
+            TIME_TRUNC(CAST(TIMESTAMP_MICROS(event_timestamp) AS TIME), SECOND) AS event_time
+  
+  FROM      pathing
+  ORDER BY  event_time ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average time between page views across Google Analytics unique sessions</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p> 
+
+  <h4>Task</h4>
+  <ul>
+    <li>Using the LEAD function, write a query that will display the average delay between page_view events across unique sessions, in January 2021</li>
+    <li>The result should be expressed in seconds, as an integer</li>
+    <li>To make the code cleaner, you can use a temporary function to make some of the time interval calculations</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>avg_delay_in_seconds</th></thead>
+      <tbody>
+        <tr><td>46</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE TEMP FUNCTION seconds_between(later_number INT64, earlier_number INT64)
+RETURNS INTEGER AS
+  (
+    TIMESTAMP_DIFF(TIMESTAMP_MICROS(later_number), TIMESTAMP_MICROS(earlier_number), SECOND)
+  );
+
+WITH page_views AS
+  ( SELECT  user_pseudo_id,
+            ( SELECT value.int_value FROM UNNEST(event_params) WHERE event_name = 'page_view' AND key = 'ga_session_id' ) AS session_id,
+            ( SELECT value.string_value FROM UNNEST(event_params) WHERE event_name = 'page_view' AND key = 'page_location' ) AS page,
+            event_timestamp
+      FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE event_name = 'page_view'
+            AND _table_suffix BETWEEN '20210101' AND '20210131'
+  ),
+
+  pathing AS
+  ( SELECT      CONCAT(user_pseudo_id, '.', session_id) AS unique_session_id,
+                seconds_between(
+                  LEAD(event_timestamp) OVER (PARTITION BY CONCAT(user_pseudo_id, '.', session_id) ORDER BY event_timestamp ASC),
+                  event_timestamp
+                ) AS delay
+      FROM      page_views
+      ORDER BY  unique_session_id, event_timestamp ASC
+  )
+
+SELECT  CAST(AVG(delay) AS INTEGER) AS avg_delay_in_seconds
+  FROM  pathing;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Google Analytics customers with multiple orders in a seven day period</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of customers who made a valid purchase during a 7-day period in January 2021.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>seven_day_repeat_customers</th></thead>
+      <tbody>
+        <tr><td>43</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH repeat_customers AS
+  ( SELECT      user_pseudo_id,
+                COUNT(*) AS purchase_count
+      FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
+                AND example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue)
+      GROUP BY  user_pseudo_id
+      HAVING    purchase_count > 1
+  ),
+
+  all_purchases AS
+  ( SELECT  user_pseudo_id,
+            CAST(TIMESTAMP_MICROS(event_timestamp) AS DATE) AS purchase_date,
+            ecommerce.transaction_id AS transaction_id,
+      FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE _table_suffix BETWEEN '20210101' AND '20210131'
+            AND example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue)
+  ),
+
+  repeat_customers_purchases AS
+  ( SELECT        r.user_pseudo_id,
+                  purchase_date,
+                  transaction_id
+      FROM        repeat_customers AS r
+      INNER JOIN  all_purchases AS a
+      ON          r.user_pseudo_id = a.user_pseudo_id
+  ),
+
+  days_between_repeat_purchases AS
+  ( SELECT  user_pseudo_id,
+            purchase_date,
+            DATE_DIFF(
+              LEAD(purchase_date) OVER(PARTITION BY user_pseudo_id ORDER BY purchase_date ASC, transaction_id ASC),
+              purchase_date,
+              DAY
+            ) AS days_between
+      FROM  repeat_customers_purchases
+  )
+
+SELECT      COUNT(DISTINCT user_pseudo_id) AS seven_day_repeat_customers
+  FROM      days_between_repeat_purchases
+  WHERE     days_between < 7;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

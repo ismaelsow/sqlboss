@@ -1,0 +1,213 @@
+---
+layout: lesson
+title: Recursive queries
+previous_lesson: /lessons/views/
+next_lesson: /lessons/aggregate-window-functions/
+---
+
+<p>Recursive subqueries are query that reference themselves. How is that useful? It’s usually used when we have hierarchical or nested relationships, like parent and child elements.</p<
+
+<p>For example if we are dealing with managers and employees, how do we display the chain of managers above a particular employee? We would need to get the manager immediately above this employee. Let’s call this manager m. Then we would need to  use the same logic to get the manager of this manager, let’s call her m+1. Then manager m+2, manager m+3 until we get to the CEO of the company.</p>
+
+<p>How to display all sub-managers under a specific manager? We would need to get the manager immediately under this manger. Let’s call this manager m. Then we would need to  use the same logic to get the manager under this manager, let’s call her m-1. Then manager m-2, manager m-3 until we get someone without direct reports.</p>
+
+<p>Here are the steps to write a recursive query:</p>
+<ol>
+  <li>Write a common table expression using the <code>WITH RECURSIVE</code> clause</li>
+  <li>Write an initial subquery for the first item we need to display. Give it a column name using as.</li>
+  <li>Use <code>UNION ALL</code></li>
+  <li>Write another subquery for the rest of the items we need to display. This is the recursive part. This second subquery will reference the first item using the column name given, and the name of the common table expression.</li>
+</ol>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+WITH RECURSIVE first_ten_numbers AS
+  ( SELECT  1 AS number
+    UNION ALL
+    SELECT  number + 1
+      FROM  first_ten_numbers
+      WHERE number < 10
+  )
+
+SELECT      *
+  FROM      first_ten_numbers 
+  ORDER BY  number ASC;
+  </code>
+</pre>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Suite of integers from 1 to 25</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>N/A</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the suite of integers from 1 to 25.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH RECURSIVE first_25_numbers AS
+  ( SELECT  1 AS number
+    UNION ALL
+    SELECT  number + 1 FROM first_25_numbers WHERE number < 25
+  )
+
+SELECT      *
+  FROM      first_25_numbers
+  ORDER BY  number ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Fibonacci sequence</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>N/A</p>
+
+  <h4>Task</h4>
+  <blockquote>In mathematics, the <strong>Fibonacci numbers</strong>, commonly denoted Fn , form a <a href="https://en.wikipedia.org/wiki/Integer_sequence" target="_blank">sequence</a>, the <strong>Fibonacci sequence</strong>, in which each number is the sum of the two preceding ones. The sequence commonly starts from 0 and 1, although some authors start the sequence from 1 and 1 or sometimes (as did Fibonacci) from 1 and 2. Starting from 0 and 1, the first few values in the sequence are: 0, 1,
+    1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144.<br><br><a href="https://en.wikipedia.org/wiki/Fibonacci_number" target="_blank">https://en.wikipedia.org/wiki/Fibonacci_number</a></blockquote>
+  <p>Write a query that displays the first 14 numbers of the Fibonacci sequence, so from number n = 1 to number n = 14.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH RECURSIVE fib_n AS
+  ( SELECT  0 AS n,
+            0 AS fib_value,
+            1 AS next_fib_value
+    
+    UNION ALL
+    
+    SELECT  n + 1,
+            next_fib_value,
+            fib_value + next_fib_value
+      FROM  fib_n
+      WHERE n < 13
+  )
+
+SELECT      n,
+            fib_value
+  FROM      fib_n
+  ORDER BY  n ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Descendants of a Wikipedia category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>At your discretion 🙂</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display all of the descendants of the <i>Place</i> category.</li>
+    <li>The results should be sorted alphabetically in ascending order.</li>
+    <li>You can use one of table functions we wrote earlier to help you (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
+    <li>Hint: one of these table functions won’t work 😉</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH RECURSIVE descendants AS
+  ( SELECT  category
+      FROM  example_dataset.subqueries_only_categories()
+      WHERE category = 'Place'
+      
+    UNION ALL
+    
+    SELECT        categories.category
+      FROM        descendants
+      INNER JOIN  example_dataset.subqueries_only_categories() AS categories
+      ON          categories.parent = descendants.category
+  )
+
+SELECT      category
+  FROM      descendants
+  WHERE     category != 'Place'
+  ORDER BY  category ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Ascendants of a Wikipedia category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>At your discretion 🙂</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display all of the ascendants of the <i>Curler</i> category.</li>
+    <li>The results should be sorted by depth level in ascending order (parent, then grand parent).</li>
+    <li>You can use one of table functions we wrote earlier to help you (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
+    <li>Hint: one of these table functions won’t work 😉</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH RECURSIVE ascendants AS
+  ( SELECT  category,
+            parent,
+            0 AS level
+      FROM  example_dataset.subqueries_only_categories()
+      WHERE category = 'Curler'
+    
+    UNION ALL
+  
+    SELECT        categories.category,
+                  categories.parent,
+                  ascendants.level + 1 AS level
+      FROM        ascendants
+      INNER JOIN  example_dataset.subqueries_only_categories() categories
+      ON          categories.category = ascendants.parent
+  )
+
+SELECT      category
+  FROM      ascendants
+  WHERE     category != 'Curler'
+  ORDER BY  level;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

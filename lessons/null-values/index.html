@@ -1,0 +1,119 @@
+---
+layout: lesson
+title: NULL values
+previous_lesson: /lessons/dates-and-times/
+next_lesson: /lessons/record/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">NULL vs empty strings</span></h3>
+<p><pre><code class="language-sql">SELECT '' AS empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT NULL AS null_value;</code></pre></p>
+<p><pre><code class="language-sql">SELECT '' = '' empty_string_equals_empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT NULL = '' null_equals_empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT NULL = NULL null_equals_empty_string;</code></pre></p>
+<p>
+  <pre>
+    <code class="language-sql">
+SELECT  COUNT(*) AS event_count,
+        COUNT(user_id) AS user_id_count
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+    </code>
+  </pre>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">IS NULL</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.events
+  WHERE user_id IS NULL;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">IS NOT NULL</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.events
+  WHERE user_id IS NOT NULL;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">NULLIF</span></h3>
+<p><pre><code class="language-sql">SELECT NULLIF('morning', 'morning');</code></pre></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">COALESCE</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  user_id,
+        COALESCE(user_id, 0)
+  FROM  bigquery-public-data.thelook_ecommerce.events
+  WHERE user_id IS NULL;
+  </code>
+</pre>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of non-user generated events broken down by event type</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of non-user generated events broken down by event type.</li>
+    <li>Sort the results by the number of non-user generated events in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      event_type,
+            COUNT(CASE  WHEN user_id IS NULL THEN 1 END) AS non_user_generated_events
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  GROUP BY  event_type
+  ORDER BY  non_user_generated_events DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replacing null user_id values</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will replace NULL user_id values with the negative number -111111 in a new column named clean_user_id.</li>
+    <li>Sort the result by clean_user_id in ascending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      user_id,
+            COALESCE(user_id, -111111) AS clean_user_id
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  ORDER BY  clean_user_id ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

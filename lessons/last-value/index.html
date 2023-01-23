@@ -1,0 +1,128 @@
+---
+layout: lesson
+title: LAST_VALUE
+previous_lesson: /lessons/first-value/
+next_lesson: /lessons/nth-value/
+---
+
+<p><code>LAST_VALUE</code> is used to display a column value from the last row in a window. It takes as parameter the column we want to display.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT    country,
+          LAST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC) AS last_user,
+          LAST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC) AS last_user_signup_date
+FROM      bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT    DISTINCT country,
+          LAST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC) AS last_user,
+          LAST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC) AS last_user_signup_date
+FROM      bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<p>We talked about window frames in a previous lesson, they come into play here:</p>
+<p><a href="https://stackoverflow.com/questions/35096414/why-doesnt-last-value-return-the-last-value" target="_blank">👉 Why doesn't LAST_VALUE return the last value?</a></p>
+
+<pre>
+  <code class="language-sql">
+SELECT    country,
+          
+          LAST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC
+            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_user,
+          
+          LAST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC
+            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_user_signup_date
+
+  FROM    bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT    DISTINCT country,
+          
+          LAST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC
+            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_user,
+          
+          LAST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC
+            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS last_user_signup_date
+
+  FROM    bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<ul>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#last_value" target="_blank">LAST_VALUE</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/window-function-calls#def_window_spec" target="_blank">Defining the window specification</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/window-function-calls#def_window_frame" target="_blank">Defining the window frame clause</a></li>
+</ul>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Date and time of the first and last valid Google Analytics purchases in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the date and time of the first and last valid purchases in January 2021.</li>
+    <li>You can make use of one of the user-defined functions created previously to generate a table of valid purchases.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>first_order_datetime</th><th>first_order_revenue</th><th>last_order_datetime</th><th>last_order_revenue</th></thead>
+      <tbody>
+        <tr><td>2021-01-01 03:29:50</td><td>20.0</td><td>2021-01-30 21:38:13</td><td>28.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH purchases AS
+  ( SELECT  event_timestamp,
+            ecommerce.purchase_revenue AS revenue
+      FROM  example_dataset.valid_purchase_events('20210101', '20210131')
+  ),
+
+  first_and_last_orders_with_timestamps AS
+  ( SELECT  FIRST_VALUE(event_timestamp) OVER(ORDER BY event_timestamp ASC) AS first_order_timestamp,
+            FIRST_VALUE(revenue) OVER(ORDER BY event_timestamp ASC) AS first_order_revenue,
+            LAST_VALUE(event_timestamp) OVER(ORDER BY event_timestamp ASC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+              AS last_order_timestamp,
+            LAST_VALUE(revenue) OVER(ORDER BY event_timestamp ASC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+              AS last_order_revenue
+      FROM  purchases
+  )
+
+SELECT  MAX(FORMAT_DATETIME('%F %T', CAST(TIMESTAMP_MICROS(first_order_timestamp) AS DATETIME))) AS first_order_datetime,
+        MAX(first_order_revenue) AS first_order_revenue,
+        MAX(FORMAT_DATETIME('%F %T', CAST(TIMESTAMP_MICROS(last_order_timestamp) AS DATETIME))) AS last_order_datetime,
+        MAX(last_order_revenue) AS last_order_revenue
+  
+  FROM  first_and_last_orders_with_timestamps;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,191 @@
+---
+layout: lesson
+title: Numbers
+previous_lesson: /lessons/main-data-types-and-type-conversion/
+next_lesson: /lessons/strings/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Numeric types and functions</span></h3>
+<ul>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#numeric_types" target="_blank">Numeric types</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions" target="_blank">Mathematical functions</a></li>
+</ul>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">ROUND</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT ROUND(2.4561, 1);
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2.5</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#round" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">TRUNCATE</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT TRUNC(2.4561, 1);
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2.4</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#trunc" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">FLOOR</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT FLOOR(2.4561);
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2.0</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#floor" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">CEIL</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT CEIL(2.4561); -- or SELECT CEILING(2.4561)
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>3.0</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#ceil" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SAFE_DIVIDE</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT SAFE_DIVIDE(2.4561, 0);
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td><i>null</i></td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#ceil" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">RAND</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT RAND();
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>0.44105372482388427</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#rand" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">ABS</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT ABS(-2.4561);
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2.4561</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#abs" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Profit margin ratio of 10 products</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the rounded profit margin ratio of 10 products</li>
+    <li>The profit_margin_ratio_per_product column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name,
+        cost,
+        retail_price,
+        CAST(((retail_price - cost) / retail_price) * 100 AS integer) AS profit_margin_ratio_per_product
+  
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE CAST(((retail_price - cost) / retail_price) * 100 AS integer) >= 50
+  LIMIT 10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — 10 random products</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display 10 products randomly each time it’s run.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      id, name
+  FROM      bigquery-public-data.thelook_ecommerce.products
+  ORDER BY  RAND()
+  LIMIT     10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,254 @@
+---
+layout: lesson
+title: Regular expressions
+previous_lesson: /lessons/strings/ 
+next_lesson: /lessons/dates-and-times/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">What are regular expressions</span></h3>
+<p>Regular expressions are a way to find complex patterns in textual data. They are extremely powerful. You can get a quick reference of the different patterns you can use and create and test your regular expressions on sites like these ones:</p>
+<ul>
+  <li><a href="https://rubular.com/" target="_blank">Rubular</a></li>
+  <li><a href="https://regex101.com/" target="_blank">Regular Expressions 101</a></li>
+</ul>
+<p>There are many regular expressions engines, here is the one used by Google BigQuery:</p>
+<p><a href="https://github.com/google/re2/wiki/WhyRE2" target="_blank">https://github.com/google/re2/wiki/WhyRE2</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_CONTAINS</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT REGEXP_CONTAINS('Mount Fuji is a japanese mountain', r'^mountain');
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>false</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_EXTRACT</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT REGEXP_EXTRACT('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>japanese</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_EXTRACT_ALL</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT REGEXP_EXTRACT_ALL('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
+  </code>
+</pre>
+<p><img src="images/regexp-extract-all.png" class="lesson-img" /></p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract_all" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_INSTR</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT REGEXP_INSTR('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>17</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_instr" target="_blank">👉 Check out the official documentation</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_REPLACE</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT REGEXP_REPLACE('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)', 'Pluto');
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>Mount Fuji is a Pluto mountain in Pluto</td></tr>
+    </tbody>
+  </table>
+</p>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_replace" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics unique users in January 2020</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <p>The Google Analytics 4 sample dataset uses different event tables partitioned by dates. For example, bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101 is the table of events recorded on January 1st, 2020.</p>
+  <p>If we want to query the data across different tables, we can use a regexp wildcard ‘*’ in our FROM clause:</p>
+  <p><code>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</code>, with the table name enclosed with backticks (this character: `).</p>
+  <p>The date part we replaced with the regexp wildcard will then be accessible in a special column called <code>_table_suffix</code>.</p>
+  <p>Here is an illustration:</p>
+  <p><img src="images/illustration-1.png" class="lesson-img" /></p>
+  <p>Each user has a unique id stored in the user_pseudo_id column.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>january_2020_unique_users</th></thead>
+      <tbody>
+        <tr><td>94790</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(DISTINCT user_pseudo_id) AS january_2020_unique_users
+  FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE _table_suffix BETWEEN '20210101' AND '20210131';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — 100 street addresses that end with an apartment or suite number</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show 100 street addresses that ends with an apartment or suite number.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  street_address
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE REGEXP_CONTAINS(street_address, r'\s\d+$')
+  LIMIT 100;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Stats on street addresses that ends with an apartment or suite number</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show stats about street addresses that ends with an apartment or suite number.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>total_street_addresses</th><th>ending_with_number</th><th>not_ending_with_number</th><th>percent_ending_with_number</th></thead>
+      <tbody>
+        <tr><td>100000</td><td>50314</td><td>49686</td><td>50</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Countries sorted by number of users living in apartments</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will list countries sorted by number of users living in apartments in descending order.</li>
+    <li>Only display countries that have at least one user living in an apartment.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      country,
+            COUNT(CASE WHEN REGEXP_CONTAINS(street_address, 'Apt.') THEN 1 END) AS users_in_apartments
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  
+  GROUP BY  country
+  HAVING    users_in_apartments > 0
+  ORDER BY  users_in_apartments DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Anonymized ip addresses</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Add an anonymized ip address column to the events table.</li>
+    <li>In order to anonymize the ip address, you need to remove its the last part.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  ip_address,
+        REGEXP_REPLACE(ip_address, r'(\.\d+)$', '') AS anonymized_ip_address
+  FROM  bigquery-public-data.thelook_ecommerce.events;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

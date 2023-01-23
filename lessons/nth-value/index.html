@@ -1,0 +1,112 @@
+---
+layout: lesson
+title: NTH_VALUE
+previous_lesson: /lessons/last-value/
+next_lesson: /lessons/percent-rank/
+---
+
+<p><code>NTH_VALUE</code> is used to display a column value from the nth row in a window. It takes as parameters:</p>
+<ol>
+  <li>the column we want to display</li>
+  <li>the offset of the row we want</li>
+</ol>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+
+<pre>
+  <code class="language-sql">
+SELECT    country,
+          NTH_VALUE(CONCAT(first_name, ' ', last_name), 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user,
+          NTH_VALUE(created_at, 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user_signup_date
+FROM      bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT    DISTINCT country,
+          NTH_VALUE(CONCAT(first_name, ' ', last_name), 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user,
+          NTH_VALUE(created_at, 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user_signup_date
+FROM      bigquery-public-data.thelook_ecommerce.users
+ORDER BY  country ASC;
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+WITH raw_second_values AS
+  ( SELECT    DISTINCT country,
+              NTH_VALUE(CONCAT(first_name, ' ', last_name), 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user,
+              NTH_VALUE(created_at, 2) OVER(PARTITION BY country ORDER BY created_at ASC) AS second_user_signup_date
+      FROM    bigquery-public-data.thelook_ecommerce.users
+    ORDER BY  country ASC
+  )
+
+SELECT  *
+  FROM  raw_second_values
+  WHERE second_user IS NOT NULL;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#nth_value" target="_blank">Check out the official documentation</a>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Date and time of the first and second valid Google Analytics purchases in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the date and time of the first and second valid purchases in January 2021.</li>
+    <li>You can make use of one of the user-defined functions created previously to generate a table of valid purchases.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>first_order_datetime</th><th>first_order_revenue</th><th>second_order_datetime</th><th>second_order_revenue</th></thead>
+      <tbody>
+        <tr><td>2021-01-01 03:29:50</td><td>20.0</td><td>2021-01-01 04:35:19</td><td>39.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH purchases AS
+  ( SELECT  event_timestamp,
+            ecommerce.purchase_revenue AS revenue
+      FROM  example_dataset.valid_purchase_events('20210101', '20210131')
+  ),
+
+  first_and_second_orders_with_timestamps AS
+  ( SELECT  FIRST_VALUE(event_timestamp) OVER(ORDER BY event_timestamp ASC) AS first_order_timestamp,
+            FIRST_VALUE(revenue) OVER(ORDER BY event_timestamp ASC) AS first_order_revenue,
+            NTH_VALUE(event_timestamp, 2) OVER(ORDER BY event_timestamp ASC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+              AS second_order_timestamp,
+            NTH_VALUE(revenue, 2) OVER(ORDER BY event_timestamp ASC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+              AS second_order_revenue
+      FROM  purchases
+  )
+
+SELECT  MAX(FORMAT_DATETIME('%F %T', CAST(TIMESTAMP_MICROS(first_order_timestamp) AS DATETIME))) AS first_order_datetime,
+        MAX(first_order_revenue) AS first_order_revenue,
+        MAX(FORMAT_DATETIME('%F %T', CAST(TIMESTAMP_MICROS(second_order_timestamp) AS DATETIME))) AS second_order_datetime,
+        MAX(second_order_revenue) AS second_order_revenue
+  
+  FROM  first_and_second_orders_with_timestamps;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

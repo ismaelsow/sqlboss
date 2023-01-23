@@ -1,0 +1,276 @@
+---
+layout: lesson
+title: User-defined functions
+previous_lesson: /lessons/union-and-union-all/
+next_lesson: /lessons/table-functions/
+---
+
+<p>A user-defined function is a piece of reusable SQL code that can accepts columns as inputs and return a calculated result.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Temporary user-defined functions</span></h3>
+<p>Temporary user-defined functions are only available in the query they are written in.</p>
+<pre>
+  <code class="language-sql">
+CREATE TEMP FUNCTION  full_name(first_name STRING, last_name STRING)
+RETURNS STRING  AS (CONCAT(first_name, ' ', last_name));
+
+SELECT  id,
+        first_name,
+        last_name,
+        full_name(first_name, last_name) AS name
+
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Persistent user-defined functions</span></h3>
+<p>Persistent user-defined functions are available across queries. They much be attached to a dataset.</p>
+<pre>
+  <code class="language-sql">
+CREATE OR REPLACE FUNCTION  example_dataset.full_name(first_name STRING, last_name STRING)
+RETURNS STRING  AS (CONCAT(first_name, ' ', last_name));
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT  id,
+        first_name,
+        last_name,
+        example_dataset.full_name(first_name, last_name) AS full_name
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+
+<p>Persistent user-defined functions can be deleted using the UI or the DROP FUNCTION statement.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Scalar subqueries</span></h3>
+<p>A user-defined function can also return a scalar subquery.</p>
+<pre>
+  <code class="language-sql">
+CREATE TEMP FUNCTION  count_users_by_country(countryParam STRING)
+RETURNS INTEGER AS
+(
+  ( SELECT  COUNT(*)
+      FROM  bigquery-public-data.thelook_ecommerce.users
+      WHERE country = countryParam
+  )
+);
+
+SELECT  count_users_by_country('France') AS france_users,
+        count_users_by_country('United States') AS us_users,
+        count_users_by_country('Germany') AS germany_users;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<ul>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/user-defined-functions#templated-sql-udf-parameters" target="_blank">Templated SQL UDF parameters</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/user-defined-functions#default_project_in_sql_expressions" target="_blank">Default project in SQL expressions</a></li>
+</ul>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Pretty print monetary amounts</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>N/A</p>
+
+  <h4>Task</h4>
+  <p>Create a persistent user-defined function that takes a decimal as parameter and return this number no more than 2 decimals.</p>
+  
+  <h4>Example results</h4>
+  <pre><code class="language-sql">SELECT example_dataset.pretty_number(12.455454524)</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td>12.45</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE FUNCTION example_dataset.pretty_number(number NUMERIC)
+AS (ROUND(number, 2));
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replace '(not set)' with NULL</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>N/A</p>
+
+  <h4>Task</h4>
+  <p>Write a user-defined function that replaces '(not set)' with NULL. It can be very useful when dealing with the Google Analytics 4 sample dataset.</p>
+  
+  <h4>Example results</h4>
+  <pre><code class="language-sql">SELECT example_dataset.nullify_not_set('(not set)')</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td><i>null</i></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+        CREATE OR REPLACE FUNCTION example_dataset.nullify_not_set(value STRING)
+AS (REPLACE(value, '(not set)', NULL));
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin" id="google-analytics-purchase-event-validator-function"><span class="medium-problem-text-span">N°3 — Google Analytics purchase event validator function</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101</p>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <p>Write a persistent user-defined function that validates if a purchase event from the Google Analytics 4 sample data is valid. We consider a purchase event valid if:</p>
+  <ul>
+    <li>The ecommerce.transaction_id field is not NULL</li>
+    <li>The ecommerce.purchase_revenue field not NULL and is greater than 0.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <pre>
+    <code class="language-sql">
+SELECT  event_timestamp,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+  
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  WHERE example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue) = TRUE;
+    </code>
+  </pre>
+  <p><img src="images/example-3-1.png" class="lesson-img" /></p>
+  <pre>
+    <code class="language-sql">
+SELECT  event_timestamp,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+  
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101
+  WHERE example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue) = TRUE;
+    </code>
+  </pre>
+  <p><img src="images/example-3-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE FUNCTION example_dataset.is_valid_purchase(transaction_id STRING, revenue FLOAT64)
+RETURNS BOOL AS ( transaction_id IS NOT NULL
+                  AND revenue IS NOT NULL
+                  AND revenue > 0 );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Strip function for Google Analytics URL</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101</p>
+
+  <h4>Task</h4>
+  <p>Write a function that will strip the page_location event parameter of the Google Analytics 4 sample dataset. As parameters, we should have the page location (a url) and an option parameter which is defined as follow:</p>
+  <ul>
+    <li>If option equals query <i>parameters</i>, remove the query parameters from the url</li>
+    <li>If option equals <i>protocol</i>, remove the http:// or https:// part of from the url</li>
+    <li>If option equals <i>domain</i>, remove the protocol and url domain from the url</li>
+    <li>If option equals <i>all</i>, then remove the 3 components mentioned in the previous bullet points</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p>With option = ‘query parameters’</p>
+  <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'query parameters')</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td>https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:48px">With option = ‘protocol’</p>
+  <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'protocol')</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td>shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:48px">With option = ‘domain’</p>
+  <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'domain')</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td>/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top:24px">With option = ‘all’</p>
+  <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'all')</code></pre>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>f0_</th></thead>
+      <tbody>
+        <tr><td>/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE FUNCTION example_dataset.strip_url(url STRING, option STRING)
+RETURNS STRING AS
+  ( CASE
+      WHEN option = 'query parameters' THEN REGEXP_REPLACE(url, r'(?i)\?.+$', '')
+      WHEN option = 'protocol' THEN REGEXP_REPLACE(url, r'(?i)^https?:\/\/', '')
+      WHEN option = 'domain' THEN REGEXP_REPLACE(url,r'(?i)(https?:\/\/)(\w+|\.{1})+\.([a-zA-Z0-9]){2,}', '')
+      WHEN option = 'all' THEN REGEXP_REPLACE(url, r'(?i)(https?:\/\/)(\w+|\.{1})+\.([a-zA-Z0-9]){2,}|\?.+$', '')
+    END
+  );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

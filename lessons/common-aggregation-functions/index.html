@@ -1,0 +1,427 @@
+---
+layout: lesson
+title: Common aggregation functions
+previous_lesson: /lessons/case-when/
+next_lesson: /lessons/group-by/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p>Here we count the total number of rows in the distribution_centers table.</p>
+<pre>
+  <code class="language-sql">
+SELECT  COUNT(*) AS distribution_centers_count
+  FROM  bigquery-public-data.thelook_ecommerce.distribution_centers;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>distribution_centers_count</th></thead>
+  <tbody>
+    <tr><td>10</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p>Here we count the number of non-null cells in the user_id column, in addition to counting the total number of rows in the distribution_centers table.</p>
+<pre>
+  <code class="language-sql">
+SELECT    COUNT(*) AS total_row_count,
+          COUNT(user_id) AS user_id_count
+  FROM    bigquery-public-data.thelook_ecommerce.events;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>total_row_count</th><th>user_id_count</th></thead>
+  <tbody>
+    <tr><td>2435634</td><td>1311042</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  SUM(num_of_item) AS total_items_sold
+  FROM  bigquery-public-data.thelook_ecommerce.orders;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>total_items_sold</th></thead>
+  <tbody>
+    <tr><td>182427</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  MIN(age) AS youngest
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>youngest</th></thead>
+  <tbody>
+    <tr><td>12</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 5</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  MAX(age) AS oldest
+        FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>oldest</th></thead>
+  <tbody>
+    <tr><td>70</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 6</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  AVG(age) AS average_age
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+<table class="table-with-header">
+  <thead><th>average_age</th></thead>
+  <tbody>
+    <tr><td>40.965139999999963</td></tr>
+  </tbody>
+</table>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of US users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of users from the United States.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>us_users</th></thead>
+      <tbody>
+        <tr><td>22408</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS us_users
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE country = 'United States';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Total number of orders in October 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays the number of orders in October 2022.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>number_of_orders_october_2022</th></thead>
+      <tbody>
+        <tr><td>7834</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS number_of_orders_october_2022
+  FROM  bigquery-public-data.thelook_ecommerce.orders
+  WHERE created_at BETWEEN '2022-10-01 00:00:00 UTC' AND '2022-10-31 23:59:59 UTC';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — Dates of the first and last orders</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that display the dates of the first and last orders.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>first_order_date</th><th>last_order_date</th></thead>
+      <tbody>
+        <tr><td>2019-01-10 13:42:00 UTC</td><td>2022-12-26 19:32:22.823791 UTC</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  MIN(created_at) AS first_order_date,
+        MAX(created_at) AS last_order_date
+  FROM  bigquery-public-data.thelook_ecommerce.orders;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Average age of US users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the average age of US users.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>us_users_average_age</th></thead>
+      <tbody>
+        <tr><td>41.084835772938106</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  AVG(age) AS us_users_average_age
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE country = 'United States';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Breakdown of items sold by gender</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show:</p>
+  <ul>
+    <li>the total number of items sold </li>
+    <li>the total number of items sold to men</li>
+    <li>the total number of items sold to women</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>total_items_sold</th><th></th>total_items_sold_to_men<th>total_items_sold_to_women</th></thead>
+      <tbody>
+        <tr><td>182427</td><td>91156</td>91271<td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  SUM(num_of_item) AS total_items_sold,
+        SUM(CASE WHEN gender = 'M' THEN num_of_item ELSE 0 END) AS total_items_sold_to_men,
+        SUM(CASE WHEN gender = 'F' THEN num_of_item ELSE 0 END) AS total_items_sold_to_women,
+  FROM  bigquery-public-data.thelook_ecommerce.orders;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°6 — Email traffic</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show how many users came from the Email traffic source.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>users_from_email</th></thead>
+      <tbody>
+        <tr><td>5078</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS users_from_email
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE traffic_source = 'Email';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Breakdown of users who came from email</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show:</p>
+  <ul>
+    <li>the total number of users that came from email</li>
+    <li>the total number of female users that came from email</li>
+    <li>and the total number of male users that came from email</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>users_from_email</th><th>female_users_from_email</th><th>male_users_from_email</th></thead>
+      <tbody>
+        <tr><td>5078</td><td>2556</td><td>2522</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS users_from_email,
+        COUNT(CASE WHEN gender = 'F' THEN 1 END) AS female_users_from_email,
+        COUNT(CASE WHEN gender = 'M' THEN 1 END) AS male_users_from_email
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE traffic_source = 'Email';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Breakdown and share of users who came from email</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show:</p>
+  <ul>
+    <li>the total number of users that came from email</li>
+    <li>the total number of female users that came from email</li>
+    <li>the share of female users over the users that came from email</li>
+    <li>the total number of male users that came from email</li>
+    <li>the share of male users over the users that came from email</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>users_from_email</th><th>female_users_from_email</th><th>female_users_from_email_share</th><th>male_users_from_email</th><th>male_users_from_email_share</th></thead>
+      <tbody>
+        <tr><td>5078</td><td2556></td><td>50.334777471445449</td><td>2522</td><td>49.665222528554551</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS users_from_email,
+        COUNT(CASE WHEN gender = 'F' THEN 1 END) AS female_users_from_email,
+        (COUNT(CASE WHEN gender = 'F' THEN 1 END) / COUNT(*)) * 100 AS female_users_from_email_share,
+        COUNT(CASE WHEN gender = 'M' THEN 1 END) AS male_users_from_email,
+        (COUNT(CASE WHEN gender = 'M' THEN 1 END) / COUNT(*)) * 100 AS male_users_from_email_share,
+  
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE traffic_source = 'Email';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°9 — Number of Google Analytics page_view events</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will count the number of page_view events in the table specified above.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>page_view_count</th></thead>
+      <tbody>
+        <tr><td>9498</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  COUNT(*) AS page_view_count
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  WHERE event_name = 'page_view';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

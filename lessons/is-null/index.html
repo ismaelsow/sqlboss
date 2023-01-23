@@ -1,0 +1,51 @@
+---
+layout: lesson
+title: IS NULL
+previous_lesson: /lessons/between/
+next_lesson: /lessons/and/
+---
+
+<p>NULL values mean that there’s no value, not even an empty string. We can not compare null values using the regular operators. We need to use some special syntax and functions to handle null values. To check for NULL in a column value, we use IS NULL.</p>
+
+<!-- Example 1 -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  order_id, user_id, status, created_at, shipped_at
+  FROM  bigquery-public-data.thelook_ecommerce.orders
+  WHERE shipped_at IS NULL
+  LIMIT 5;
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — 10 events that are not attributable to any users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that shows 10 events that are not attributable to any users.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id, user_id, sequence_number, session_id, created_at, ip_address, city
+  FROM  bigquery-public-data.thelook_ecommerce.events
+  WHERE user_id IS NULL
+  LIMIT 10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

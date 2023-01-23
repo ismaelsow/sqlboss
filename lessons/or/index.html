@@ -1,0 +1,58 @@
+---
+layout: lesson
+title: OR
+previous_lesson: /lessons/and/
+next_lesson: /lessons/not/
+---
+
+<p>We can also use the OR keyword to combine multiple conditions in the WHERE clause. We use the OR keyword to specify conditions where AT LEAST ONE needs to be true</p>
+
+<!-- Example 1 -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  id, first_name, last_name, email, state, city, country
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE country = 'Austria' OR city = 'Vienna'
+  LIMIT 10;
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Products containing ‘dna’ in their name</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays all products that contain ‘dna’ in their name, regardless of the case.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE name LIKE '%dna%'
+        OR name LIKE '%Dna%'
+        OR name LIKE '%DNa%'
+        OR name LIKE '%DNA%'
+        OR name LIKE '%dNa%'
+        OR name LIKE '%dNA%'
+        OR name LIKE '%dnA%'
+        OR name LIKE '%DnA%';
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

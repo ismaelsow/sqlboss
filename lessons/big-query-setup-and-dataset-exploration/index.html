@@ -1,0 +1,43 @@
+---
+layout: lesson
+title: BigQuery Setup and Dataset Exploration
+previous_lesson: /lessons/key-concepts/
+next_lesson: /lessons/problem-solving-and-best-practices/ 
+---
+
+<!-- About BigQuery and Google Standard SQL -->
+<h3 class="h3-big-margin"><span class="grey-text-span">About BigQuery and Google Standard SQL</span></h3>
+<ul>
+  <li>BigQuery is Google’s cloud data warehouse solution</li>
+  <li>BigQuery is fast, scalable and cost-effective</li>
+  <li>BigQuery supports the Google Standard SQL dialect which is an ANSI compliant flavor of SQL</li>
+</ul>
+
+<!-- Establishing the BigQuery environment -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Establishing the BigQuery environment</span></h3>
+<ul>
+  <li>Create a Gmail account if don’t have one</li>
+  <li>Log into your Gmail account</li>
+  <li>Go to <a href="https://console.cloud.google.com/bigquery">https://console.cloud.google.com/bigquery</a></li>
+  <li>If you don’t already have a Google Cloud Project created, you’ll be prompted to create one. Click Create Project and follow the prompts.</li>
+  <li>There are two versions of the Google BigQuery environment. The first is the <a href="https://cloud.google.com/bigquery/docs/sandbox">BigQuery sandbox</a>, a feature-limited, no-cost option for playing around with the tool.</li>
+  <li>The other one is the upgraded environment, for which you’ll need to provide your credit card.</li>
+  <li>As instructors, we’ll be using the upgraded environment, but start with the sandbox instead.</li>
+</ul>
+
+<!-- Monitoring BigQuery costs -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Monitoring BigQuery costs</span></h3>
+<p>If you grow out of the BigQuery sandbox, you’ll need to create a billing account and keep an eye on your BigQuery usage in order to avoid surprise bills. To do so open this link: <a href="https://console.cloud.google.com/billing">https://console.cloud.google.com/billing</a></p>
+<p>When your billing account is created, click on your billing account from this same link to see your cost and cost projections. Bookmark that page and check it often.</p>
+
+<!-- Datasets -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Datasets</span></h3>
+<p>Here are the main production datasets we'll be working with in the course.</p>
+<ul>
+  <li><a href="https://console.cloud.google.com/marketplace/product/bigquery-public-data/thelook-ecommerce">TheLook Ecommerce</a>: <pre>bigquery-public-data.thelook_ecommerce</pre></li>
+  <li><a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset">Google Analytics 4 Ecommerce dataset</a>: <pre>bigquery-public-data.ga4_obfuscated_sample_ecommerce</p></li>
+</ul>
+
+<!-- The first SQL query -->
+<h3 class="h3-big-margin"><span class="grey-text-span">The first SQL query</span></h3>
+<pre><code class="language-sql">SELECT "Hello, world!";</code></pre>

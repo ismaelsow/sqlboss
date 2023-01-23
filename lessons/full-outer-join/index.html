@@ -1,0 +1,79 @@
+---
+layout: lesson
+title: FULL OUTER JOIN
+previous_lesson: /lessons/left-join-and-right-join/
+next_lesson: /lessons/self-join/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT            *
+  FROM            bigquery-public-data.thelook_ecommerce.users
+  FULL OUTER JOIN bigquery-public-data.thelook_ecommerce.events
+  ON              users.id = events.user_id;
+  --WHERE users.id IS NULL OR events.id IS NULL;
+  </code>
+</pre>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Number of users with no events and number of events with no users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show the number of users with no events and number of events with no users.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>user_count</th><th>event_count</th></thead>
+      <tbody>
+        <tr><td>20154</td><td>1124900</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT            COUNT(DISTINCT users.id) AS user_count,
+                  COUNT(DISTINCT events.id) AS event_count
+  
+  FROM            bigquery-public-data.thelook_ecommerce.users users
+  FULL OUTER JOIN bigquery-public-data.thelook_ecommerce.events events
+  ON              users.id = events.user_id
+  
+  WHERE           events.id IS NULL
+                  OR users.id IS NULL;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

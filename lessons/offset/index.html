@@ -1,0 +1,55 @@
+---
+layout: lesson
+title: OFFSET
+previous_lesson: /lessons/order-by/
+next_lesson: /lessons/case-when/
+---
+
+<p>The OFFSET clause helps us paginate the result set returned by our SELECT. It has to be used together with the LIMIT clause. So the following code:</p>
+
+<pre>
+  <code class="language-sql">
+SELECT      id, name, retail_price
+  FROM      bigquery-public-data.thelook_ecommerce.products
+  ORDER BY  retail_price DESC
+  LIMIT     10
+  OFFSET    90;
+  </code>
+</pre>
+<p>Will return the 91th to 100th most expensive products:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — 41th to 50th oldest users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that shows the 41th to 50th oldest users.</li>
+    <li>Sort by age in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      id, first_name, last_name, age
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  ORDER BY  age DESC
+  LIMIT    10
+  OFFSET   40;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

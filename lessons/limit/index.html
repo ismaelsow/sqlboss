@@ -1,0 +1,46 @@
+---
+layout: lesson
+title: LIMIT
+previous_lesson: /lessons/select-from/
+next_lesson: /lessons/where-and-comparison-operators/
+---
+
+<!-- Limiting the number of results returned -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Limiting the number of results returned</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  LIMIT 3;
+  </code>
+</pre>
+<p><img src="images/limit-number-of-results-returned-2.png" class="lesson-img" /></p>
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — 5 items from the orders table</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays all columns from the orders table and uses the <code>LIMIT</code> command to restrict the result set to only 5 rows.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.orders
+  LIMIT 5;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

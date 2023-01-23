@@ -1,0 +1,156 @@
+---
+layout: lesson
+title: SELECT FROM
+previous_lesson: /lessons/problem-solving-and-best-practices/
+next_lesson: /lessons/limit/
+---
+
+<!-- Selecting everything -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Selecting everything</span></h3>
+<pre>
+  <code class="language-sql">
+  /*
+	This is a multiple-line comment
+	for longer notes
+  */
+
+  SELECT  * -- This is a single-line comment
+    FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+
+<!-- Visualizing query size in the BigQuery console -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Visualizing query size in the BigQuery console</span></h3>
+<p><figure><img src="images/query-preview.png" class="lesson-img" /><figcaption>Query size preview</figcaption></figure></p>
+<p><figure><img src="images/query-size-returned-rows.png" class="lesson-img" /><figcaption>Number of returned rows</figcaption></figure></p>
+
+<!-- Selecting specific columns -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Selecting specific columns</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  id, name
+  FROM  bigquery-public-data.thelook_ecommerce.distribution_centers;
+  </code>
+</pre>
+<p><img src="images/selecting-specific-columns.png" class="lesson-img" /></p>
+
+<!-- Column aliasing -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Column aliasing</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  first_name, last_name, id, id AS user_id
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+  </code>
+</pre>
+<p><img src="images/selecting-specific-columns-2.png" class="lesson-img" /></p>
+
+<!-- Calculated columns -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Calculated columns</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  id,
+        name, cost, cost * 1.2 AS increased_cost
+  FROM  bigquery-public-data.thelook_ecommerce.products;
+  </code>
+</pre>
+<p><img src="images/calculated-columns-2.png" class="lesson-img" /></p>
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Gross margin for each product</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display a new column named margin showing the difference between the retail_price and the cost.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name,
+        cost,
+        retail_price,
+        retail_price - cost AS gross_margin
+ 
+  FROM  bigquery-public-data.thelook_ecommerce.products;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Retail prices with 10% increase</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the id, name, retail_price columns, plus a new column called retail_price_increased that shows retail prices increased by 10%.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name,
+        retail_price,
+        retail_price * 1.1 AS retail_price_increased
+  
+  FROM  bigquery-public-data.thelook_ecommerce.products;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — Increased retail prices and the expected increased margin</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display:</p>
+  <ul>
+    <li>the id, name, cost, retail_price columns</li>
+    <li>Plus a new column named margin that will show the difference between the retail_price and the cost</li>
+    <li>Plus a new column called retail_price_increased that shows retail prices increased by 10%</li>
+    <li>And another column called retail_priced_increased_margin that will show the new margin with this 10% increase.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name,
+        cost,
+        retail_price,
+        retail_price - cost AS gross_margin,
+        retail_price * 1.1 AS retail_price_increased,
+        (retail_price * 1.1 - cost) AS retail_price_increased_margin
+  
+  FROM  bigquery-public-data.thelook_ecommerce.products;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

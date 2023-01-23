@@ -1,0 +1,140 @@
+.logo {
+  max-width: 250px;
+}
+
+.menu-links div {
+  padding-left: 48px;
+}
+
+.mobile-margin-48 {
+  margin-top: 48px;
+}
+
+.top-section {
+  padding-top: 156px;
+}
+
+
+.teacher-section {
+  flex-direction: column;
+}
+.teacher-visuals {
+  padding-bottom: 72px;
+}
+.teacher-visuals div:first-of-type {
+  padding-bottom: 32px;
+}
+.linkedin-icon {
+  width:64px
+}
+
+
+.plans {
+  flex-direction: column;
+}
+
+.pricing-plan {
+  margin-right: 0px;
+  margin-bottom: 96px;
+  font-size: 12px;
+  padding: 44px 64px;
+}
+
+div, p, ol, ul, li {
+  font-size: 64px;
+  line-height: 84px;
+}
+
+h1 {
+  font-size: 128px;
+  line-height: 148px;
+  padding-top: 256px;
+  padding-bottom: 56px;
+  letter-spacing: -0.2px;
+  max-width: min-content;
+}
+
+h2 {
+  font-size: 96px;
+  line-height: 124px;
+  margin-top: 124px;
+  margin-bottom: 72px;
+  max-width: min-content;
+}
+
+h3 {
+  font-size: 72px;
+  line-height: 96px;
+  letter-spacing: -0.2px;
+  max-width: max-content;
+  padding-bottom: 36px;
+}
+
+p {
+  padding-bottom: 64px;
+}
+
+li {
+  padding-bottom: 48px;
+}
+
+.btn-wrapper {
+  padding-top:24px;
+  padding-bottom:24px;
+  margin-top: 38px;
+  margin-bottom: 38px;
+}
+
+.btn-wrapper button.btn {
+  font-size: 72px;
+  border-radius: 12px;
+}
+
+.price {
+  font-size:72px;
+}
+
+.cta {
+  width:100%;
+  font-size:48px !important;
+}
+
+.menu-links a {
+  font-size: 36px;
+}
+
+.footer {
+  font-size: 32px;
+  margin-top: 96px;
+  text-align: center;
+}
+
+.formkit-field {
+  padding-top: 56px !important;
+}
+
+.formkit-input {
+  font-size: 64px !important;
+  line-height: 84px !important;
+}
+
+.formkit-submit.formkit-submit {
+  font-size: 64px !important;
+  line-height: 84px !important;
+}
+
+.scribbles-container {
+  display: none;
+}
+
+.pricing-subtitle {
+  font-size: 36px;
+}
+
+.custom-request-info {
+  padding-top: 24px;
+}
+
+.dataset-details {
+  margin-top:256px;
+}

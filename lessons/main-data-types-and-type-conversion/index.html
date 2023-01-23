@@ -1,0 +1,105 @@
+---
+layout: lesson
+title: Main data types and type conversion
+previous_lesson: /lessons/distinct/
+next_lesson: /lessons/numbers/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Common data types</span></h3>
+
+<table class="table-with-header">
+  <thead><th>Name</th><th>Description</th></thead>
+  <tbody>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#boolean_type" target="_blank">BOOL</a></td>
+      <td>Boolean values are represented by the keywords <code>TRUE</code> and <code>FALSE</code> (case-insensitive).</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#numeric_types" target="_blank">Numeric types</a></td>
+      <td><p>Numeric types include the following types:</p>
+        <ul>
+          <li><code>INT64</code> with alias <code>INT</code>, <code>SMALLINT</code>, <code>INTEGER</code>, <code>BIGINT</code>, <code>TINYINT</code>, <code>BYTEINT</code></li>
+          <li><code>NUMERIC</code> with alias <code>DECIMAL</code></li>
+          <li><code>BIGNUMERIC</code> with alias <code>BIGDECIMAL</code></li>
+          <li><code>FLOAT64</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#string_type" target="_blank">STRING</a></td>
+      <td>Variable-length character (Unicode) data.</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#date_type" target="_blank">DATE</a></td>
+      <td>The date type represents a logical calendar date, independent of time zone. Format ⇒ <code>'YYYY-[M]M-[D]D'</code>  <code>YYYY</code>: Four-digit year• <code>[M]M</code>: One or two digit month• <code>[D]D</code>: One or two digit day.</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#date_type" target="_blank">DATETIME</a></td>
+      <td>A datetime value represents a date and time, as they might be displayed on a watch, independent of time zone. It includes the year, month, day, hour, minute, second, and subsecond. ⇒  <code>YYYY-[M]M-[D]D[( |T)[H]H:[M]M:[S]S[.F]]</code>: <code>YYYY</code>: Four-digit year• <code>[M]M</code>: One or two digit month• [D]D: One or two digit day• <code>( |T)</code>: A space or a T separator• <code>[H]H</code>: One or two digit hour (valid values from 00 to 23)• [M]M: One or two digit
+        minutes (valid values from 00 to 59)• <code>[S]S</code>: One or two digit seconds (valid values from 00 to 59)• <code>[.F]</code>: Up to six fractional digits (microsecond precision)</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#time_type" target="_blank">TIME</a></td>
+      <td>A time value represents a time of day, as might be displayed on a clock, independent of a specific date and time zone. Range ⇒ 00:00:00 to 23:59:59.999999.</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#time_type" target="_blank">TIMESTAMP</a></td>
+      <td>A timestamp value represents an absolute point in time, independent of any time zone or convention such as Daylight Savings Time, with microsecond precision. A timestamp is typically represented internally as the number of elapsed microseconds since a fixed initial point in time. Range: 0001-01-01 00:00:00 to 9999-12-31 23:59:59.999999 UTC.</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#interval_type" target="_blank">INTERVAL</a></td>
+      <td>An interval object represents duration or amount of time. Interval is composed of three independent parts:• <code>[sign]Y-M</code>: Years and Months• [sign]D: Days• [sign]H:M:S.F: Hours, Minutes, Seconds and Subseconds. Canonical format ⇒ [sign]Y-M [sign]D [sign]H:M:S[.F]</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#struct_type" target="_blank">STRUCT</a></td>
+      <td>Container of ordered fields each with a type (required) and field name (optional).</td>
+    </tr>
+    <tr>
+      <td><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#array_type" target="_blank">ARRAY</a></td>
+      <td>Ordered list of zero or more elements of any non-array type.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Main conversion functions</span></h3>
+<blockquote>Google Standard SQL for BigQuery supports conversion functions. These data type conversions are explicit, but some conversions can happen implicitly.<br><br><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/conversion_functions" target="_blank">https://cloud.google.com/bigquery/docs/reference/standard-sql/conversion_functions</a></blockquote>
+<p>The main conversion functions are:</p>
+<ul>
+  <li>CAST</li>
+  <li>SAFE_CAST</li>
+</ul>
+<p>Check out also <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/conversion_rules">the BigQuery conversion rules and type coercion</a>.</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Converting created_at timestamp into other time types</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will convert the created_at column to the date, and time types.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        email,
+        created_at,
+        CAST(created_at AS date) AS created_at_date,
+        CAST(created_at AS time) AS created_at_time
+  
+  FROM  bigquery-public-data.thelook_ecommerce.users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

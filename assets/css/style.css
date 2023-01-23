@@ -1,0 +1,398 @@
+/* GENERAL */
+@font-face {
+  font-family: 'Plus Jakarta Display';
+  src: url('/assets/fonts/PlusJakartaDisplay-Bold.woff');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Display';
+  src: url('/assets/fonts/PlusJakartaDisplay-Regular.ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/assets/fonts/Satoshi-Regular.woff');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/assets/fonts/Satoshi-Bold.woff');
+  font-weight: bold;
+}
+
+body {
+  font-family: 'Satoshi';
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  background-color: #efede1; /* #FFFBF5; */
+}
+
+.top-section {
+  padding-top: 36px;
+}
+
+.menu-links div {
+  padding-left: 16px;
+}
+
+h1, h2, h3 {
+  font-family: 'Plus Jakarta Display';
+  font-weight: 700;
+  color: #050038;
+}
+
+h4 {
+  font-weight: bold;
+}
+
+.h3-big-margin {
+  margin-top: 48px;
+}
+.padding-top-72 {
+  margin-top: 72px;
+}
+
+.logo {
+  max-width: 150px;
+  border-radius: 12px;
+}
+
+h1 {
+  padding-top: 128px;
+  font-size: 58px;
+  line-height: 72px;
+  letter-spacing: -0.6px;
+  max-width: max-content;
+}
+
+.intro {
+  padding-top: 24px;
+}
+
+h2 {
+  font-size: 48px;
+  line-height: 58px;
+  letter-spacing: -0.5px;
+  margin-top: 32px;
+  max-width: max-content;
+  margin-top: 72px;
+  margin-bottom: 24px;
+}
+
+li {
+  padding-bottom: 16px;
+}
+
+a, a:hover, a:visited {
+  color: black;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+/* CONTENT SECTION */
+.chapter {
+  padding-bottom: 16px;
+}
+
+.dataset-details {
+  margin-top:64px;
+}
+
+.teacher-section {
+  display:flex;
+  padding-top:24px;
+  padding-bottom: 48px;
+}
+.teacher-visuals {
+  display:flex;
+  flex-direction:column;
+  padding-right:36px;
+  align-items:center;
+}
+.teacher-pic {
+  max-width:200px;
+  border-radius:50%;
+}
+.linkedin-icon {
+  width:24px
+}
+.teacher-visuals div:first-of-type {
+  padding-bottom:18px;
+}
+
+
+/* PRICING SECTION */
+.plans {
+  display:flex;
+  flex-direction:row;
+  padding-top:28px;
+}
+
+.pricing-plan {
+  border-radius: 12px;
+  border: 1px black solid;
+  padding: 12px 18px;
+  margin-right: 28px;
+  background-color: white;
+  width: 100%;
+}
+
+.individual-license {
+  margin-top: 48px;
+}
+
+.btn-wrapper {
+  padding-top:24px;
+  padding-bottom:24px;
+}
+
+.price {
+  font-weight:bold;
+  font-size:38px;
+}
+
+.cta {
+  width:100%;
+  font-size:24px;
+}
+
+
+/* TEXT HIGHLIGHTS */
+.purple-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #a259ff;
+  color: #FFF;
+}
+
+.hard-problem-text-span, .red-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #f24e1e;
+  color: #FFF;
+}
+
+.easy-problem-text-span, .green-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #23AD5F;
+  color: #FFF;
+}
+
+.small-green-text-span {
+  display: inline-block;
+  padding: 2px;
+  background-color: #23AD5F;
+  color: #FFF;
+  width: max-content;
+}
+
+.blue-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #4262FF;
+  color: #FFF;
+}
+
+.medium-problem-text-span, .yellow-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #FECF43;
+  color: #FFF;
+}
+
+.black-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #000000;
+  color: #FFF;
+}
+
+.teal-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #20d9d2;
+  color: #FFF;
+}
+
+.teal-text-span h3 {
+  color: #FFF;
+}
+
+.grey-text-span {
+  display: inline-block;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  border-radius: 10px;
+  background-color: #CCC;
+  color: black;
+}
+
+.grey-text-span h3 {
+  color: #FFF;
+}
+
+
+/* SCRIBBLES */
+.scribbles-container {
+  position: relative;
+}
+
+.scribbles-container .top-section img.right {
+  opacity: 1;
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg);
+  transform-style: preserve-3d;
+  position: absolute;
+  left: auto;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  width: 16vw;
+  max-width: 250px;
+}
+
+
+/* BLOCKQUOTES */
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: "\201C";
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+
+
+/* SCREENSHOTS */
+.screenshot-frame {
+  border-radius: 4px;
+  background-color: #151718;
+  overflow: hidden;
+  width: 100%;
+}
+
+div.screenshot-window-top {
+  padding: 0 .5em 0 .5em;
+  width: 100%;
+  line-height: 1.4em !important;
+  text-align: left;
+}
+
+div.screenshot-frame-button {
+  border-radius: 100%;
+  display: inline-block;
+  width: .5em;
+  height: .5em;
+  background-color: #e4edf6;
+  margin-right: .25em;
+}
+
+div.screenshot-frame img {
+  border-radius:0px;
+  border-width:0px;
+  width:100%;
+}
+
+.green-icon {
+  color: #20c933;
+}
+
+.orange-icon {
+  color: #fcb400;
+}
+
+
+/* LESSONS */
+table {
+  background-color: white;
+  /* margin-bottom: 24px; */
+}
+td, th {
+  padding: 12px;
+}
+td, th {
+  border-color: #efede1;
+  border-width: 1px;
+  border-style: solid;
+}
+table.table-with-header th {
+  background-color: #f7f6f3;
+}
+div.table-wrapper {
+  overflow-y: scroll !important;
+  margin-bottom: 24px;
+}
+
+
+figure {
+  background-color: white;
+  padding: 8px;
+}
+figcaption a {
+  font-size: 0.75em;
+}
+.lesson-img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.lesson-navigation {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hide-control, .collapsible-item {
+  display: none;
+}
+
+.problem {
+  background-color: white;
+  padding: 12px;
+}
+
+
+/* FOOTER */
+.footer {
+  font-size: 16px;
+  margin-top: 48px;
+}

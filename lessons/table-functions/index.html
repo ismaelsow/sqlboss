@@ -1,0 +1,226 @@
+---
+layout: lesson
+title: Table functions
+previous_lesson: /lessons/user-defined-functions/
+next_lesson: /lessons/views/
+---
+
+<p>A table function, also called table-valued function (TVF) is a user-defined function that contains a SQL query and returns a table.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+CREATE OR REPLACE TABLE FUNCTION example_dataset.orders_for_year(yearParam INT) AS
+  ( SELECT  *
+      FROM  bigquery-public-data.thelook_ecommerce.orders
+      WHERE EXTRACT(year FROM CAST(created_at AS DATE)) = yearParam
+  );
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT      user_id,
+            order_id,
+            num_of_item,
+            created_at
+  
+  FROM      example_dataset.orders_for_year(2022)
+  ORDER BY  created_at DESC;
+  </code>
+</pre>
+
+<p>At the moment, only persistent table functions are supported by BigQuery.</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Table function generating valid Google Analytics purchase events</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will returns the valid purchase events that happened during a certain period.</li>
+    <li>You can use the function we created in one of the previous practice problems (<a href="/lessons/user-defined-functions/#google-analytics-purchase-event-validator-function" target="_blank">Google Analytics purchase event validator function</a>).</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <pre>
+    <code class="language-sql">
+SELECT  event_date,
+        event_name,
+        ecommerce.transaction_id,
+        ecommerce.purchase_revenue
+  FROM  example_dataset.valid_purchase_events('20210101', '20210102');
+    </code>
+  </pre>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE TABLE FUNCTION example_dataset.valid_purchase_events(start_date STRING, end_date STRING) AS
+  ( SELECT  *
+      FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE event_name = 'purchase'
+            AND (example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue) = TRUE)
+            AND (_table_suffix BETWEEN start_date AND end_date)
+  );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin" id="table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s"><span class="medium-problem-text-span">N°2 — Table function returning Wikipedia list of category and parent category using CTEs</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>dbpedia.pages</p>
+
+  <h4>Task</h4>
+  <p>Create a table function that returns the table described in the previous practice problem: (<a href="/lessons/union-and-union-all/#category-parent-table" target="_blank">Category parent table</a>). Make use of a common table expression.</p>
+  
+  <h4>Example results</h4>
+  <pre>
+    <code class="language-sql">
+SELECT  *
+  FROM  example_dataset.cte_categories();
+    </code>
+  </pre>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE TABLE FUNCTION example_dataset.cte_categories() AS
+  ( WITH l3_categories AS
+    ( SELECT  DISTINCT l3 AS category,
+              l2 AS parent
+        FROM  dbpedia.pages ),
+    
+    l2_categories AS
+    (SELECT  DISTINCT l2 AS category,
+            l1 AS parent
+      FROM  dbpedia.pages
+    ),
+    
+    l1_categories AS
+    (SELECT  DISTINCT l1 AS category,
+            '' AS parent
+      FROM  dbpedia.pages
+    ),
+    
+    all_categories AS
+    (SELECT *
+      FROM  l1_categories
+        
+      UNION ALL
+    
+      SELECT  *
+        FROM  l2_categories
+    
+      UNION ALL
+    
+      SELECT  *
+        FROM  l3_categories
+    )
+
+    SELECT  *
+      FROM  all_categories
+  );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin" id="table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries"><span class="medium-problem-text-span">N°3 — Table function returning Wikipedia list of category and parent categories using subqueries</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>dbpedia.pages</p>
+
+  <h4>Task</h4>
+<p>Create a table function that returns the table described in the previous practice problem: (<a href="/lessons/union-and-union-all/#category-parent-table" target="_blank">Category parent table</a>). Don’t make use of a common table expression, only use subqueries (no common table expressions).</p>
+  
+  <h4>Example results</h4>
+  <pre>
+    <code class="language-sql">
+SELECT  *
+  FROM  example_dataset.subqueries_only_categories();
+    </code>
+  </pre>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE OR REPLACE TABLE FUNCTION example_dataset.subqueries_only_categories() AS
+  ( ( SELECT  *
+        FROM  ( SELECT  DISTINCT l3 AS category,
+                        l2 AS parent
+                  FROM  dbpedia.pages
+              )
+    )
+    
+    UNION ALL
+    ( SELECT  DISTINCT l2 AS category,
+              l1 AS parent
+        FROM  dbpedia.pages
+    )
+  
+    UNION ALL
+    ( SELECT  DISTINCT l1 AS category,
+              '' AS parent
+        FROM  dbpedia.pages
+    )
+  );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Table function for generating Wikipedia category’s full list of ascendants</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>N/A</p>
+
+  <h4>Task</h4>
+  <p>Use the function defined the previous problem (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs)</a> to display each category along as well as their parent and grand parent.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      c1.category AS category,
+            c1.parent AS parent,
+            c2.parent AS grand_parent
+  
+  FROM      example_dataset.cte_categories() c1
+  LEFT JOIN example_dataset.cte_categories() c2
+  ON        c2.category = c1.parent;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

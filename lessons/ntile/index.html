@@ -1,0 +1,208 @@
+---
+layout: lesson
+title: NTILE
+previous_lesson: /lessons/row-number/
+next_lesson: /lessons/rank/
+---
+
+<p><code>NTILE</code> is used to create roughly equal buckets of each window. It takes one parameter: the number buckets we want to have per window.</p>
+
+<p>Depending on that number, the buckets will all have the same size, or one bucket among the others will have 1 item more. For example:</p>
+<ul>
+  <li>If a window have 4 items and we want 2 buckets, each bucket will have 2 items</li>
+  <li>If a window have 5 items and we want 2 buckets, one bucket will have 2 items and the other one will have 3 items. By default, the biggest bucket will be displayed first.</li>
+</ul>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p>Imagine we want to create student project groups in different classes, with each group having three students, and being based on the subscription date of each student. We would write something like this:</p>
+<pre>
+  <code class="language-sql">
+SELECT      class_name,
+            student_name,
+            signup_date,
+            NTILE(3) OVER(PARTITION BY class_name ORDER BY signup_date ASC)
+  
+  FROM      classes_and_students
+  ORDER BY  class_name ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT    user_id,
+          order_id,
+          num_of_item,
+          created_at AS order_date,
+          NTILE(2) OVER(PARTITION BY user_id ORDER BY created_at ASC) AS order_bucket
+  
+  FROM    bigquery-public-data.thelook_ecommerce.orders
+  WHERE   FORMAT_DATE('%Y', created_at) = '2022'
+ORDER BY  user_id ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT    user_id,
+          order_id,
+          num_of_item,
+          created_at AS order_date,
+          CASE
+            WHEN NTILE(2) OVER(PARTITION BY user_id ORDER BY created_at ASC) = 1 THEN 'first half'
+            ELSE  'second half'
+          END AS order_bucket
+  
+  FROM    bigquery-public-data.thelook_ecommerce.orders
+  WHERE   FORMAT_DATE('%Y', created_at) = '2022'
+ORDER BY  user_id ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#ntile" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — 10 random user percentiles</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display 10 random customers along with their percentile in terms of sales.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH  user_sales AS
+  ( SELECT      user_id,
+                SUM(sale_price) AS total_sales
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id
+  ),
+
+  user_sales_percentile AS
+  ( SELECT  user_id,
+            ROUND(total_sales, 2) AS total_sales,
+            NTILE(100) OVER(ORDER BY total_sales ASC) AS percentile
+      FROM  user_sales
+  )
+
+SELECT      *
+  FROM      user_sales_percentile
+  ORDER BY  RAND()
+  LIMIT     10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Specific user quartiles</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the quartile of these 10 user ids: (87601, 32635, 83830, 1888, 91828, 43342, 21419, 17782, 98024, 36479) in terms of sales.</li>
+    <li>Order the result by total sales in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH  user_sales AS
+  ( SELECT      user_id,
+                SUM(sale_price) AS total_sales
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id
+  ),
+
+  user_sales_quartile AS
+  ( SELECT  user_id,
+            ROUND(total_sales, 2) AS total_sales,
+            NTILE(4) OVER(ORDER BY total_sales ASC) AS quartile
+      FROM  user_sales
+  )
+
+SELECT      *
+  FROM      user_sales_quartile
+  WHERE     user_id IN (87601, 32635, 83830, 1888, 91828, 43342, 21419, 17782, 98024, 36479)
+  ORDER BY  total_sales DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Category tertiles</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the different tertiles or tiers (<i>top</i>, <i>middle</i>, and <i>bottom</i>) for each category in terms of total sales</li>
+    <li>Sort the results by total sales in descending order</li>
+  </ul> 
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH product_sales AS
+  ( SELECT      category,
+                SUM(sale_price) AS total_sales
+    FROM        bigquery-public-data.thelook_ecommerce.products products
+    INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+    ON          products.id = order_items.product_id
+    GROUP BY    category
+  ),
+
+  product_sales_tiers AS
+  ( SELECT  category,
+            total_sales,
+            NTILE(3) OVER (ORDER BY total_sales DESC) AS tier
+      FROM  product_sales
+  )
+
+SELECT      category,
+            ROUND(total_sales, 2) AS total_sales,
+            CASE
+              WHEN tier = 1 THEN 'top'
+              WHEN tier = 2 THEN 'middle'
+              WHEN tier = 3 THEN 'bottom'
+            END AS tier
+  
+  FROM      product_sales_tiers
+  ORDER BY  total_sales DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

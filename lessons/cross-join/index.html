@@ -1,0 +1,194 @@
+---
+layout: lesson
+title: CROSS JOIN
+previous_lesson: /lessons/subqueries-and-common-table-expressions/
+next_lesson: /lessons/inner-join/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">CROSS JOIN</span></h3>
+<pre>
+  <code class="language-sql">
+WITH customer_count AS
+  ( SELECT  COUNT(*) AS c_count
+      FROM
+        ( SELECT  DISTINCT user_id
+            FROM  bigquery-public-data.thelook_ecommerce.orders 
+        ) 
+  ),
+
+  user_count AS
+    ( SELECT  COUNT(*) AS u_count
+        FROM  bigquery-public-data.thelook_ecommerce.users
+    )
+
+SELECT        *
+  FROM        customer_count
+  CROSS JOIN  user_count; -- customer_count, join user_count;
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+WITH customer_count AS
+  ( SELECT  COUNT(*) AS c_count
+      FROM
+        ( SELECT  DISTINCT user_id
+            FROM  bigquery-public-data.thelook_ecommerce.orders 
+        ) 
+  ),
+  
+  user_count AS
+    ( SELECT  COUNT(*) AS u_count
+        FROM  bigquery-public-data.thelook_ecommerce.users
+    )
+
+SELECT        customer_count.c_count,
+              user_count.u_count,
+              customer_count.c_count / user_count.u_count * 100 AS customer_percentage
+  FROM        customer_count
+  CROSS JOIN  user_count; -- customer_count, join user_count
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">CROSS JOIN UNNEST</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  event_params
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  WHERE event_date = '20210131'
+    AND event_timestamp = 1612069510766593
+    AND event_name = 'page_view'
+    AND user_pseudo_id = '1026454.4271112504';
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT  user_pseudo_id, event_name, event_params
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  WHERE event_date = '20210131'
+    AND event_timestamp = 1612069510766593
+    AND event_name = 'page_view'
+    AND user_pseudo_id = '1026454.4271112504';
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT        user_pseudo_id, event_name, unnested_params
+  FROM        bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  WHERE       event_date = '20210131'
+              AND event_timestamp = 1612069510766593
+              AND event_name = 'page_view'
+              AND user_pseudo_id = '1026454.4271112504';
+  </code>
+</pre>
+
+<pre>
+  <code class="language-sql">
+SELECT  user_pseudo_id, event_name, unnested_params
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
+        UNNEST(event_params) AS unnested_params
+  WHERE event_date = '20210131'
+    AND event_timestamp = 1612069510766593
+    AND event_name = 'page_view'
+    AND user_pseudo_id = '1026454.4271112504';
+  </code>
+</pre>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics homepage unique visitors in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique users who have visited the home page in January 2021</li>
+    <li>This number should be broken down by device category</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        device.category AS device_category,
+              COUNT(DISTINCT user_pseudo_id) AS homepage_unique_visitors
+  
+  FROM        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  
+  WHERE       event_name = 'page_view'
+              AND (_table_suffix BETWEEN '20210101' AND '20210131')
+              AND (unnested_params.key = 'page_location')
+              AND (unnested_params.value.string_value = 'https://googlemerchandisestore.com/')
+  
+  GROUP BY    device_category;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Google Analytics engaged users in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique engaged users in January 2021</li>
+    <li>An engaged users is a user with at least one event where the event parameter field engagement_time_msec is greater than 0</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>unique_engaged_users</th></thead>
+      <tbody>
+        <tr><td>86962</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        COUNT(DISTINCT user_pseudo_id) AS unique_engaged_users
+  
+  FROM        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  
+  WHERE       (_table_suffix BETWEEN '20210101' AND '20210131')
+              AND (unnested_params.key = 'engagement_time_msec')
+              AND (unnested_params.value.int_value > 0);
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

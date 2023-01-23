@@ -1,0 +1,75 @@
+---
+layout: lesson
+title: NOT
+previous_lesson: /lessons/or/
+next_lesson: /lessons/order-by/
+---
+
+<p>The NOT keyword is used to specify a “negative condition”.</p>
+
+<!-- Example 1 -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.distribution_centers
+  WHERE name NOT IN ('Memphis TN', 'Savannah GA');
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+<!-- Example 2 -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  email
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE email NOT LIKE '%@example.org'
+  LIMIT 10;
+  </code>
+</pre>
+<p><img src="images/example-2.png" class="lesson-img" /></p>
+
+<!-- Example 3 -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<p>Since we can’t use normal operators or NULL, when we want to test that something has a value, we use the ‘IS NOT NULL’ construct.</p>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.orders
+  WHERE returned_at IS NOT NULL
+  LIMIT 10;
+  </code>
+</pre>
+<p><img src="images/example-3.png" class="lesson-img" /></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — 10 products that don’t have “Men’s” in their name</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show 10 products that don’t have Men’s in their name.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  name
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE name NOT LIKE '%Men\'s%'
+  LIMIT 10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

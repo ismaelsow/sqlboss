@@ -1,0 +1,616 @@
+---
+layout: lesson
+title: Dates and times
+previous_lesson: /lessons/regular-expressions/
+next_lesson: /lessons/null-values/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Main dates and times data types</span></h3>
+<p>
+  <table class="table-with-header">
+    <thead><th>Type</th><th>Example</th></thead>
+    <tbody>
+      <tr><td>DATE</td><td>2022-12-24</td></tr>
+      <tr><td>DATETIME</td><td>2022-12-24 23:59:59</td></tr>
+      <tr><td>TIME</td><td>23:59:59</td></tr>
+      <tr><td>TIMESTAMP</td><td>2021-10-11 00:55:34 UTC</td></tr>
+      <tr><td>INTERVAL</td><td>1-2 3 4:5:6</td></tr>
+    </tbody>
+  </table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">DATE functions</span></h3>
+<div>
+  <p><code>CURRENT_DATE</code></p>
+  <pre><code class="language-sql">SELECT CURRENT_DATE();</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2023-01-21</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#current_date" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>EXTRACT</code></p>
+  <pre><code class="language-sql">SELECT  EXTRACT(year FROM CURRENT_DATE());</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2023</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#extract" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>DATE</code></p>
+  <pre><code class="language-sql">SELECT DATE(2016, 12, 25);</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2016-12-25</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>DATE_ADD</code></p>
+  <pre><code class="language-sql">SELECT DATE_ADD(DATE('2008-12-25'), INTERVAL 5 day) AS five_days_later;</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2008-12-30</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_add" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>DATE_SUB</code></p>
+  <pre><code class="language-sql">SELECT DATE_SUB(DATE('2008-12-25'), INTERVAL 5 day) AS five_days_ago;</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2008-12-20</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_sub" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>DATE_DIFF</code></p>
+  <pre>
+    <code class="language-sql">
+SELECT  DATE_DIFF(DATE('2010-07-07'),
+        DATE('2008-12-25'), day) AS days_diff;
+    </code>
+  </pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>559</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_diff" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>DATE_TRUNC</code></p>
+  <pre><code class="language-sql">SELECT DATE_TRUNC(DATE('2008-12-25'), MONTH) AS month;</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2008-12-01</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_trunc" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>FORMAT_DATE</code></p>
+  <pre><code class="language-sql">SELECT FORMAT_DATE('%b %d %Y', DATE('2008-12-25')) AS formatted;</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>Dec 25 2008</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#format_date" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>LAST_DAY</code></p>
+  <pre><code class="language-sql">SELECT LAST_DAY(DATE('2008-11-25'), MONTH) AS last_day;</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2008-11-30</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#last_day" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+<div style="margin-top:48px">
+  <p><code>PARSE_DATE</code></p>
+  <pre><code class="language-sql">SELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008');</code></pre>
+  <p>
+  <table class="table-with-header">
+    <thead><th>f0_</th></thead>
+    <tbody>
+      <tr><td>2008-12-25</td></tr>
+    </tbody>
+  </table>
+  </p>
+  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#parse_date" target="_blank">👉 Check out the official documentation</a></p>
+</div>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Functions for other date and time types</span></h3>
+<p>Similarly named functions exist for the other types:</p>
+<ul>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/datetime_functions" target="_blank">DATETIME functions</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/time_functions" target="_blank">TIME functions</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/timestamp_functions" target="_blank">TIMESTAMP functions</a></li>
+  <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/interval_functions" target="_blank">INTERVAL functions</a></li>
+</ul>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Date arithmetic</span></h3>
+<p>It’s possible to add and subtract values of different date and time types. Here are the general rules:</p>
+<p>
+  <table class="table-with-header">
+    <thead><th>Operation</th><th>Result data type</th></thead>
+    <tbody>
+      <tr><td>INTERVAL + INTERVAL</td><td>INTERVAL</td></tr>
+      <tr><td>INTERVAL - INTERVAL</td><td>INTERVAL</td></tr>
+      <tr><td>OTHER TYPE  N - OTHER TYPE N</td><td>INTERVAL</td></tr>
+      <tr><td>OTHER TYPE  N + INTERVAL</td><td>OTHER TYPE N</td></tr>
+      <tr><td>OTHER TYPE  N - INTERVAL</td><td>OTHER TYPE N</td></tr>
+    </tbody>
+  </table>
+</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Gross revenue per month</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the gross revenue for each month over all years for which there is data.</li>
+    <li>We should be able to differentiate between similar months across years (for example January 2022 vs January 2021).</li>
+    <li>Sort the results by gross revenue in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%B %Y', created_at) AS month_year,
+            ROUND(SUM(sale_price), 2) AS gross_revenue
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY  month_year
+  ORDER BY  gross_revenue DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Unique visitors on the home page per month</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the number of unique visitors on the home page for each month over all years for which there is data.</li>
+    <li>We should be able to differentiate between similar months across years (for example January 2022 vs January 2021).</li>
+    <li>Sort the results by gross revenue in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%B %Y', created_at) AS month_year,
+            COUNT(DISTINCT user_id) AS homepage_unique_visitors
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  WHERE     event_type = 'home'
+  
+  GROUP BY  month_year
+  ORDER BY  homepage_unique_visitors DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — New users per year</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the number of user account creations per year</li>
+    <li>Sort the results by new users account creations in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT    EXTRACT(YEAR FROM created_at) AS signup_year,
+          COUNT(id) AS new_users
+FROM      bigquery-public-data.thelook_ecommerce.users
+GROUP BY  signup_year
+ORDER BY  new_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Month with the largest number of new user signups</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the number of user signups for each month over all years for which there is data</li>
+    <li>We should be able to differentiate between similar months across years (for example January 2022 vs January 2021)</li>
+    <li>Sort the results by new users in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
+            COUNT(id) AS new_users
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  month_year
+  ORDER BY  new_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Gross revenue for the last day of each month in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the gross revenue for the last day of each month in 2022</li>
+    <li>Sort the results by gross revenue in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      LAST_DAY(CAST(created_at AS date), month) AS last_day_of_month,
+            ROUND(SUM(sale_price), 2) AS gross_revenue
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY  last_day_of_month
+  ORDER BY  gross_revenue DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Top 3 months with the highest average order item sale price in the last 12 months</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the top 3 months with the highest average order item sale price in the last 12 months (excluding the current month)</li>
+    <li>sort the results by average order item sale price in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-6.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
+            ROUND(AVG(sale_price), 2) AS average_item_sale_price
+  
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  WHERE     CAST(created_at AS date) < DATE_TRUNC(CURRENT_DATE(), month)
+            AND CAST(created_at AS date) > (DATE_TRUNC(CURRENT_DATE(), month) - MAKE_INTERVAL(month => 12))
+  
+  GROUP BY  month_year
+  ORDER BY  average_item_sale_price DESC
+  LIMIT     3;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°7 — Ecommerce metrics by date</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the number of transactions and the total revenue per date</li>
+    <li>Sorted by date in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-7.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CAST(created_at AS date) AS date_yymmdd,
+            COUNT(DISTINCT order_id) AS transactions,
+            ROUND(SUM(sale_price), 2) AS revenue
+  
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY  date_yymmdd
+  ORDER BY  date_yymmdd ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°8 — Ecommerce metrics by weekdays vs weekends</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the number of transactions and the total revenue on weekdays and weekends, broken down by year</li>
+    <li>Sorted by year in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-8.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      EXTRACT(YEAR FROM created_at) AS year,
+            
+            COUNT(DISTINCT(CASE WHEN FORMAT_DATE('%A', created_at) NOT IN ('Saturday', 'Sunday') THEN order_id END))
+              AS weekday_transactions,
+            
+            COUNT(DISTINCT(CASE WHEN FORMAT_DATE('%A', created_at) IN ('Saturday', 'Sunday') THEN order_id END))
+              AS weekend_transactions,
+            
+            ROUND(SUM(
+              CASE
+                WHEN FORMAT_DATE('%A', created_at) NOT IN ('Saturday', 'Sunday') THEN sale_price
+                ELSE 0
+              END
+            ), 2) AS weekday_revenue,
+            
+            ROUND(SUM(
+              CASE
+                WHEN FORMAT_DATE('%A', created_at) IN ('Saturday', 'Sunday') THEN sale_price
+                ELSE 0
+              END
+            ), 2) AS weekend_revenue
+  
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY  year
+  ORDER BY  year ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°9 — Average delivery time broken down by year</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the average delivery time in days, broken down by year, sorted by year in ascending order</li>
+    <li>The delivery time should be displayed with 2 decimals</li>
+    <li>Do not include in your calculation the orders that have not been delivered yet</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-9.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      EXTRACT(YEAR FROM created_at) AS year,
+            ROUND(AVG(
+              EXTRACT(DAY FROM (delivered_at - created_at))
+              + (EXTRACT(HOUR FROM (delivered_at - created_at)) / 24)
+              + (EXTRACT(MINUTE FROM (delivered_at - created_at)) / (60 * 24))
+              + (EXTRACT(SECOND FROM (delivered_at - created_at)) / (60 * 60 * 24))
+            ), 2) AS avg_delivery_time_in_days
+  
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  WHERE     delivered_at IS NOT NULL
+  GROUP BY  year
+  ORDER BY  year ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — Average number of items purchased by unique customer by year</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the average number of items purchased by each unique customer, broken down by year.</li>
+    <li>The results should be sorted by year in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-10.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      EXTRACT(YEAR FROM created_at) AS year,
+            ROUND(SUM(num_of_item) / COUNT(DISTINCT user_id), 2) AS items_purchased_by_unique_customer
+  
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  GROUP BY  year
+  ORDER BY  year ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°11 — High daily gross revenues in January 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the days with gross revenue greater than 10,000 in January 2022</li>
+    <li>The date format should be similar to 01/01/22</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-11.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%d/%m/%y', created_at) AS date_ddmmyy,
+            ROUND(SUM(sale_price), 2) AS gross_revenue
+  
+  FROM      bigquery-public-data.thelook_ecommerce.order_items
+  WHERE     CAST(created_at AS date) BETWEEN DATE('2022-01-01') AND DATE('2022-01-31')
+  
+  GROUP BY  date_ddmmyy
+  HAVING    gross_revenue > 10000
+  ORDER BY  date_ddmmyy ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Unique customers per month</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of unique customers per month: </p>
+  <ul>
+    <li>We should be able to differentiate the months between dates</li>
+    <li>The months should be displayed in their full form</li>
+    <li>The results should be sorted by month in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-12.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      FORMAT_DATE('%B %Y', created_at) AS month_year,
+            COUNT(DISTINCT user_id) AS unique_customers
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  GROUP BY  month_year
+  ORDER BY  PARSE_DATE('%B %Y', month_year) ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

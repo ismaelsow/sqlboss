@@ -1,0 +1,187 @@
+---
+layout: lesson
+title: RECORD
+previous_lesson: /lessons/null-values/
+next_lesson: /lessons/arrays/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Field of fields</span></h3>
+<p>A STRUCT, also known as a RECORD, is a column that’s made of other fields each with a type (required) and field name (optional).</p>
+<p><img src="images/schema.png" class="lesson-img" /></p>
+<p>For example, let’s look at the geo record of the first event in the Google Analytics 4 sample data:</p>
+<pre>
+  <code class="language-sql">
+SELECT  geo
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  LIMIT 1;
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>geo.continent</th><th>geo.sub_continent</th><th>geo.country</th><th>geo.region</th><th>geo.city</th><th>geo.metro</th></thead>
+    <tbody><td>Americas</td><td>Northern America</td><td>United States</td><td>California</td><td>San Carlos</td><td>(not set)</td></tbody>
+  </table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Dot notation</span></h3>
+<p>Each field of a record can be accessed using the dot notation:</p>
+<pre>
+  <code class="language-sql">
+SELECT  geo.continent
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  LIMIT 1;
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>continent</th></thead>
+    <tbody><td>Americas</td></tbody>
+  </table>
+</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Google Analytics user id, device category geo properties</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the user pseudo id, the device category and the geo record for one event.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>user_pseudo_id</th><th>category</th><th>geo.continent</th><th>geo.sub_continent</th><th>geo.country</th><th>geo.region</th><th>geo.city</th><th>geo.metro</th></thead>
+      <tbody>
+        <tr><td>1026454.4271112504</td><td>mobile</td><td>Americas</td><td>Northern America</td><td>United States</td><td>California</td><td>San Carlos</td><td>(not set)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  user_pseudo_id, device.category, geo
+  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  LIMIT 1;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Google Analytics number of unique users by continent, country and city</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique users broken down by continent, country and city</li>
+    <li>If the city value is <i>(not set)</i>, it should be replaced with a NULL value</li>
+    <li>Sort the result by user count in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      geo.continent AS continent,
+            geo.country AS country,
+            NULLIF(geo.city, '(not set)') AS city,
+            COUNT(DISTINCT user_pseudo_id) AS unique_users
+  
+  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  GROUP BY  continent,
+            country,
+            city
+  ORDER BY  unique_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — Google Analytics number of unique users by device category, operating system, and browser</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique users broken down by device category, operating system, and browser</li>
+    <li>Sort the results by unique users in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      device.category AS device_category,
+            device.operating_system AS operating_system,
+            device.web_info.browser AS browser,
+            COUNT(DISTINCT user_pseudo_id) AS unique_users
+  
+  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  GROUP BY  device_category,
+            operating_system,
+            browser
+  ORDER BY  unique_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Google Analytics number of unique users by marketing campaign</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique users by marketing campaign by marketing medium, marketing source and marketing campaign</li>
+    <li>Google for utm parameters and inspect the traffic_source record for more information</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      traffic_source.medium AS medium,
+            traffic_source.source AS source,
+            traffic_source.name AS campaign,
+            COUNT(DISTINCT user_pseudo_id) AS unique_users
+  
+  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  GROUP BY  medium, source, campaign
+  ORDER BY  unique_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

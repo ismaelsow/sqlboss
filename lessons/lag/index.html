@@ -1,0 +1,340 @@
+---
+layout: lesson
+title: LAG
+previous_lesson: /lessons/dense-rank/
+next_lesson: /lessons/lead/
+---
+
+<p><code>LAG</code> allows us to display values from previous rows. It takes up to 3 parameters:</p>
+<ol>
+  <li>The column whose value we want to display.</li>
+  <li>The offset, how are many rows back we want to go. By default, this is equal to 1.</li>
+  <li>The default output to return if the offset is outside the bond of the window. By default, this is NULL.</li>
+</ol>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT    id,
+          created_at AS signup_date,
+          CONCAT(first_name, ' ', last_name) AS user,
+          LAG(CONCAT(first_name, ' ', last_name)) OVER(ORDER BY created_at ASC) AS previous_signed_up_user
+  
+  FROM    bigquery-public-data.thelook_ecommerce.users
+ORDER BY  signup_date ASC;
+  </code>
+</pre>
+<p><img src="images/lag.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#lag" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Special formatting removing repeats in column</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>Resulting table from previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country">Most popular full names by country</a>)</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the table from the previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country">Most popular full names by country</a>) in such a way that that each country value only appears once.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average difference in order value between first order and second order</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the average difference in order value for repeat customers, between the first and the second order.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>avg_difference</th></thead>
+      <tbody>
+        <tr><td>-0.88</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH repeat_customers AS
+  ( SELECT      user_id,
+                COUNT(*) AS order_count
+      FROM      bigquery-public-data.thelook_ecommerce.orders
+      GROUP BY  user_id
+      HAVING    order_count > 1
+  ),
+
+  orders_with_values AS
+  ( SELECT      user_id,
+                created_at AS order_date,
+                order_id,
+                SUM(sale_price) AS order_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id, created_at, order_id
+  ),
+
+  row_numbered_orders_with_values AS
+  ( SELECT  user_id,
+            order_date,
+            order_id,
+            order_value,
+            ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY order_date ASC) AS row_num
+      FROM  orders_with_values
+  ),
+
+  differences_by_repeat_users AS
+  ( SELECT        r1.user_id,
+                  order_value - LAG(order_value) OVER(PARTITION BY r1.user_id ORDER BY row_num ASC) AS difference
+      FROM        row_numbered_orders_with_values AS r1
+      INNER JOIN  repeat_customers AS r2
+      ON          r1.user_id = r2.user_id
+      WHERE       row_num IN (1,2)
+  )
+
+SELECT      ROUND(AVG(difference), 2) AS avg_difference
+  FROM      differences_by_repeat_users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Next day repeat customers in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of customers who made a purchase on 2 consecutive dates in 2022 (for example on November 14th, then on November 15th).</li>
+    <li>Using a temporary function could make the date calculations easier and cleaner 😉</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>next_day_repeat_customers</th></thead>
+      <tbody>
+        <tr><td>4138</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+CREATE TEMP FUNCTION check_consecutive_order(first_timestamp TIMESTAMP, previous_timestamp TIMESTAMP)
+RETURNS BOOL AS
+  ( 
+    (SELECT (DATE_DIFF(CAST(first_timestamp AS DATE), CAST(previous_timestamp AS DATE), DAY) = 1))
+  );
+
+WITH repeat_customers AS
+  ( SELECT      user_id,
+                COUNT(*) AS order_count
+      FROM      bigquery-public-data.thelook_ecommerce.orders
+      WHERE     FORMAT_DATE('%Y', created_at) = '2022'
+      GROUP BY  user_id
+      HAVING    order_count > 1
+  ),
+
+  repeat_customers_orders AS
+  ( SELECT        r.user_id AS user_id,
+                  o.order_id AS order_id,
+                  o.created_at AS order_timestamp
+      
+      FROM        repeat_customers AS r
+      INNER JOIN  (SELECT user_id, order_id, created_at FROM bigquery-public-data.thelook_ecommerce.order_items) AS o
+      ON          r.user_id = o.user_id
+                  AND FORMAT_DATE('%Y', o.created_at) = '2022' 
+      
+      GROUP BY    user_id, order_id, order_timestamp
+      ORDER BY    user_id ASC, order_timestamp ASC
+  ),
+
+  days_between_repeat_customers_orders AS
+  ( SELECT  user_id,
+            order_id,
+            order_timestamp,
+            check_consecutive_order(order_timestamp, LAG(order_timestamp) OVER(PARTITION BY user_id ORDER BY order_timestamp ASC))
+              AS is_consecutive_order
+      FROM  repeat_customers_orders
+  )
+
+SELECT  COUNT(DISTINCT user_id) AS next_day_repeat_customers
+  FROM  days_between_repeat_customers_orders
+  WHERE is_consecutive_order = TRUE;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Average difference in order value between last order and second last order</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the average difference in order value for repeat customers, between the last order and the order just before the last.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>avg_difference</th></thead>
+      <tbody>
+        <tr><td>-0.04</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH repeat_customers AS
+  ( SELECT      user_id,
+                COUNT(*) AS order_count
+      FROM      bigquery-public-data.thelook_ecommerce.orders
+      GROUP BY  user_id
+      HAVING    order_count > 1
+  ),
+
+  orders_with_values AS
+  ( SELECT      user_id,
+                created_at AS order_date,
+                order_id,
+                SUM(sale_price) AS order_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id, created_at, order_id
+  ),
+
+  row_numbered_orders_with_values AS
+  ( SELECT  user_id,
+            order_date,
+            order_id,
+            order_value,
+            ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY order_date DESC) AS row_num
+      FROM  orders_with_values
+  ),
+
+  differences_by_repeat_users AS
+  ( SELECT        r1.user_id,
+                  order_value - LAG(order_value) OVER(PARTITION BY r1.user_id ORDER BY row_num ASC) AS difference
+      FROM        row_numbered_orders_with_values AS r1
+      INNER JOIN  repeat_customers AS r2
+      ON          r1.user_id = r2.user_id
+      WHERE       row_num IN (1,2)
+  )
+
+SELECT      ROUND(AVG(difference), 2) AS avg_difference
+  FROM      differences_by_repeat_users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Growth in items shipped by shipping date and distribution center in December 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>
+  <p>bigquery-public-data.thelook_ecommerce.inventory_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the growth of total items shipped by distribution center, by shipping date</li>
+    <li>Format the growth rate without decimals and with a '%' sign</li>
+    <li>Ensure that you’re not risking dividing by zero or NULL when calculating the growth rate</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH items_shipped_by_center AS
+  ( SELECT        CAST(o.shipped_at AS DATE) AS shipping_date,
+                  d.id AS center_id,
+                  d.name AS center_name,
+                  COUNT(*) AS items_shipped
+      
+      FROM        bigquery-public-data.thelook_ecommerce.distribution_centers AS d
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.inventory_items AS i
+      ON          d.id = i.product_distribution_center_id
+      
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS o
+      ON          i.id = o.inventory_item_id
+                  AND o.shipped_at IS NOT NULL
+      
+      WHERE       EXTRACT(YEAR FROM o.shipped_at) = 2022
+                  AND EXTRACT(MONTH FROM o.shipped_at) = 12
+      GROUP BY    shipping_date, center_id, center_name
+  ),
+
+  growth_by_shipping_dates AS
+  ( SELECT  *,
+            (SAFE_DIVIDE(CAST((items_shipped - (LAG(items_shipped) OVER(PARTITION BY center_id ORDER BY shipping_date ASC))) AS FLOAT64),
+            CAST(((LAG(items_shipped) OVER(PARTITION BY center_id ORDER BY shipping_date ASC))) AS FLOAT64)) * 100)
+              AS growth_by_shipping_date
+      FROM  items_shipped_by_center
+  ),
+
+  formatted_growth_by_shipping_dates AS
+  ( SELECT  shipping_date,
+            center_id,
+            center_name,
+            items_shipped,
+            CONCAT(CAST(COALESCE(growth_by_shipping_date, 0) AS INTEGER), '%') AS growth_by_shipping_date
+      FROM  growth_by_shipping_dates
+  )
+
+SELECT      shipping_date, center_name, items_shipped, growth_by_shipping_date
+  FROM      formatted_growth_by_shipping_dates
+  ORDER BY  center_id ASC, shipping_date ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

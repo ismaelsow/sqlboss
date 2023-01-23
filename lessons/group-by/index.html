@@ -1,0 +1,376 @@
+---
+layout: lesson
+title: GROUP BY
+previous_lesson: /lessons/common-aggregation-functions/
+next_lesson: /lessons/having/
+---
+
+<p>Key things to know:</p>
+<ol>
+  <li>The GROUP BY clause allows to break down aggregation metrics by specific dimensions.</li>
+  <li>An aggregation metric is a number calculated using one of the aggregation functions we saw earlier (COUNT, SUM, MAX, MIN, AVG etc.). A dimension is usually a column with a non-numerical value, for example job, gender, city, age, date etc.</li>
+  <li>When you hear GROUP BY, you can think break down by.</li>
+</ol>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT      country,
+            AVG(age) AS users_average_age
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  country;
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT      country,
+            city,
+            AVG(age) AS users_average_age
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  country, city;
+  </code>
+</pre>
+<p><img src="images/example-2.png" class="lesson-img" /></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+<thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of products by category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of products by category, sorted by number of products in descending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      category,
+            COUNT(*) AS number_of_products
+  FROM      bigquery-public-data.thelook_ecommerce.products
+  GROUP BY  category
+  ORDER BY  number_of_products DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Number of users by age group</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the number of users by age group</li>
+    <li>sorted by number of users in descending order</li>
+  </ul>
+  <p>Here is how you should define age groups:</p>
+  <ul>
+    <li>From 12 years old to 17 years old: <i>teenager</i></li>
+    <li>From 18 years old to 64 years old: <i>working_age</i></li>
+    <li>65 years old and over: <i>senior</i></li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CASE
+              WHEN age BETWEEN 12 AND 17 THEN 'teenagers'
+              WHEN age BETWEEN 16 AND 64 THEN 'working_age'
+              WHEN age >= 65 THEN 'seniors'
+            END AS age_group,
+            COUNT(*) AS number_of_users
+  
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  age_group
+  ORDER BY  number_of_users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Biggest age group in Brasil</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the biggest age group in Brasil, as well as the number of corresponding users. Here is how you should define age groups:</p>
+  <ul>
+    <li>From 12 years old to 17 years old: <i>teenager</i></li>
+    <li>From 18 years old to 64 years old: <i>working_age</i></li>
+    <li>65 years old and over: <i>senior</i></li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>age_group</th><th>number_of_users</th></thead>
+      <tbody>
+        <tr><td>working_age</td><td>11653</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CASE
+              WHEN age BETWEEN 12 AND 17 THEN 'teenagers'
+              WHEN age BETWEEN 16
+              AND 64 THEN 'working_age' WHEN age >= 65 THEN 'seniors'
+            END AS age_group,
+            COUNT(*) AS number_of_users
+  
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  WHERE     country = 'Brasil'
+  
+  GROUP BY  age_group
+  LIMIT     1;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Number of events from Facebook and YouTube in July 2022 broken down by event type and traffic source</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the number of events from Facebook and YouTube in July 2022</li>
+    <li>broken down by event_type and traffic_source</li>
+    <li>sorted by event count in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      event_type,
+            traffic_source,
+            COUNT(*) AS event_count
+  
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  WHERE     (created_at BETWEEN '2022-07-01 00:00:00 UTC' AND '2022-07-31 23:59:59 UTC')
+            AND traffic_source IN ('YouTube', 'Facebook')
+  
+  GROUP BY  event_type,
+            traffic_source
+  ORDER BY  event_count DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — Top two order status by number of items</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the top two order status by number of items, sorted by number of items in descending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      status,
+            SUM(num_of_item) AS number_of_items
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  GROUP BY  status
+  ORDER BY  number_of_items DESC
+  LIMIT     2;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°6 — Number of orders by size group</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the number of orders broken down by size group</li>
+    <li>sorted by number of orders in descending order</li>
+  </ul>
+  <p>Size groups are defined this way:</p>
+  <ul>
+    <li>If number of order items is 1 then <i>small</i></li>
+    <li>If number of order items is 2 or 3 then <i>medium</i></li>
+    <li>If number of order items is 4 or more then <i>big</i></li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-6.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CASE
+              WHEN num_of_item = 1 THEN 'small'
+              WHEN num_of_item IN (2,3) THEN 'medium'
+              WHEN num_of_item >= 4 THEN 'big'
+            END AS size_group,
+            COUNT(*) AS number_of_orders
+  
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  GROUP BY  size_group
+  ORDER BY  number_of_orders DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Country with the smallest number of users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the country with the smallest number of users.</li>
+    <li>Deutschland should be counted as Germany</li>
+    <li>España should be counted as Spain</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>country_name</th><th>number_of_users</th></thead>
+      <tbody>
+        <tr><td>Austria</td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CASE
+              WHEN country = 'Deutschland' THEN 'Germany'
+              WHEN country = 'España' THEN 'Spain'
+              ELSE country
+            END
+            AS country_name,
+            COUNT(*) AS number_of_users
+  
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  country_name
+  ORDER BY  number_of_users ASC
+  LIMIT     1;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of home events in the state of New York in the first quarter of 2022 broken down by traffic source and browser</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the number of home events in the state of New York in the first quarter of 2022</li>
+    <li>broken down by traffic source and browser</li>
+    <li>sorted by number of events in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-8.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      traffic_source,
+            browser,
+            COUNT(*) AS number_of_events
+  
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  WHERE     (created_at BETWEEN '2022-01-01 00:00:00 UTC' AND '2022-03-31 23:59:59 UTC')
+            AND state = 'New York'
+  
+  GROUP BY  traffic_source,
+            browser
+  ORDER BY  number_of_events DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+---
+layout: lesson
+title: HAVING
+previous_lesson: /lessons/group-by/
+next_lesson: /lessons/distinct/
+---
+
+<p>In order to filter the result set returned by a SELECT clause, we’ve already seen how to use the WHERE clause. But what if we need to filter the result of a GROUP BY clause? We can’t use the WHERE clause there as the WHERE clause is evaluated before the GROUP BY and can’t filtered the aggregated data.</p>
+
+<p>To filter the aggregated data, we’ll use a new clause: HAVING.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT      country,
+            AVG(age) AS users_average_age
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  GROUP BY  country
+  HAVING    users_average_age >= 42;
+  </code>
+</pre>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Customers with more than 2 orders</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the users that have made more than 2 orders.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      user_id,
+            COUNT(order_id) AS number_of_orders
+  
+  FROM      bigquery-public-data.thelook_ecommerce.orders
+  GROUP BY  user_id
+  HAVING    number_of_orders > 2
+  ORDER BY  number_of_orders ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Number of home events in the state of New York in the first quarter of 2022 broken down by traffic source and browser with a filter</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the number of home events in the state of New York in the first quarter of 2022</li>
+    <li>broken down by traffic source and browser</li>
+    <li>filtering out rows that have less than 100 home events</li>
+    <li>and sorting by number of events in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      traffic_source,
+            browser,
+            COUNT(*) AS number_of_events
+  
+  FROM      bigquery-public-data.thelook_ecommerce.events
+  WHERE     state = 'New York'
+            AND created_at BETWEEN '2022-01-01 00:00:00 UTC' AND '2022-03-31 23:59:59 UTC'
+  
+  GROUP BY  traffic_source,
+            browser
+  HAVING    number_of_events >= 100
+  ORDER BY  number_of_events DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

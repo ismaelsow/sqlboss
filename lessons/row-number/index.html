@@ -1,0 +1,580 @@
+---
+layout: lesson
+title: ROW_NUMBER
+previous_lesson: /lessons/aggregate-window-functions/
+next_lesson: /lessons/ntile/
+---
+
+<p><code>ROW_NUMBER</code> is a the simplest of the window functions that deal with ranking items. In BigQuery, these ranking functions are called numbering functions:</p<
+<blockquote>Returns the sequential row ordinal (1-based) of each row for each ordered partition. If the ORDER BYclause is unspecified then the result is non-deterministic (⇒ i.e not sorted in any particular way).</blockquote>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT      country,
+            id AS user_id,
+            created_at AS signup_date,
+            ROW_NUMBER() OVER(PARTITION BY country ORDER BY created_at ASC) AS row_num
+  
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  WHERE     FORMAT_DATE('%Y', created_at) = '2022'
+  ORDER BY  country ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
+<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#row_number" target="_blank">👉 Check out the official documentation</a></p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — VIP customers activation dates</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>A VIP customer is defined as a customer who made at least 4 purchases</li>
+    <li>Write a query that will show the dates each VIP customer reached this status</li>
+    <li>Display the results in random order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH users_orders AS
+  ( SELECT  CAST(created_at AS DATE) AS order_date,
+            user_id,
+            order_id,
+            ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY created_at DESC) AS row_num
+      FROM  bigquery-public-data.thelook_ecommerce.orders
+  )
+
+SELECT      order_date,
+            user_id,
+            order_id
+  
+  FROM      users_orders
+  WHERE     row_num = 4
+  ORDER BY  RAND();
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Cheapest product by category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the name of the cheapest product by category along with its price.</li>
+    <li>Sort the result by retail price in ascending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH row_numbered_products AS
+  ( SELECT  category,
+            name,
+            retail_price,
+            ROW_NUMBER() OVER(PARTITION BY category ORDER BY retail_price ASC) AS row_num
+      FROM  bigquery-public-data.thelook_ecommerce.products
+  )
+
+SELECT      category,
+            name,
+            ROUND(retail_price, 2) AS retail_price
+  
+  FROM      row_numbered_products
+  WHERE     row_num = 1
+  ORDER BY  retail_price ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Every other user</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that display every other user.</li>
+    <li>It’ll display the first user, then the third user, and so forth.</li>
+    <li>You can use the <code>MOD</code> function for the most elegant solution but it’s not required.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH row_numbered_users AS
+  ( SELECT  id,
+            CONCAT(first_name, ' ', last_name) AS name,
+            created_at,
+            ROW_NUMBER() OVER(ORDER BY created_at ASC) AS row_num
+      FROM  bigquery-public-data.thelook_ecommerce.users
+  )
+
+SELECT  id, name, created_at
+  FROM  row_numbered_users
+  WHERE MOD(row_num, 2) = 1;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — First order in each country</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display each country along with the id of its first recorded order</li>
+    <li>Sort the results by country in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH orders_countries AS
+  ( SELECT        country,
+                  order_id,
+                  orders.created_at
+      FROM        bigquery-public-data.thelook_ecommerce.orders orders
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.users users
+      ON          orders.user_id = users.id
+  ),
+
+  row_numbered_orders_countries AS
+  ( SELECT  country,
+            order_id,
+            created_at,
+            ROW_NUMBER() OVER(PARTITION BY country ORDER BY created_at ASC) AS row
+      FROM  orders_countries
+  )
+
+  SELECT      country,
+              order_id AS first_order_id
+    
+    FROM      row_numbered_orders_countries
+    WHERE     row = 1
+    ORDER BY  country ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Top selling product in each country</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will return the name of the top selling product in each country.</p>
+  <p>Sort the results by country in ascending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH product_sales_by_country AS
+  ( SELECT        country,
+                  products.name AS product_name,
+                  retail_price,
+                  order_items.created_at AS order_timestamp
+      
+      FROM        bigquery-public-data.thelook_ecommerce.users users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+      ON          users.id = order_items.user_id
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+      ON          order_items.product_id = products.id
+  ),
+
+  grouped_product_sales_by_country AS
+  ( SELECT      country,
+                product_name,
+                SUM(retail_price) AS sales
+      FROM      product_sales_by_country
+      GROUP BY  country, product_name
+      ORDER BY  sales DESC
+  ),
+
+  row_numbered_top_products AS
+  ( SELECT  country,
+            product_name,
+            sales,
+            ROW_NUMBER() OVER(PARTITION BY country ORDER BY sales DESC) AS row_num
+      FROM  grouped_product_sales_by_country
+  )
+      
+SELECT      country,
+            product_name
+  FROM      row_numbered_top_products
+  WHERE     row_num = 1
+  ORDER BY  country ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°6 — Top 3 selling products in China and the United States on Jan 1st, 2023</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will return the names and the sales of the top 3 selling products in China and the US, on Jan 1st, 2023, separately.</li>
+    <li>Which country is displayed first does not matter.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-6.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH product_sales_by_country AS
+  ( SELECT        country,
+                  products.name AS product_name,
+                  retail_price,
+                  order_items.created_at AS order_timestamp
+      
+      FROM        bigquery-public-data.thelook_ecommerce.users users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+      ON          users.id = order_items.user_id
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+      ON          order_items.product_id = products.id
+      
+      WHERE       CAST(order_items.created_at AS DATE) = DATE('2023-01-01')
+  ),
+
+  grouped_product_sales_by_country AS
+  ( SELECT      country,
+                product_name,
+                SUM(retail_price) AS sales
+      FROM      product_sales_by_country
+      GROUP BY  country, product_name
+      ORDER BY  sales DESC
+  ),
+
+  row_numbered_top_products AS
+  ( SELECT  country,
+            product_name,
+            sales,
+            ROW_NUMBER() OVER(PARTITION BY country ORDER BY sales DESC) AS row_num
+      FROM  grouped_product_sales_by_country
+  )
+      
+SELECT  country,
+        product_name,
+        ROUND(sales, 2) AS sales
+  
+  FROM  row_numbered_top_products
+  WHERE country IN ('United States', 'China')
+        AND row_num IN (1, 2, 3);
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Best selling product by category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will return the name of the top selling product in each category.</p>
+  <p>Sort the results by category in ascending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-7.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH product_sales_by_category AS
+  ( SELECT        category,
+                  products.name AS product_name,
+                  retail_price,
+                  order_items.created_at AS order_timestamp
+      
+      FROM        bigquery-public-data.thelook_ecommerce.order_items order_items
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+      ON          order_items.product_id = products.id
+  ),
+
+  grouped_product_sales_by_category AS
+  ( SELECT      category,
+                product_name,
+                SUM(retail_price) AS sales
+      FROM      product_sales_by_category
+      GROUP BY  category, product_name
+      ORDER BY  sales DESC
+  ),
+
+  row_numbered_top_products AS
+  ( SELECT  category,
+            product_name,
+            sales,
+            ROW_NUMBER() OVER(PARTITION BY category ORDER BY sales DESC) AS row_num
+      FROM  grouped_product_sales_by_category
+  )
+      
+SELECT      category,
+            product_name
+  FROM      row_numbered_top_products
+  WHERE     row_num = 1
+  ORDER BY  category ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of days to become a VIP customer</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>A VIP customer is defined as a customer who made at least 4 purchases.</li>
+    <li>Write a query that will show the average number of days it takes to become a VIP customer.</li>
+    <li>Customers who didn’t make 4 purchases shouldn’t be included in the calculation of the average.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>average_days_to_vip</th></thead>
+      <tbody>
+        <tr><td>428</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH numbered_users_orders AS
+  ( SELECT      user_id,
+                order_id,
+                created_at AS order_timestamp,
+                ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY created_at ASC) AS order_num
+      FROM      bigquery-public-data.thelook_ecommerce.orders
+  ),
+
+  first_users_orders AS
+  ( SELECT  user_id,
+            order_id,
+            order_timestamp AS first_user_order_timestamp,
+            order_num
+      FROM  numbered_users_orders
+      WHERE (SELECT COUNT(*) FROM numbered_users_orders) >= 4
+            AND order_num = 1
+  ),
+
+  fourth_users_orders AS
+  ( SELECT  user_id,
+            order_id,
+            order_timestamp AS fourth_user_order_timestamp,
+            order_num
+      FROM  numbered_users_orders
+      WHERE (SELECT COUNT(*) FROM numbered_users_orders) >= 4
+            AND order_num = 4
+  ),
+
+  days_between_orders_by_user AS
+  ( SELECT        f1.user_id,
+                  first_user_order_timestamp,
+                  fourth_user_order_timestamp,
+                  (EXTRACT(HOUR FROM (fourth_user_order_timestamp - first_user_order_timestamp)) / 24) AS days_between
+      FROM        first_users_orders AS f1
+      INNER JOIN  fourth_users_orders AS f2
+      ON          f1.user_id = f2.user_id
+  )
+
+SELECT  CAST(AVG(days_between) AS INTEGER) AS average_days_to_vip
+  FROM  days_between_orders_by_user;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Most popular and less popular brands</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the most popular brand (highest number of items sold)</li>
+    <li>and the least popular brand (lowest number of items sold)</li>
+    <li>as well as they corresponding number of items sold.</li>
+  </ul>
+  <p>Don’t worry about handling ties.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-9.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH brand_products AS
+  ( SELECT        brand,
+                  products.id AS item_id
+      FROM        bigquery-public-data.thelook_ecommerce.products products
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+      ON          products.id = order_items.product_id
+  ),
+
+  row_numbered_brand_products AS
+  ( SELECT  brand,
+            item_id,
+            ROW_NUMBER() OVER(PARTITION BY brand) AS items_sold
+      FROM  brand_products
+  ),
+
+  max_brand AS
+  ( SELECT  brand, 'Most popular' AS label, items_sold
+      FROM  row_numbered_brand_products
+      WHERE items_sold = (SELECT MAX(items_sold) FROM row_numbered_brand_products)
+  ),
+
+  min_brand AS
+  ( SELECT  brand, 'Least popular' AS label, items_sold
+      FROM  row_numbered_brand_products
+      WHERE items_sold = (SELECT MIN(items_sold) FROM row_numbered_brand_products)
+      LIMIT 1
+  )
+
+SELECT  *
+  FROM  max_brand
+
+UNION ALL
+
+SELECT  *
+  FROM  min_brand;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°10 — Random sample of 1% of the products</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display a random 1% sample of all products.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-10.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH random_products AS
+  ( SELECT      id,
+                name,
+      FROM      bigquery-public-data.thelook_ecommerce.products
+      ORDER BY  RAND()
+  ),
+
+  row_numbered_random_products AS
+  ( SELECT  id,
+            name,
+            ROW_NUMBER() OVER() AS row
+      FROM  random_products
+  ),
+
+  one_percent_mark AS
+  ( SELECT  CAST(COUNT(*) * 0.01 AS INTEGER) AS number
+      FROM  bigquery-public-data.thelook_ecommerce.products
+  )
+
+SELECT  id,
+        name
+  FROM  row_numbered_random_products
+  WHERE row <= (SELECT number FROM one_percent_mark);
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

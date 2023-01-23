@@ -1,0 +1,198 @@
+---
+layout: lesson
+title: UNION and UNION ALL
+previous_lesson: /lessons/self-join/
+next_lesson: /lessons/user-defined-functions/
+---
+
+<p>The <code>UNION ALL</code> operator is used to add the result of queries on top of each other. The result sets of each query must have the same number of columns, with the same types, and in the same order.</p>
+<p>It can be very useful when you’re dealing with a table that’s cut in different parts, for size reasons for example.</p>
+<p>There’s also a <code>UNION</code> operator which deduplicates the different result sets and is not supported by Google BigQuery.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<pre>
+  <code class="language-sql">
+(SELECT 11 AS id,
+        'Boston MA' AS state,
+        42.3601 AS latitude,
+        71.0589 AS longitude
+)
+
+UNION ALL
+
+(SELECT 12 AS id,
+        'Seattle WA' AS state,
+        47.6062 AS latitude,
+        122.3321 AS longitude
+)
+
+UNION ALL
+
+(SELECT 13 AS id,
+        'Miami FL' AS state,
+        25.7617 AS latitude,
+    80.1918 AS longitude
+);
+  </code>
+</pre>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — New distribution centers</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will add three distribution centers to the existing table.</li>
+    <li>You can populate the new distribution centers with any id, name, geographic coordinates you’d like.</li>
+    <li>Sort the results by id in ascending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+( SELECT      *
+    FROM      bigquery-public-data.thelook_ecommerce.distribution_centers
+)
+
+UNION ALL
+
+( SELECT      11 AS id,
+              'Seattle WA' AS state,
+              47.6062 AS latitude,
+              122.3321 AS longitude
+)
+
+UNION ALL
+
+( SELECT      12 AS id,
+              'Miami FL' AS state,
+              25.7617 AS latitude,
+              80.1918 AS longitude
+)
+
+UNION ALL
+
+( SELECT      13 AS id,
+              'Phoenix AZ' AS sate,
+              33.4484 AS latitude,
+              112.0740 AS longitude
+)
+
+ORDER BY  id ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — States with events or users</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of unique states that have events OR users.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH all_states AS
+  (   SELECT  state
+        FROM  bigquery-public-data.thelook_ecommerce.events
+      
+      UNION ALL
+  
+      SELECT  state
+        FROM  bigquery-public-data.thelook_ecommerce.users
+  )
+
+SELECT  DISTINCT state
+  FROM  all_states;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin" id="category-parent-table"><span class="medium-problem-text-span">N°3 — Category parent table</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>dbpedia.pages</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Create a new BigQuery dataset called dbpedia.</li>
+    <li>Inside this dataset, load the DBP_wiki_data.csv file into a BigQuery table called pages. You can find the file on this page: <a href="Inside this dataset, load the DBP_wiki_data.csv file into a BigQuery table called pages. You can find the file on this page: https://www.kaggle.com/datasets/danofer/dbpedia-classes" target="_blank">https://www.kaggle.com/datasets/danofer/dbpedia-classes</a></li>
+    <li>Write a query that will create a table with a category and parent relationship.</li>
+    <li>Category without parents should have the parent column set to an empty string.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH l3_categories AS
+  ( SELECT  DISTINCT l3 AS category,
+            l2 AS parent
+      FROM  dbpedia.pages
+  ),
+  
+  l2_categories AS
+    (  SELECT DISTINCT l2 AS category,
+              l1 AS parent
+        FROM  dbpedia.pages
+    ),
+  
+  l1_categories AS
+    (  SELECT DISTINCT  l1 AS category,
+                        '' AS parent
+                  FROM  dbpedia.pages
+    ),
+  
+  all_categories AS
+    ( SELECT  *
+        FROM  l1_categories
+      
+      UNION ALL
+      
+      SELECT  *
+        FROM  l2_categories
+      
+      UNION ALL
+      
+      SELECT  *
+        FROM  l3_categories
+    )
+
+SELECT  *
+  FROM  all_categories;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

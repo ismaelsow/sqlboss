@@ -1,0 +1,692 @@
+---
+layout: lesson
+title: INNER JOIN
+previous_lesson: /lessons/cross-join/
+next_lesson: /lessons/left-join-and-right-join/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT        *
+  FROM        bigquery-public-data.thelook_ecommerce.users
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
+  ON          users.id = orders.user_id;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT        users.id, orders.order_id
+  FROM        bigquery-public-data.thelook_ecommerce.users
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
+  ON          users.id = orders.user_id
+  
+  GROUP BY    users.id, orders.order_id
+  ORDER BY    users.id ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT        users.id, orders.order_id, order_items.product_id
+  FROM        bigquery-public-data.thelook_ecommerce.users
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
+  ON          users.id = orders.user_id
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
+  ON          users.id = order_items.user_id
+              AND orders.order_id = order_items.order_id
+  
+  GROUP BY    users.id,
+              orders.order_id,
+              order_items.product_id
+  ORDER BY    users.id ASC;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT        users.id, orders.order_id, order_items.product_id, products.name
+  FROM        bigquery-public-data.thelook_ecommerce.users
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
+  ON          users.id = orders.user_id
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+  ON          users.id = order_items.user_id
+              AND orders.order_id = order_items.order_id
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+  ON          order_items.product_id = products.id
+  
+  GROUP BY    users.id,
+              orders.order_id,
+              order_items.product_id,
+              products.name
+  
+  ORDER BY    users.id ASC;
+  </code>
+</pre>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Customers’ full names and orders</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the full name of each order’s customer, along with the order id and date.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-1.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        CONCAT(first_name, ' ', last_name) AS customer_name,
+              order_id,
+              CAST(orders.created_at AS date) AS order_date
+  FROM        bigquery-public-data.thelook_ecommerce.users users
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders orders
+  ON          users.id = orders.user_id
+  ORDER BY    order_date DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Number of products sold per category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of products sold per category, sorted by number of products sold in descending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        category,
+              COUNT(*) AS products_sold
+  
+  FROM        bigquery-public-data.thelook_ecommerce.products products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+  ON          products.id = order_items.product_id
+  
+  GROUP BY    category
+  ORDER BY    products_sold DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Number of customers who bought in only one category</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of customers who bought in 1 category.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>number_of_mono_category_customers</th></thead>
+      <tbody>
+        <tr><td>36669</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH mono_category_customers AS
+  ( SELECT        COUNT(DISTINCT category) AS number_of_categories_bought
+      FROM        bigquery-public-data.thelook_ecommerce.users users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+      ON          users.id = order_items.user_id
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+      ON          order_items.product_id = products.id
+      GROUP BY    users.id
+      HAVING      number_of_categories_bought = 1
+  )
+
+SELECT  COUNT(*) AS number_of_mono_category_customers
+  FROM  mono_category_customers;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Purchase rate by country</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the purchase rate by country ⇒ i.e the percentage of users from each country that are also customers.</li>
+    <li>The results should be sorted by purchase rate in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH country_customers AS
+  ( SELECT        users.country AS country,
+                  COUNT(DISTINCT users.id) AS customers
+      FROM        bigquery-public-data.thelook_ecommerce.users users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.orders orders
+      ON          users.id = orders.user_id
+      GROUP BY    users.country
+  ),
+  
+  country_users AS
+  (  SELECT     country,
+                COUNT(DISTINCT id) AS users
+      FROM      bigquery-public-data.thelook_ecommerce.users
+      GROUP BY  country
+  )
+
+SELECT        country_customers.country AS country,
+              country_users.users AS users,
+              country_customers.customers AS customers,
+              ROUND((country_customers.customers / country_users.users) * 100, 2) AS purchase_rate
+  FROM        country_customers
+  INNER JOIN  country_users
+  ON          country_customers.country = country_users.country
+  ORDER BY    purchase_rate DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Names of returned products in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the names of the products that were returned as well the number of times they were returned, in 2022.</li>
+    <li>The results should be sorted by number of returns in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH returned_orders AS
+  ( SELECT  order_id
+      FROM  bigquery-public-data.thelook_ecommerce.orders
+      WHERE (returned_at IS NOT NULL)
+            AND (EXTRACT(YEAR FROM CAST(returned_at AS DATE)) = 2022)
+  ),
+  
+  returned_products AS
+  (  SELECT       order_items.product_id AS product_id,
+                  COUNT(DISTINCT order_items.order_id) AS number_of_returns
+      FROM        returned_orders
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS order_items
+      ON          returned_orders.order_id = order_items.order_id
+      GROUP BY    product_id
+  )
+
+SELECT        name, number_of_returns
+  FROM        returned_products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+  ON          returned_products.product_id = products.id
+  ORDER BY    number_of_returns DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Product return rate in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the return rate of each product along with their names.</li>
+    <li>The results should be sorted by number of returns in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-6.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH returned_orders AS
+  ( SELECT  order_id
+      FROM  bigquery-public-data.thelook_ecommerce.orders
+      WHERE (returned_at IS NOT NULL)
+            AND (EXTRACT(YEAR FROM CAST(returned_at AS DATE)) = 2022)),
+  
+  returned_products AS
+  (  SELECT       order_items.product_id AS product_id,
+                  COUNT(DISTINCT order_items.order_id) AS number_of_returns
+      FROM        returned_orders
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS order_items
+      ON          returned_orders.order_id = order_items.order_id
+      GROUP BY    product_id
+  ),
+    
+  total AS
+  ( SELECT      product_id,
+                COUNT(DISTINCT order_id) AS total_orders
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  product_id
+  )
+
+SELECT        name,
+              number_of_returns,
+              total_orders,
+              ROUND((number_of_returns / total_orders) * 100, 2) AS return_rate
+  
+	FROM        returned_products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+  ON          returned_products.product_id = products.id
+  INNER JOIN  total
+  ON          returned_products.product_id = total.product_id
+  ORDER BY    number_of_returns DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Distribution of customer categories</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the customer categories, the number of customers in each category and the percentage over the total of customers, for each category.</li>
+    <li>The percentages should have 3 decimals. The results should be sorted by number of customers in descending order.</li>
+  </ul>
+  <p>The category is function of the lifetime value:</p>
+  <ul>
+    <li>If below 833, then the category is <i>small</i>.</li>
+    <li>If above or equal to 833 and less than or equal to 1665, then <i>medium</i></li>
+    <li>Otherwise, it should be <i>large</i>.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-7.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH customer_clv AS
+  (  SELECT     user_id,
+                SUM(sale_price) AS lifetime_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id
+  ),
+  
+  total_customers AS
+  (  SELECT COUNT(DISTINCT user_id)
+      FROM  bigquery-public-data.thelook_ecommerce.orders
+  )
+
+SELECT      CASE
+              WHEN lifetime_value < 833 THEN 'small'
+              WHEN lifetime_value BETWEEN 833 AND 1665 THEN 'medium'
+              WHEN lifetime_value > 1665 THEN 'large'
+            END AS customer_category,
+            COUNT(DISTINCT user_id) AS customers,
+            ROUND((COUNT(DISTINCT user_id)
+              / (  SELECT * FROM total_customers)) * 100, 3)
+              AS percentage
+  
+  FROM      customer_clv
+  GROUP BY  customer_category
+  ORDER BY  customers DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Customer categories by lifetime value</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the customers’ full name, id, lifetime value and category. The category is function of the lifetime value:</p>
+  <ul>
+    <li>If below 833, then the category is <i>small</i>.</li>
+    <li>If above or equal to 833 and less than or equal to 1665, then <i>medium</i></li>
+    <li>Otherwise, it should be <i>large</i>.</li>
+  </ul>
+  <p>The results should be sorted by lifetime value in descending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-8.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH customer_clv AS
+  (  SELECT     user_id,
+                ROUND(SUM(sale_price), 2) AS lifetime_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      GROUP BY  user_id
+  ),
+  
+  customer_clv_category AS
+  (  SELECT     user_id,
+                lifetime_value,
+                CASE
+                  WHEN lifetime_value < 833 THEN 'small'
+                  WHEN lifetime_value BETWEEN 833 AND 1665 THEN 'medium'
+                  WHEN lifetime_value > 1665 THEN 'large'
+                END AS category
+      FROM      customer_clv
+      GROUP BY  user_id,
+                lifetime_value,
+                category
+  )
+
+SELECT        CONCAT(first_name, ' ', last_name) AS name,
+              user_id,
+              lifetime_value,
+              category
+  
+  FROM        customer_clv_category
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.users AS users
+  ON          customer_clv_category.user_id = users.id
+  ORDER BY    lifetime_value DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Name of the most expensive item ever sold</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the name of the most expensive item that have been sold. If there are ties, take the product whose id comes first in ascending alphabetical order.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>name</th></thead>
+    <tbody>
+      <tr><td>Alpha Industries Rip Stop Short</td></tr>
+    </tbody>
+  </table>
+</div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH top_item AS
+  (  SELECT     product_id
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      ORDER BY  sale_price DESC,
+                product_id ASC
+      LIMIT     1
+  )
+
+SELECT        products.name
+  FROM        top_item
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+  ON          top_item.product_id = products.id;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — VIP customers in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the names of the customers who made at least a purchase of more than $500 in 2022</p>
+  <p>as well the value of their biggest order and the date of that biggest order.</p>
+  <p>The results should be sorted by biggest order value in descending order, and by order date in descending order.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-10.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH big_orders AS
+  (  SELECT     order_id,
+                CAST(created_at AS DATE) AS order_date,
+                user_id,
+                SUM(sale_price) AS order_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      WHERE     EXTRACT(YEAR FROM CAST(created_at AS DATE)) = 2022
+      GROUP BY  order_id,
+                order_date,
+                user_id
+      HAVING    order_value > 500
+  ),
+  
+  biggest_customer_orders AS
+  (  SELECT     user_id,
+                ROUND(MAX(order_value), 2) AS biggest_order_value,
+                order_date
+      FROM      big_orders
+      GROUP BY  user_id,
+                order_date
+      ORDER BY  biggest_order_value
+  )
+
+SELECT        CONCAT(first_name, ' ', last_name) AS vip_customer_name,
+              biggest_order_value,
+              order_date
+  
+  FROM        biggest_customer_orders
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.users AS users
+  ON          biggest_customer_orders.user_id = users.id
+  ORDER BY    biggest_order_value DESC,
+              order_date DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Distribution centers by number of items shipped</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>
+  <p>bigquery-public-data.thelook_ecommerce.inventory_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the name of the distribution center</li>
+    <li>along with its number of items shipped.</li>
+    <li>Sort the results by number of items shipped in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-11.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        name AS distribution_center,
+              COUNT(*) AS items_shipped
+  
+  FROM        bigquery-public-data.thelook_ecommerce.distribution_centers distribution_centers
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.inventory_items inventory_items
+  ON          distribution_centers.id = inventory_items.product_distribution_center_id
+  
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
+  ON          inventory_items.product_id = order_items.product_id
+  
+  GROUP BY    distribution_center
+  ORDER BY    items_shipped DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — D7 retention rate</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+  <p>bigquery-public-data.thelook_ecommerce.events</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display:</p>
+  <ul>
+    <li>the number of active users on January 8th, 2022 (i.e they generated an event)</li>
+    <li>the number of users created on January 1st, 2022</li>
+    <li>the d7 retention rate</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>d7_active_users_count</th><th>d0_users_count</th><th>d7_retention_rate</th></thead>
+      <tbody>
+        <tr><td>2</td><td>74</td><td>2.7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH d7_active_users AS
+  ( SELECT        COUNT(DISTINCT users.id) AS user_count
+      FROM        bigquery-public-data.thelook_ecommerce.users users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.events
+      ON          users.id = events.user_id
+                  AND (CAST (users.created_at AS DATE) = DATE('2022-01-01'))
+                  AND (DATE_TRUNC(CAST(events.created_at AS DATE), day) = DATE('2022-01-01') + MAKE_INTERVAL(day => 7))
+  ),
+
+  d0_users AS
+  ( SELECT  COUNT(*) AS user_count
+      FROM  bigquery-public-data.thelook_ecommerce.users
+      WHERE CAST (users.created_at AS DATE) = DATE('2022-01-01')
+  )
+
+SELECT
+  (SELECT user_count FROM d7_active_users) AS d7_active_users_count,
+  (SELECT user_count FROM d0_users) AS d0_users_count,
+  ROUND(((SELECT user_count FROM d7_active_users) / (SELECT user_count FROM d0_users)) * 100, 2) AS d7_retention_rate;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

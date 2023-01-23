@@ -1,0 +1,265 @@
+---
+layout: lesson
+title: WHERE and comparison operators
+previous_lesson: /lessons/limit/
+next_lesson: /lessons/like/
+---
+
+<p>The WHERE clause is used to filter the data we want to return. Following the WHERE clause, comes a condition that will be evaluated to either true or false. That type of condition represents what’s called a boolean value.</p>
+
+<!-- Filtering records from a table -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Filtering records from a table</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.events
+  WHERE state = "Connecticut";
+  </code>
+</pre>
+<pre>
+  <code class="language-sql">
+SELECT  column_name, data_type
+  FROM  bigquery-public-data.sec_quarterly_financials.INFORMATION_SCHEMA.COLUMNS
+  WHERE table_name = 'sic_codes';
+  </code>
+</pre>
+<p>To specify the condition for our WHERE clause, we can use many different operators. Below are the comparison operators that are commonly used.</p>
+
+<!-- Comparison operators -->
+<h3 class="h3-big-margin"><span class="grey-text-span">Comparison operators</span></h3>
+<table>
+  <tr><td>Equal to</td><td>=</td></tr>
+  <tr><td>Different from (not equal to)</td><td>&#60;&#62; or !=</td></tr>
+  <tr><td>Greater than</td><td>&#62;</td></tr>
+  <tr><td>Less than</td><td>&#60;</td></tr>
+  <tr><td>Greater than or equal to</td><td>&#62;=</td></tr>
+  <tr><td>Less than or equal to</td><td>&#60;=</td></tr>
+</table>
+
+<!-- SQL order of operations -->
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — First name of user with id 4</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays the first name of the user that has an id equal to 4.</p>
+  
+  <h4>Example results</h4>
+  <p>
+  <table class="table-with-header">
+    <thead><th>cool_name</th></thead>
+    <tbody>
+      <tr><td>Emily</td></tr>
+    </tbody>
+  </table>
+  </p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  first_name AS cool_name
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE id = 4;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — 5 orders whose status is different from “Shipped”</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays 5 orders whose status is different from “Shipped”.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  order_id, status, gender, created_at, returned_at
+  FROM  bigquery-public-data.thelook_ecommerce.orders
+  WHERE status <> "Shipped" -- status != "Shipped" would work also
+  LIMIT 5;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — 5 products that sell for more than twice the cost</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays 5 products that sell for more than twice the cost.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id, cost, category, name, brand, retail_price, department
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE retail_price >= 2 * cost
+  LIMIT 5;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Products whose cost is greater than or equal to the retail price</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays the products whose cost is greater than or equal to the retail price.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  *
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE cost >= retail_price;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — 10 products that sells for more than 500</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays 10 products that sell for more than 500.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id, cost, category, name, brand, retail_price, department
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE retail_price > 500
+  LIMIT 10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°6 — 5 users from countries whose names start with the letter M or an earlier letter in the alphabet</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that displays 5 users from countries whose names start with the letter M or an earlier letter in the alphabet.</p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-6.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id, first_name, last_name, country
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE country <= 'M'
+  LIMIT 5;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — 10 products that have a profit margin ratio (in %) that’s 50% or more</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the profit margin ratio in percentage for each product.</li>
+    <li>Only display 10 rows.</li>
+    <li>The profit_margin_ratio_per_product column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-7.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT  id,
+        name,
+        cost,
+        retail_price,
+        ((retail_price - cost) / retail_price) * 100 AS profit_margin_ratio_per_product
+  
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE ((retail_price - cost) / retail_price) * 100 >= 50
+  LIMIT 10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>

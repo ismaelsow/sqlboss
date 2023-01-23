@@ -1,0 +1,884 @@
+---
+layout: lesson
+title: Subqueries and common table expressions
+previous_lesson: /lessons/arrays/
+next_lesson: /lessons/cross-join/
+---
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Intro to subqueries</span></h3>
+<p>In addition to querying a table directly, subqueries allow you to query the results of the other queries. It’s also a way to make complex queries more manageable.</p>
+<pre>
+  <code class="language-sql">
+SELECT  *
+  FROM  ( SELECT  event_type
+            FROM  bigquery-public-data.thelook_ecommerce.events
+            LIMIT 5
+        );
+  </code>
+</pre>
+<p><img src="images/intro-to-subqueries.png" class="lesson-img" /></p>
+
+<p>Table resulting from subqueries can also be aliased and we can access their column names using the dot notation.</p>
+
+<pre>
+  <code class="language-sql">
+SELECT  subquery.event_type
+  FROM (  SELECT  event_type
+            FROM  bigquery-public-data.thelook_ecommerce.events
+            LIMIT 5
+        ) AS subquery;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Common table expressions</span></h3>
+<p>As our queries grow more complex with many levels of nested subqueries, the code can become harder to read. A great way to make subqueries more usable is to use the WITH…AS clause, also known as common table expressions.</p>
+<pre>
+  <code class="language-sql">
+WITH subquery AS (
+  SELECT  event_type
+    FROM  bigquery-public-data.thelook_ecommerce.events
+    LIMIT 5
+  )
+
+SELECT  event_type
+  FROM  subquery;
+  </code>
+</pre>
+
+<p>We can use several common table expressions, separated by a comma:</p>
+
+<pre>
+  <code class="language-sql">
+WITH subquery_1 AS (
+  SELECT  event_type
+    FROM  bigquery-public-data.thelook_ecommerce.events
+    LIMIT 5
+  ),
+  
+  subquery_2 AS (
+    SELECT  COUNT(*) AS event_type_count
+      FROM  subquery_1 )
+
+SELECT  *
+  FROM  subquery_2;
+  </code>
+</pre>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Scalar subqueries</span></h3>
+<p>Scalar subqueries are subquery that return a table that has just one row and one column, basically a cell.</p>
+<pre>
+  <code class="language-sql">
+SELECT  number_of_users
+  FROM
+    ( SELECT  COUNT(*) AS number_of_users
+        FROM  bigquery-public-data.thelook_ecommerce.users
+    ) AS user_count;
+  </code>
+</pre>
+<p>
+  <table class="table-with-header">
+    <thead><th>number_of_users</th></thead>
+    <tbody><td>100000</td></tbody>
+  </table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Multi-rows subqueries and the IN operator</span></h3>
+<pre>
+  <code class="language-sql">
+SELECT  user_id
+  FROM
+    ( SELECT  DISTINCT user_id
+        FROM  bigquery-public-data.thelook_ecommerce.orders
+    ) AS customer_ids;
+  </code>
+</pre>
+<p><img src="images/multi-rows.png" class="lesson-img" /></p>
+<p>We can use this kind of subqueries in our WHERE clause with the IN and NOT…IN constructs:</p>
+<pre>
+  <code class="language-sql">
+SELECT  id AS non_customer_id
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE id NOT IN
+    ( SELECT  DISTINCT user_id
+        FROM  bigquery-public-data.thelook_ecommerce.orders
+    );
+  </code>
+</pre>
+<p>In the case we want to test our condition on several columns, we would use parentheses: WHERE (id, first_name, last_name,…) not in …</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Correlated subqueries and the EXISTS operator</span></h3>
+<p>A correlated subquery is a subquery that refers to a field in the outer query and gets executed for each record in the outer query. EXISTS is an operator that’s always followed by a subquery. It returns true if the table used as argument has at least 1 row, false otherwise. If we rewrite our previous example with a correlated query, we get:</p>
+<pre>
+  <code class="language-sql">
+SELECT  id AS non_customer_id
+  FROM  bigquery-public-data.thelook_ecommerce.users users
+  WHERE NOT EXISTS
+    ( SELECT  user_id
+        FROM  bigquery-public-data.thelook_ecommerce.orders orders
+        WHERE users.id = orders.user_id
+    );
+  </code>
+</pre>
+
+<p>We can see that while the previous subquery was self-sufficient:</p>
+<pre>
+  <code class="language-sql">
+SELECT  DISTINCT user_id
+  FROM  bigquery-public-data.thelook_ecommerce.orders;
+  </code>
+</pre>
+
+<p>The correlated subquery needs data from the outer query to execute (i.e the id column in the users table):</p>
+<pre>
+  <code class="language-sql">
+SELECT  user_id
+  FROM  bigquery-public-data.thelook_ecommerce.orders orders
+  WHERE users.id = orders.user_id;
+  </code>
+</pre>
+
+<p>There are some SQL problems where correlated queries are needed to solve them. This is especially true for problems where you are looking for negatives. When looking for positives, a JOIN will usually be a better solution. We will see JOINs in later lessons.</p>
+<p>The main drawback of using correlated queries is that they are really slow, as they re-evaluated for each record in the outer query.</p>
+
+
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Number of repeat customers</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.orders</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the number of repeat customers.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>repeat_customers</th></thead>
+      <tbody>
+        <tr><td>30200</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH multiple_order_users AS
+  (  SELECT   user_id,
+              COUNT(*) AS number_of_orders
+      FROM    bigquery-public-data.thelook_ecommerce.orders
+    GROUP BY  user_id
+    HAVING    number_of_orders > 1
+  )
+
+SELECT  COUNT(*) AS repeat_customers
+  FROM  multiple_order_users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Id of the top-selling product in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show the id of the top selling product in 2022.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>product_id</th></thead>
+      <tbody>
+        <tr><td>25557</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH top_product_sales AS
+  ( SELECT      product_id,
+                COUNT(*) AS sales
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      WHERE     EXTRACT(YEAR FROM CAST(created_at AS DATE)) = 2022
+      GROUP BY  product_id
+      ORDER BY  sales DESC
+      LIMIT     1
+  )
+
+SELECT  product_id
+  FROM  top_product_sales;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Name of the top-selling product in 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will show the name of the top selling product in 2022</li>
+    <li>In case of ties, sort by product id in ascending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>name</th></thead>
+      <tbody>
+        <tr><td>G311 Golds Gym Racerback Tank Top</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH top_product_sales AS
+  ( SELECT      product_id,
+                COUNT(*) AS sales
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      WHERE     EXTRACT(YEAR FROM CAST(created_at AS DATE)) = 2022
+      GROUP BY  product_id
+      ORDER BY  sales DESC,
+                product_id ASC
+      LIMIT     1
+  )
+
+SELECT  name
+  FROM (  SELECT  name
+            FROM  bigquery-public-data.thelook_ecommerce.products products
+            WHERE products.id = ( SELECT product_id FROM top_product_sales )
+  );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Smoothed out average retail price</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will show the average retail price, calculated without the highest and lowest priced products.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>smoothed_out_average_retail_price</th></thead>
+      <tbody>
+        <tr><td>59.15</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH max_price AS
+  ( SELECT  MAX(retail_price) AS price
+      FROM  bigquery-public-data.thelook_ecommerce.products
+  ),
+  
+  min_price AS
+  ( SELECT MIN(retail_price) AS price
+      FROM bigquery-public-data.thelook_ecommerce.products
+  )
+
+SELECT  ROUND(AVG(retail_price), 2) AS smoothed_out_average_retail_price
+  FROM  bigquery-public-data.thelook_ecommerce.products
+  WHERE retail_price NOT IN ((SELECT price FROM  max_price), (SELECT price FROM  min_price));
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Top 3 months with the highest average order value in the last 12 months</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will:</p>
+  <ul>
+    <li>display the top 3 months with the highest average order value in the last 12 months (excluding the current month)</li>
+    <li>the average order value should be displayed with 2 decimals</li>
+    <li>sort the results by average order value in descending order</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH order_value_by_month AS
+  (  SELECT     FORMAT_DATE('%b %Y', created_at) AS month_year,
+                order_id,
+                SUM(sale_price) AS order_value
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      WHERE     CAST(created_at AS date) < DATE_TRUNC(CURRENT_DATE(), month)
+                AND CAST(created_at AS date) >= DATE_TRUNC(CURRENT_DATE(), month) - MAKE_INTERVAL(month => 12)
+      GROUP BY  month_year,
+                order_id
+  )
+
+SELECT      month_year,
+            ROUND(AVG(order_value), 2) AS average_order_value
+  FROM      order_value_by_month
+  GROUP BY  month_year
+  ORDER BY  average_order_value DESC
+  LIMIT     3;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Percentage of products never ordered</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.products</p>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write two queries that will display the percentage of products that have never been ordered</li>
+    <li>One query should use NOT IN</li>
+    <li>The other one should use NOT EXISTS</li>
+    <li>Discuss the merits of the 2 approaches</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>percentage_of_nevered_ordered_products</th></thead>
+      <tbody>
+        <tr><td>0.21</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH all_products AS
+  ( SELECT DISTINCT   id AS product_id
+                FROM  bigquery-public-data.thelook_ecommerce.products
+  ),
+
+  ordered_products AS
+  ( SELECT DISTINCT   product_id
+                FROM  bigquery-public-data.thelook_ecommerce.order_items
+  ),
+
+  never_ordered_products AS
+  ( SELECT  all_products.product_id
+      FROM  all_products
+      WHERE all_products.product_id NOT IN ( SELECT ordered_products.product_id FROM ordered_products )
+  )
+
+SELECT  ROUND(( SELECT COUNT(*) FROM never_ordered_products) / (SELECT COUNT(*) FROM all_products) * 100, 2)
+          AS percentage_of_nevered_ordered_products;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Top buyer in February 2022</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.thelook_ecommerce.order_items</p>
+  <p>bigquery-public-data.thelook_ecommerce.users</p>
+
+  <h4>Task</h4>
+  <p>Write a query that will display the top buyer in February 2022.</p>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>id</th><th>first_name</th><th>last_name</th></thead>
+      <tbody>
+        <tr><td>79080</td><td>William</td><td>Conrad</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH top_buyer_id AS
+  (  SELECT     user_id,
+                ROUND(SUM(sale_price), 2) AS customer_spend
+      FROM      bigquery-public-data.thelook_ecommerce.order_items
+      WHERE     CAST(created_at AS DATE) BETWEEN DATE('2022-02-01') AND DATE('2022-02-28')
+      GROUP BY  user_id
+      ORDER BY  customer_spend DESC
+      LIMIT     1
+  ),
+  
+  users AS
+  ( SELECT  id, first_name, last_name
+      FROM  bigquery-public-data.thelook_ecommerce.users
+  )
+
+SELECT  id, first_name, last_name
+  FROM  users
+  WHERE id = ( SELECT user_id FROM top_buyer_id );
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Google Analytics unique page views by page in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of total page views and the number of unique page views by page</li>
+    <li>A session is defined by a combination of the user_pseudo_id and the ga_session_id numbers</li>
+    <li>So basically, we want to display the number of sessions where each page was visited at least once</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-8.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH subquery AS
+  (  SELECT user_pseudo_id,
+            ( SELECT  value.int_value
+                FROM  UNNEST(event_params)
+                WHERE event_name = 'page_view'
+                      AND key = 'ga_session_id'
+            ) AS session_id,
+            
+            ( SELECT  value.string_value
+                FROM  UNNEST(event_params)
+                WHERE event_name = 'page_view'
+                      AND key = 'page_location'
+            ) AS page
+      
+      FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE _table_suffix BETWEEN '20210101' AND '20210131'
+            AND event_name = 'page_view'
+  )
+
+SELECT      page,
+            COUNT(*) AS total_pageviews,
+            COUNT(DISTINCT CONCAT(user_pseudo_id,session_id)) AS unique_pageviews
+  
+  FROM      subquery
+  GROUP BY  page
+  ORDER BY  unique_pageviews DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Google Analytics top 10 landing pages in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the top 10 landing pages in January 2021</li>
+    <li>Sorted by entrances in descending order</li>
+    <li>We get a landing page when we have the page_view event where the entrance event parameter is equal to 1</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-9.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT DISTINCT (   SELECT  value.string_value
+                      FROM  UNNEST(event_params)
+                      WHERE key = 'page_location'
+                            AND event_name = 'page_view'
+                ) AS page,
+  
+                SUM(COALESCE(
+                  (   SELECT  value.int_value
+                        FROM  UNNEST(event_params)
+                        WHERE key = 'entrances'
+                        AND event_name = 'page_view'
+                  ), 0)
+                ) AS entrances
+  
+  FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
+            AND event_name = 'page_view'
+  
+  GROUP BY  page
+  HAVING    entrances > 0
+  
+  ORDER BY  entrances DESC
+  LIMIT     10;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — </span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of new and returning users in January 2021</li>
+    <li>We get a new user when we have an event for which the ga_session_number event params field is equal to 1</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>new_users</th><th>returning_users</th></thead>
+      <tbody>
+        <tr><td>90221</td><td>16598</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH user_metrics AS
+  (  SELECT     user_pseudo_id,
+                CONCAT(user_pseudo_id, '.', (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id'))
+                  AS unique_session_id,
+                (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_number')
+                  AS session_number
+      
+      FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
+      
+      GROUP BY  user_pseudo_id,
+                unique_session_id,
+                session_number
+      ORDER BY  user_pseudo_id ASC,
+                session_number ASC
+  )
+
+SELECT
+  ( SELECT  COUNT(DISTINCT user_pseudo_id)
+      FROM  user_metrics
+      WHERE session_number = 1
+  ) AS new_users,
+  
+  ( SELECT  COUNT(DISTINCT user_pseudo_id)
+      FROM  user_metrics
+      WHERE session_number > 1
+  ) AS returning_users;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Google Analytics session conversion rate in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the total number of sessions</li>
+    <li>and the number of sessions where at least one purchase happened</li>
+    <li>and the session conversion rate</li>
+    <li>for the January 2021 period</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>all_sessions</th><th>sessions_with_purchases</th><th>session_conversion_rate</th></thead>
+      <tbody>
+        <tr><td>118380</td><td>1115</td><td>0.94</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH sessions_with_purchases AS
+  ( SELECT      CONCAT( user_pseudo_id,
+                        '.',
+                        (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id')
+                ) AS unique_session_id,
+                COUNT(*)    AS purchases
+                
+      FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE     (_table_suffix BETWEEN '20210101' AND '20210131')
+                AND event_name = 'purchase'
+      GROUP BY  unique_session_id
+  ),
+  
+  all_sessions AS
+  ( SELECT  DISTINCT CONCAT( user_pseudo_id,
+                            '.',
+                            (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id'))
+                FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+                WHERE _table_suffix BETWEEN '20210101' AND '20210131'
+    )
+
+SELECT  (SELECT COUNT(*) FROM all_sessions) AS all_sessions,
+        (SELECT COUNT(*) FROM sessions_with_purchases) AS sessions_with_purchases,
+        ROUND(
+            (SELECT COUNT(*) FROM sessions_with_purchases)
+            / (SELECT COUNT(*) FROM all_sessions) * 100,
+        2) AS session_conversion_rate;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Google Analytics user channel grouping in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that displays the number of users by channel grouping</li>
+    <li>Sorted by number of users in descending order</li>
+  </ul>
+  <p>You can find documentation on the channel grouping concept here: <a href="https://support.google.com/analytics/answer/9756891" target="_blank">https://support.google.com/analytics/answer/9756891</a></p>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-12.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT      CASE
+              WHEN  traffic_source.source = '(direct)'
+                    AND (traffic_source.medium IN ('(not set)', '(none)'))
+                    THEN 'Direct'
+              WHEN  ( REGEXP_CONTAINS(traffic_source.source,'alibaba|amazon|google shopping|shopify|etsy|ebay|stripe|walmart')
+                    OR REGEXP_CONTAINS(traffic_source.name, '^(.*(([^a-df-z]|^)shop|shopping).*)$'))
+                    AND REGEXP_CONTAINS(traffic_source.medium, '^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Shopping'
+              WHEN REGEXP_CONTAINS(traffic_source.source,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    AND REGEXP_CONTAINS(traffic_source.medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Search'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'badoo|facebook|fb|instagram|linkedin|pinterest|tiktok|twitter|whatsapp')
+                    AND REGEXP_CONTAINS(traffic_source.medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Social'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'dailymotion|disneyplus|netflix|youtube|vimeo|twitch|vimeo|youtube')
+                    AND REGEXP_CONTAINS(traffic_source.medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Video'
+              WHEN  traffic_source.medium IN ('display', 'banner', 'expandable', 'interstitial', 'cpm')
+                    THEN 'Display'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'alibaba|amazon|google shopping|shopify|etsy|ebay|stripe|walmart')
+                    OR REGEXP_CONTAINS(traffic_source.name, '^(.*(([^a-df-z]|^)shop|shopping).*)$')
+                    THEN 'Organic Shopping'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'badoo|facebook|fb|instagram|linkedin|pinterest|tiktok|twitter|whatsapp')
+                    OR traffic_source.medium IN ('social', 'social-network', 'social-media', 'sm', 'social network', 'social media')
+                    THEN 'Organic Social'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'dailymotion|disneyplus|netflix|youtube|vimeo|twitch|vimeo|youtube')
+                    OR REGEXP_CONTAINS(traffic_source.medium,'^(.*video.*)$')
+                    THEN 'Organic Video'
+              WHEN  REGEXP_CONTAINS(traffic_source.source,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    OR traffic_source.medium = 'organic'
+                    THEN 'Organic Search'
+              WHEN REGEXP_CONTAINS(traffic_source.source,'email|e-mail|e_mail|e mail')
+                    OR REGEXP_CONTAINS(traffic_source.medium,'email|e-mail|e_mail|e mail')
+                    THEN 'Email'
+              WHEN traffic_source.medium = 'affiliate'
+                    THEN 'Affiliates'
+              WHEN  traffic_source.medium = 'referral'
+                    THEN 'Referral'
+              WHEN  traffic_source.medium = 'audio'
+                    THEN 'Audio'
+              WHEN traffic_source.medium = 'sms'
+                    THEN 'SMS'
+              WHEN  traffic_source.medium LIKE '%push'
+                    OR REGEXP_CONTAINS(traffic_source.medium,'mobile|notification')
+                    THEN 'Mobile Push Notifications'
+                    ELSE  'Unassigned'
+            END AS channel_grouping,
+            COUNT(DISTINCT user_pseudo_id) AS users
+  
+  FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
+  
+  GROUP BY  channel_grouping
+  ORDER BY  users DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°13 — Google Analytics session channel grouping in January 2021</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that display the number of sessions by channel grouping</li>
+    <li>Sorted by number of sessions in descending order</li>
+  </ul>
+  <p>You can learn more about channel grouping with this link: <a href="https://support.google.com/analytics/answer/9756891" target="_blank">https://support.google.com/analytics/answer/9756891</a></li>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-13.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+WITH subquery AS
+  ( SELECT      user_pseudo_id,
+                ( SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id' ) AS session_id,
+                COALESCE(MAX(( SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'medium' )), '(none)') AS medium,
+                COALESCE(MAX(( SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'source' )), '(direct)') AS source,
+                COALESCE(MAX(( SELECT  value.string_value FROM UNNEST(event_params) WHERE key = 'campaign' )), '(not set)') AS name
+      
+      FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+      WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
+      GROUP BY  user_pseudo_id,
+                session_id
+  )
+
+SELECT      CASE
+              WHEN  source = '(direct)' AND (medium IN ('(not set)', '(none)')) THEN 'Direct'
+              WHEN  (REGEXP_CONTAINS(SOURCE,'alibaba|amazon|google shopping|shopify|etsy|ebay|stripe|walmart')
+                    OR REGEXP_CONTAINS(name, '^(.*(([^a-df-z]|^)shop|shopping).*)$'))
+                    AND REGEXP_CONTAINS(medium, '^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Shopping'
+              WHEN  REGEXP_CONTAINS(SOURCE,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    AND REGEXP_CONTAINS(medium,'^(.*cp.*|ppc|paid.*)$')
+                    AND LOWER(name) LIKE '%simmer%'
+                    THEN 'Branded Paid Search'
+              WHEN  REGEXP_CONTAINS(SOURCE,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    AND REGEXP_CONTAINS(medium,'^(.*cp.*|ppc|paid.*)$')
+                    AND LOWER(name) NOT LIKE '%simmer%'
+                    THEN 'Generic Paid Search'
+              WHEN  REGEXP_CONTAINS(SOURCE,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    AND REGEXP_CONTAINS(medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Search'
+              WHEN  REGEXP_CONTAINS(SOURCE,'badoo|facebook|fb|instagram|linkedin|pinterest|tiktok|twitter|whatsapp')
+                    AND REGEXP_CONTAINS(medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Social'
+              WHEN  REGEXP_CONTAINS(SOURCE,'dailymotion|disneyplus|netflix|youtube|vimeo|twitch|vimeo|youtube')
+                    AND REGEXP_CONTAINS(medium,'^(.*cp.*|ppc|paid.*)$')
+                    THEN 'Paid Video'
+              WHEN  medium IN ('display', 'banner', 'expandable', 'interstitial', 'cpm')
+                    THEN 'Display'
+              WHEN  REGEXP_CONTAINS(SOURCE,'alibaba|amazon|google shopping|shopify|etsy|ebay|stripe|walmart')
+                    OR REGEXP_CONTAINS(name, '^(.*(([^a-df-z]|^)shop|shopping).*)$')
+                    THEN 'Organic Shopping'
+              WHEN  REGEXP_CONTAINS(SOURCE,'badoo|facebook|fb|instagram|linkedin|pinterest|tiktok|twitter|whatsapp')
+                    OR medium IN ('social', 'social-network', 'social-media', 'sm', 'social network', 'social media')
+                    THEN 'Organic Social'
+              WHEN  REGEXP_CONTAINS(SOURCE,'dailymotion|disneyplus|netflix|youtube|vimeo|twitch|vimeo|youtube')
+                    OR REGEXP_CONTAINS(medium,'^(.*video.*)$')
+                    THEN 'Organic Video'
+              WHEN  REGEXP_CONTAINS(SOURCE,'baidu|bing|duckduckgo|ecosia|google|yahoo|yandex')
+                    OR medium = 'organic'
+                    THEN 'Organic Search'
+              WHEN  REGEXP_CONTAINS(SOURCE,'email|e-mail|e_mail|e mail')
+                    OR REGEXP_CONTAINS(medium,'email|e-mail|e_mail|e mail')
+                    THEN 'Email'
+              WHEN  medium = 'affiliate'
+                    THEN 'Affiliates'
+              WHEN  medium = 'referral'
+                    THEN 'Referral'
+              WHEN  medium = 'audio'
+                    THEN 'Audio'
+              WHEN  medium = 'sms'
+                    THEN 'SMS'
+              WHEN  medium LIKE '%push'
+                    OR REGEXP_CONTAINS(medium,'mobile|notification')
+                    THEN 'Mobile Push Notifications'
+              ELSE  'Unassigned'
+            END AS channel_grouping,
+            COUNT(DISTINCT CONCAT(user_pseudo_id, '.', session_id)) AS sessions
+  
+  FROM      subquery
+  GROUP BY  channel_grouping
+  ORDER BY  sessions DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
