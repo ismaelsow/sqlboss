@@ -25,10 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
     head.appendChild(link);
 
     // Keep the teacher visuals above the teacher text
-    let albanNoutchaTeacher = document.querySelector(".teacher-section.alban-noutcha");
-    let albanNoutchaTeacherVisuals = document.querySelector(".teacher-visuals.alban-noutcha");
-    let albanNoutchaTeacherText = document.querySelector(".teacher-text.alban-noutcha");
-    albanNoutchaTeacher.insertBefore(albanNoutchaTeacherVisuals, albanNoutchaTeacherText);
+    if (document.querySelector(".teacher-section.alban-noutcha")) {
+      let albanNoutchaTeacher = document.querySelector(".teacher-section.alban-noutcha");
+      let albanNoutchaTeacherVisuals = document.querySelector(".teacher-visuals.alban-noutcha");
+      let albanNoutchaTeacherText = document.querySelector(".teacher-text.alban-noutcha");
+      albanNoutchaTeacher.insertBefore(albanNoutchaTeacherVisuals, albanNoutchaTeacherText);
+    }
   }
 
   Array.from(document.querySelectorAll(".hide-control")).forEach(function(item) {

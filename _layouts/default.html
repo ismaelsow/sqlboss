@@ -12,33 +12,12 @@
 
         <div class="col-xs-12 col-lg-6">
           {% include navigation.html %}
-
-          <h1><span class="green-text-span">SQL Boss SQL Course</span></h1>
-          <h2>{{ page.title }}</h2>
-
           {{ content }}
-
         </div>
 
         <div class="col-lg-3"></div>
       </div>  
     </section> 
-
-    <section class="container"style="padding-top:56px">
-      <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-xs-12 col-lg-6">
-          <div class="lesson-navigation">
-            <div><a href="{{ page.previous_lesson }}">⇐ Previous lesson</a></div>
-            <div><a href="/premium-pack/">Premium pack</a></div>
-            {% if page.next_lesson %}
-              <div><a href="{{ page.next_lesson }}">Next lesson ⇒</a></div>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-lg-3"></div>
-      </div> 
-    </section>
 
     {% include footer.html %} 
   </body>

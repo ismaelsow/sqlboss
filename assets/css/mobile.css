@@ -70,6 +70,14 @@ h3 {
   padding-bottom: 36px;
 }
 
+h4 {
+  font-size: 64px;
+  line-height: 72px;
+  letter-spacing: -0.2px;
+  max-width: max-content;
+  padding-bottom: 24px;
+}
+
 p {
   padding-bottom: 64px;
 }
@@ -137,4 +145,21 @@ li {
 
 .dataset-details {
   margin-top:256px;
+}
+
+/* LESSONS */
+.hide-control, .show-control {
+  font-size: 48px;
+}
+
+figcaption a {
+  font-size: 0.4em;
+}
+
+pre.language-sql {
+  padding: 0px 28px;
+}
+
+code.language-sql {
+  font-size: 0.65em;
 }

@@ -1,167 +1,148 @@
-<html>
+---
+layout: default
+---
 
-  <head>
-    <title>SQL Boss - Free SQL lessons for analysts, marketing and product people</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
-  </head>
+<h1><span class="yellow-text-span" style="max-width:max-content">Get fluent in SQL</span><br>Finally 😉</h1>
+<h3 style="padding-top:48px;">Free SQL course and interview prep<br>for <span class="green-text-span">SELECT people.</span></h3>
 
-  <body>
-    <div class="scribbles-container">
-      <img src="/assets/images/scribble-4.svg" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: auto;top: 50px;right: 0;bottom: 0;width: 16vw;max-width: 250px;">
-      <img src="/assets/images/scribble-58.svg" loading="lazy" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: 0;top: 100px;right: auto;bottom: auto;width: 16vw;max-width: 200px;">
+<div class="intro">
+  <p><span style="font-weight:800">Hi there 👋</span></p>
+  <p>It's easy to learn <strong>SQL syntax</strong> online. Finding resources to <strong>practice real-world SQL problem-solving</strong> is much more difficult.</p>
+  <p>SQL Boss is a <strong>free SQL course</strong> that focuses on <strong>practice</strong>. If you read the 50+ short lessons and do the <strong>180 carefully paced practice problems</strong>, you'll get good at SQL pretty fast.</p>
+  <p>It's one of the most complete courses for data analysis and reporting. We cover <strong>advanced subjects</strong> like window functions, user-defined functions, recursive queries, pivot etc. (<a href="#table-of-contents">👉 see table of contents below</a>).</p>
+
+  <p style="margin-top:48px"></p>
+
+  <div class="chapter">
+    <span class="grey-text-span">What flavor of SQL will I learn?</span>
+    <p>You'll be using Google Standard SQL and the Google BigQuery database. The SQL syntax variations that exist between database engines (BigQuery, Snowflake, Oracle, PostgreSQL, MySQL, Microsoft SQL Server, etc.) are small and easy to pick up.</p>
+  </div>
+
+  <div class="chapter">
+    <span class="grey-text-span">What datasets will I be working with?</span>
+    <p>Thanks to the use of BigQuery, you'll be working with <strong>real datasets</strong> hosted on Google Cloud. No more contrived, toy-like examples and datasets. Also, nothing to install on your computer. You'll not get stuck trying to make your instructor's pet database work on your machine.</p>
+    <p>During the lessons and exercises, you'll query 3 main datasets loaded in Google BigQuery:</p>
+    <ul>
+      <li><strong><a href="https://console.cloud.google.com/marketplace/product/bigquery-public-data/thelook-ecommerce" target="blank">theLook eCommerce</a></strong>: TheLook is a fictitious eCommerce clothing site developed by the Looker team. The dataset contains information about customers, products, orders, logistics, web events, and digital marketing campaigns.
+</li>
+      <li><strong><a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset" target="blank">The BigQuery Google Analytics 4 sample</a></strong>: this dataset contains 3 months' worth of Google Analytics event data (partially obfuscated). The data was collected on the Google Merchandise Store (an online store that sells Google-branded merchandise).
+</li>
+      <li><strong><a href="https://www.kaggle.com/datasets/danofer/dbpedia-classes" target="blank">DBPedia Classes</a></strong>: DBpedia (from "DB" for "database") is a project aiming to extract structured content from the information created in Wikipedia. This is an extract of the data that provides hierarchical categories ("classes") for almost 350K wikipedia articles.</li>
+    </ul>
+  </div>
+
+  <div class="chapter">
+    <span class="grey-text-span">Does the course cover database design, modification or administration topics?</span>
+    <p>No. The course focuses on analysis and reporting, i.e answering business questions with SELECT-based queries. We cover user-defined functions, table functions, and views as they can be used to make better SELECT-based queries. We don't include anything that creates, updates or deletes database records.</p>
+  </div>
+
+</div> 
+</div>
+<div class="col-lg-3"></div>
+</div>  
+</section>
+
+
+<div class="scribbles-container">
+  <img src="/assets/images/scribble-62.svg" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: auto;top: 950px;right: 0;bottom: 0;width: 16vw;max-width: 250px;">
+  <img src="/assets/images/scribble-9.svg" loading="lazy" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: 0;top: 1350px;right: auto;bottom: auto;width: 16vw;max-width: 200px;">
+</div>
+<section class="container table-of-contents">
+  <div class="row">
+    <div class="col-lg-3"></div>
+
+    <div class="col-xs-12 col-lg-6">
+
+      <h2 id="table-of-contents"><span class="purple-text-span">Table of Contents</span></h2>
+
+      <h3><span class="grey-text-span">Basic selections</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/key-concepts/">Key SQL concepts</a></li>
+          <li><a href="lessons/big-query-setup-and-dataset-exploration/">BigQuery setup and dataset exploration</a></li>
+          <li><a href="lessons/readme/">README</a></li>
+          <li><a href="lessons/select-from/">SELECT FROM</a></li>
+          <li><a href="lessons/limit/">LIMIT</a></li>
+          <li><a href="lessons/where-and-comparison-operators/">WHERE and comparison operators</a></li>
+          <li><a href="lessons/like/">LIKE</a></li>
+          <li><a href="lessons/like/">IN</a></li>
+          <li><a href="lessons/between/">BETWEEN</a></li>
+          <li><a href="lessons/is_null/">IS NULL</a></li>
+          <li><a href="lessons/and/">AND</a></li>
+          <li><a href="lessons/or/">OR</a></li>
+          <li><a href="lessons/not/">NOT</a></li>
+          <li><a href="lessons/order-by/">ORDER BY</a></li>
+          <li><a href="lessons/offset/">OFFSET</a></li>
+          <li><a href="lessons/case-when/">CASE WHEN</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">Aggregations</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/common-aggregation-functions/">Common aggregation functions</a></li>
+          <li><a href="lessons/group-by/">GROUP BY</a></li>
+          <li><a href="lessons/having/">HAVING</a></li>
+          <li><a href="lessons/distinct/">DISTINCT</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">Common types and functions</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/main-data-types-and-type-conversion/">Main data types and type conversion</a></li>
+          <li><a href="lessons/numbers/">Numbers</a></li>
+          <li><a href="lessons/strings/">Strings</a></li>
+          <li><a href="lessons/regular-expressions/">Regular expressions</a></li>
+          <li><a href="lessons/dates-and-times/">Dates and times</a></li>
+          <li><a href="lessons/null-values/">NULL values</a></li>
+          <li><a href="lessons/record/">RECORD</a></li>
+          <li><a href="lessons/arrays/">Arrays</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">JOINs, subqueries and set operations</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/subqueries-and-common-table-expressions/">Subqueries and common table expressions</a></li>
+          <li><a href="lessons/cross-join/">CROSS JOIN</a></li>
+          <li><a href="lessons/inner-join/">INNER JOIN</a></li>
+          <li><a href="lessons/left-join-and-right-join/">LEFT JOIN and RIGHT JOIN</a></li>
+          <li><a href="lessons/full-outer-join/">FULL OUTER JOIN</a></li>
+          <li><a href="lessons/self-join/">Self JOIN</a></li>
+          <li><a href="lessons/union-and-union-all/">UNION and UNION ALL</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">Modular queries</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/user-defined-functions/">User-defined functions</a></li>
+          <li><a href="lessons/table-functions/">Table functions</a></li>
+          <li><a href="lessons/views/">Views</a></li>
+          <li><a href="lessons/recursive-queries/">Recursive queries</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">Window functions and PIVOT operator</span></h3>
+      <div class="chapter">
+        <ul>
+          <li><a href="lessons/aggregate-window-functions/">Aggregate window functions</a></li>
+          <li><a href="lessons/row-number/">ROW_NUMBER (ranking window function)</a></li>
+          <li><a href="lessons/ntile/">NTILE (ranking window function)</a></li>
+          <li><a href="lessons/rank/">RANK (ranking window function)</a></li>
+          <li><a href="lessons/dense-rank/">DENSE_RANK (ranking function)</a></li>
+          <li><a href="lessons/lag/">LAG (offset function)</a></li>
+          <li><a href="lessons/lead/">LEAD (offset function)</a></li>
+          <li><a href="lessons/first-value/">FIRST_VALUE (offset function)</a></li>
+          <li><a href="lessons/last-value/">LAST_VALUE (offset function) and window frame specification</a></li>
+          <li><a href="lessons/nth-value/">NTH_VALUE (offset function)</a></li>
+          <li><a href="lessons/percent-rank/">PERCENT_RANK (statistical function)</a></li>
+          <li><a href="lessons/pivot/">PIVOT</a></li>
+        </ul>
+      </div>
+
     </div>
-    <section class="container top-section">
-      <div class="row">
-        <div class="col-lg-3"></div>
-
-        <div class="col-xs-12 col-lg-6">
-          <div style="display:flex;flex-direction:row;justify-content:space-between;align-items:center">
-            <div><a href="/" style="text-decoration:none"><img src="/assets/images/banner.png" class="logo" /></a></div>
-            <div style="display:flex;flex-direction:row;justify-content:left;align-items:center" class="menu-links">
-              <div><a class="go-to-training" href="/premium-pack">Premium Pack</a></div>
-            </div> 
-          </div>
-
-          <h1><span class="yellow-text-span" style="width:max-content">Finally learn SQL</span><br>with the SQL Boss course 😎</h1>
-          <h2>50 <span class="green-text-span" style="width:max-content">free SQL lessons</span> for BI, data, marketing and product analysts.</h2>
-
-          <div class="intro">
-            <p><span style="font-weight:800">Ismaël here 👋</span></p>
-            <p>We're so happy you chose us to help you upgrade your SQL skills. Under 24 hours (usually earlier than that), you'll receive an email with everything you need to access the Hardcore Week of SQL bootcamp. Why the delay? We use Notion to host the course and in Notion, you can only share pages manually.</p>
-            <p>Meanwhile, in a few minutes you should get your invoice from Stripe, our billing platform. And if you have any questions, shoot us an email at hardcoreweek@userstand.com</p>
-            <p>See you soon!</p>
-          </div> 
-        </div>
-        <div class="col-lg-3"></div>
-      </div>  
-    </section>
-
-
-    <div class="scribbles-container">
-      <img src="/assets/images/scribble-62.svg" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: auto;top: 950px;right: 0;bottom: 0;width: 16vw;max-width: 250px;">
-      <img src="/assets/images/scribble-9.svg" loading="lazy" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;position: absolute;left: 0;top: 1350px;right: auto;bottom: auto;width: 16vw;max-width: 200px;">
-    </div>
-    <section class="container table-of-contents">
-      <div class="row">
-        <div class="col-lg-3"></div>
-
-        <div class="col-xs-12 col-lg-6">
-
-          <h2><span class="purple-text-span">Table of Contents</span></h2>
-
-          <h3><span class="grey-text-span">Basic selections</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/key-concepts/">Key concepts</a></li>
-              <li><a href="lessons/big-query-setup-and-dataset-exploration/">BigQuery setup and dataset exploration</a></li>
-              <li><a href="lessons/problem-solving-and-best-practices/">Problem solving and best practices</a></li>
-              <li><a href="lessons/select-from/">SELECT FROM</a></li>
-              <li><a href="lessons/limit/">LIMIT</a></li>
-              <li><a href="lessons/where-and-comparison-operators/">WHERE and comparison operators</a></li>
-              <li><a href="lessons/like/">LIKE</a></li>
-              <li><a href="lessons/like/">IN</a></li>
-              <li><a href="lessons/between/">BETWEEN</a></li>
-              <li><a href="lessons/is_null/">IS NULL</a></li>
-              <li><a href="lessons/and/">AND</a></li>
-              <li><a href="lessons/or/">OR</a></li>
-              <li><a href="lessons/not/">NOT</a></li>
-              <li><a href="lessons/order-by/">ORDER BY</a></li>
-              <li><a href="lessons/offset/">OFFSET</a></li>
-              <li><a href="lessons/case-when/">CASE WHEN</a></li>
-            </ul>
-          </div>
-
-          <h3><span class="grey-text-span">Aggregations</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/common-aggregation-functions/">Common aggregation functions</a></li>
-              <li><a href="lessons/group-by/">GROUP BY</a></li>
-              <li><a href="lessons/having/">HAVING</a></li>
-              <li><a href="lessons/distinct/">DISTINCT</a></li>
-            </ul>
-          </div>
-
-          <h3><span class="grey-text-span">Common types and functions</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/main-data-types-and-type-conversion/">Main data types and type conversion</a></li>
-              <li><a href="lessons/numbers/">Numbers</a></li>
-              <li><a href="lessons/strings/">Strings</a></li>
-              <li><a href="lessons/regular-expressions/">Regular expressions</a></li>
-              <li><a href="lessons/dates-and-times/">Dates and times</a></li>
-              <li><a href="lessons/null-values/">NULL values</a></li>
-              <li><a href="lessons/record/">RECORD</a></li>
-              <li><a href="lessons/arrays/">Arrays</a></li>
-            </ul>
-          </div>
-
-          <h3><span class="grey-text-span">JOINs, subqueries and set operations</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/subqueries-and-common-table-expressions/">Subqueries and common table expressions</a></li>
-              <li><a href="lessons/cross-join/">CROSS JOIN</a></li>
-              <li><a href="lessons/inner-join/">INNER JOIN</a></li>
-              <li><a href="lessons/left-join-and-right-join/">LEFT JOIN and RIGHT JOIN</a></li>
-              <li><a href="lessons/full-outer-join/">FULL OUTER JOIN</a></li>
-              <li><a href="lessons/self-join/">Self JOIN</a></li>
-              <li><a href="lessons/union-and-union-all/">UNION and UNION ALL</a></li>
-            </ul>
-          </div>
-
-          <h3><span class="grey-text-span">Modular queries</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/user-defined-functions/">User-defined functions</a></li>
-              <li><a href="lessons/table-functions/">Table functions</a></li>
-              <li><a href="lessons/views/">Views</a></li>
-              <li><a href="lessons/recursive-queries/">Recursive queries</a></li>
-            </ul>
-          </div>
-
-          <h3><span class="grey-text-span">Window functions and PIVOT operator</span></h3>
-          <div class="chapter">
-            <ul>
-              <li><a href="lessons/aggregate-window-functions/">Aggregate window functions</a></li>
-              <li><a href="lessons/row-number/">ROW_NUMBER (ranking window function)</a></li>
-              <li><a href="lessons/ntile/">NTILE (ranking window function)</a></li>
-              <li><a href="lessons/rank/">RANK (ranking window function)</a></li>
-              <li><a href="lessons/dense-rank/">DENSE_RANK (ranking function)</a></li>
-              <li><a href="lessons/lag/">LAG (offset function)</a></li>
-              <li><a href="lessons/lead/">LEAD (offset function)</a></li>
-              <li><a href="lessons/first-value/">FIRST_VALUE (offset function)</a></li>
-              <li><a href="lessons/last-value/">LAST_VALUE (offset function) and window frame specification</a></li>
-              <li><a href="lessons/nth-value/">NTH_VALUE (offset function)</a></li>
-              <li><a href="lessons/percent-rank/">PERCENT_RANK (statistical function)</a></li>
-              <li><a href="lessons/pivot/">PIVOT</a></li>
-            </ul>
-          </div>
-
-        </div>
-        <div class="col-lg-3"></div>
-      </div> 
-    </section> 
-
-    <section class="container"style="padding-top:56px">
-      <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-xs-12 col-lg-6">
-          <p class="footer">2023 &copy;	Made with 💝 by Userstand SAS, France, SIRET 85242310200015</p>
-        </div>
-        <div class="col-lg-3"></div>
-      </div> 
-    </section>
-
-    <script src="/assets/js/customize.js"></script>
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TL8NCBG');</script>
-    <!-- End Google Tag Manager -->
-  </body>
-</html>
+    <div class="col-lg-3"></div>
+  </div> 
+</section> 
