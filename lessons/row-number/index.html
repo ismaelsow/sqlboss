@@ -5,6 +5,8 @@ previous_lesson: /lessons/aggregate-window-functions/
 next_lesson: /lessons/ntile/
 ---
 
+<p><img src="images/row-number.png" class="illustration" /></p>
+
 <p><code>ROW_NUMBER</code> is a the simplest of the window functions that deal with ranking items. In BigQuery, these ranking functions are called numbering functions:</p<
 <blockquote>Returns the sequential row ordinal (1-based) of each row for each ordered partition. If the ORDER BYclause is unspecified then the result is non-deterministic (⇒ i.e not sorted in any particular way).</blockquote>
 
@@ -29,7 +31,7 @@ SELECT      country,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — VIP customers activation dates</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — VIP customers activation dates&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -72,7 +74,7 @@ SELECT      order_date,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Cheapest product by category</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Cheapest product by category&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -114,7 +116,7 @@ SELECT      category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Every other user</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Every other user&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -153,7 +155,7 @@ SELECT  id, name, created_at
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — First order in each country</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — First order in each country&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -204,7 +206,7 @@ WITH orders_countries AS
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Top selling product in each country</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Top selling product in each country&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -266,7 +268,7 @@ SELECT      country,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°6 — Top 3 selling products in China and the United States on Jan 1st, 2023</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°6 — Top 3 selling products in China and the United States on Jan 1st, 2023&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -334,7 +336,7 @@ SELECT  country,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Best selling product by category</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Best selling product by category&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -393,7 +395,7 @@ SELECT      category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of days to become a VIP customer</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of days to become a VIP customer&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -468,7 +470,7 @@ SELECT  CAST(AVG(days_between) AS INTEGER) AS average_days_to_vip
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Most popular and less popular brands</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Most popular and less popular brands&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -533,7 +535,7 @@ SELECT  *
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°10 — Random sample of 1% of the products</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°10 — Random sample of 1% of the products&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>

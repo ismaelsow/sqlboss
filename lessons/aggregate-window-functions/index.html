@@ -5,6 +5,8 @@ previous_lesson: /lessons/recursive-queries/
 next_lesson: /lessons/row-number/
 ---
 
+<p><img src="images/aggregate-window-functions.png" class="illustration" /></p>
+
 <p>Window functions are functions that:</p>
 <ul>
   <li><strong>operate like normal scalar functions</strong>: for 1 column value, they return 1 scalar result. Scalar meaning 1 value, not a table or set of rows.</li>
@@ -266,7 +268,7 @@ SELECT      user_id,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Product category with the most products</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Product category with the most products&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -302,7 +304,7 @@ SELECT      category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Average retail prices per category</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Average retail prices per category&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -340,7 +342,7 @@ SELECT      category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Youngest and oldest age per country</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Youngest and oldest age per country&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -381,7 +383,7 @@ SELECT      country,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Number of individual product sales vs average number of product sales per category</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Number of individual product sales vs average number of product sales per category&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -454,7 +456,7 @@ SELECT        id,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Percentage of total revenue per category in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Percentage of total revenue per category in 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -510,7 +512,7 @@ SELECT      category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°6 — Cumulative daily orders of specific customers</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°6 — Cumulative daily orders of specific customers&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -544,7 +546,7 @@ SELECT  CAST(created_at AS DATE) AS order_date,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Cumulative daily spend of specific customers</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Cumulative daily spend of specific customers&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>

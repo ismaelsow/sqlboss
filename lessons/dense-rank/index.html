@@ -5,6 +5,8 @@ previous_lesson: /lessons/rank/
 next_lesson: /lessons/lag/
 ---
 
+<p><img src="images/dense-rank-illustration.png" class="illustration" /></p>
+
 <p><code>DENSE_RANK</code> is similar to <a href="/lessons/rank/">RANK (ranking function)</a>. Its output is based on the value of the ranking column used in the ORDER BY inside the OVER clause.</p>
 <p>Here the rank is always consecutive: rows with the same ranking column’s value are assigned the same rank, but the next rank value is one greater than the previously assigned rank.</p>
 
@@ -29,7 +31,7 @@ SELECT      category,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Top 3 customers with the most items bought, per country</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Top 3 customers with the most items bought, per country&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -82,7 +84,7 @@ SELECT      *
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — 5 most expensive items per category</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — 5 most expensive items per category&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -122,7 +124,7 @@ SELECT      *
 </div>
 
 
-<h3 class="h3-big-margin" id="most-popular-full-names-by-country"><span class="hard-problem-text-span">N°3 — Most popular full names by country</span></h3>
+<h3 class="h3-big-margin" id="most-popular-full-names-by-country"><span class="hard-problem-text-span">N°3 — Most popular full names by country&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>

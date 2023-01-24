@@ -5,6 +5,8 @@ previous_lesson: /lessons/union-and-union-all/
 next_lesson: /lessons/table-functions/
 ---
 
+<p><img src="images/user-defined-functions.svg" class="illustration" /></p>
+
 <p>A user-defined function is a piece of reusable SQL code that can accepts columns as inputs and return a calculated result.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Temporary user-defined functions</span></h3>
@@ -73,7 +75,7 @@ SELECT  count_users_by_country('France') AS france_users,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Pretty print monetary amounts</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Pretty print monetary amounts&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>N/A</p>
@@ -107,7 +109,7 @@ AS (ROUND(number, 2));
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replace '(not set)' with NULL</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replace '(not set)' with NULL&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>N/A</p>
@@ -141,7 +143,7 @@ AS (REPLACE(value, '(not set)', NULL));
 </div>
 
 
-<h3 class="h3-big-margin" id="google-analytics-purchase-event-validator-function"><span class="medium-problem-text-span">N°3 — Google Analytics purchase event validator function</span></h3>
+<h3 class="h3-big-margin" id="google-analytics-purchase-event-validator-function"><span class="medium-problem-text-span">N°3 — Google Analytics purchase event validator function&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101</p>
@@ -195,7 +197,7 @@ RETURNS BOOL AS ( transaction_id IS NOT NULL
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Strip function for Google Analytics URL</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Strip function for Google Analytics URL&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101</p>

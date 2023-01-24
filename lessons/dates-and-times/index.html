@@ -5,6 +5,8 @@ previous_lesson: /lessons/regular-expressions/
 next_lesson: /lessons/null-values/
 ---
 
+<p><img src="images/dates-and-times.png" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Main dates and times data types</span></h3>
 <p>
   <table class="table-with-header">
@@ -184,7 +186,7 @@ SELECT  DATE_DIFF(DATE('2010-07-07'),
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Gross revenue per month</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Gross revenue per month&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -217,7 +219,7 @@ SELECT      FORMAT_DATE('%B %Y', created_at) AS month_year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Unique visitors on the home page per month</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Unique visitors on the home page per month&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -252,7 +254,7 @@ SELECT      FORMAT_DATE('%B %Y', created_at) AS month_year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — New users per year</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — New users per year&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -284,7 +286,7 @@ ORDER BY  new_users DESC;
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Month with the largest number of new user signups</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Month with the largest number of new user signups&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -317,7 +319,7 @@ SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Gross revenue for the last day of each month in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Gross revenue for the last day of each month in 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -349,7 +351,7 @@ SELECT      LAST_DAY(CAST(created_at AS date), month) AS last_day_of_month,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Top 3 months with the highest average order item sale price in the last 12 months</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Top 3 months with the highest average order item sale price in the last 12 months&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -387,7 +389,7 @@ SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°7 — Ecommerce metrics by date</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°7 — Ecommerce metrics by date&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -421,7 +423,7 @@ SELECT      CAST(created_at AS date) AS date_yymmdd,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°8 — Ecommerce metrics by weekdays vs weekends</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°8 — Ecommerce metrics by weekdays vs weekends&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -473,7 +475,8 @@ SELECT      EXTRACT(YEAR FROM created_at) AS year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°9 — Average delivery time broken down by year</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°9 — Average delivery time broken down by year&nbsp;🔥
+</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -513,7 +516,7 @@ SELECT      EXTRACT(YEAR FROM created_at) AS year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — Average number of items purchased by unique customer by year</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — Average number of items purchased by unique customer by year&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -546,7 +549,7 @@ SELECT      EXTRACT(YEAR FROM created_at) AS year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°11 — High daily gross revenues in January 2022</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°11 — High daily gross revenues in January 2022&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -582,7 +585,7 @@ SELECT      FORMAT_DATE('%d/%m/%y', created_at) AS date_ddmmyy,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Unique customers per month</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Unique customers per month&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>

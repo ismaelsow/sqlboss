@@ -5,6 +5,8 @@ previous_lesson: /lessons/cross-join/
 next_lesson: /lessons/left-join-and-right-join/
 ---
 
+<p><img src="images/inner-join.png" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
 <p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
 
@@ -95,7 +97,7 @@ SELECT        users.id, orders.order_id, order_items.product_id, products.name
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Customers’ full names and orders</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Customers’ full names and orders&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -127,7 +129,7 @@ SELECT        CONCAT(first_name, ' ', last_name) AS customer_name,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Number of products sold per category</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Number of products sold per category&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -161,7 +163,7 @@ SELECT        category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Number of customers who bought in only one category</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Number of customers who bought in only one category&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -207,7 +209,7 @@ SELECT  COUNT(*) AS number_of_mono_category_customers
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Purchase rate by country</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Purchase rate by country&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -259,7 +261,7 @@ SELECT        country_customers.country AS country,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Names of returned products in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°5 — Names of returned products in 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -309,7 +311,7 @@ SELECT        name, number_of_returns
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Product return rate in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Product return rate in 2022&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -371,7 +373,7 @@ SELECT        name,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Distribution of customer categories</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Distribution of customer categories&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -430,7 +432,7 @@ SELECT      CASE
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Customer categories by lifetime value</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Customer categories by lifetime value&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -491,7 +493,7 @@ SELECT        CONCAT(first_name, ' ', last_name) AS name,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Name of the most expensive item ever sold</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Name of the most expensive item ever sold&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -535,7 +537,7 @@ SELECT        products.name
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — VIP customers in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — VIP customers in 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -594,7 +596,7 @@ SELECT        CONCAT(first_name, ' ', last_name) AS vip_customer_name,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Distribution centers by number of items shipped</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Distribution centers by number of items shipped&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>
@@ -636,7 +638,7 @@ SELECT        name AS distribution_center,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — D7 retention rate</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — D7 retention rate&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>

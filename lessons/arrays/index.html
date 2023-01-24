@@ -5,6 +5,8 @@ previous_lesson: /lessons/record/
 next_lesson: /lessons/subqueries-and-common-table-expressions/
 ---
 
+<p><img src="images/arrays.png" class="illustration" /></p>
+
 <p>An array is an ordered list of zero or more elements.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Basic array</span></h3>
@@ -58,7 +60,7 @@ SELECT  CONCAT(user_pseudo_id, '.', event_timestamp) AS event_identifier,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics number of sessions per date</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics number of sessions per date&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -95,7 +97,7 @@ SELECT      PARSE_DATE('%Y%m%d', _table_suffix) AS session_date,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Anonymized ip address using the SPLIT function</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Anonymized ip address using the SPLIT function&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
@@ -126,7 +128,7 @@ SELECT  id,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Google Analytics number of scroll events by page location</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Google Analytics number of scroll events by page location&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>

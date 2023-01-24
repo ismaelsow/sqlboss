@@ -97,6 +97,16 @@ a:hover {
   text-decoration: underline;
 }
 
+img {
+  max-width: 100%;
+}
+
+img.illustration {
+  max-width: 50%;
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+
 
 /* CONTENT SECTION */
 .chapter {

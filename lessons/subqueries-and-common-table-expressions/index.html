@@ -5,6 +5,8 @@ previous_lesson: /lessons/arrays/
 next_lesson: /lessons/cross-join/
 ---
 
+<p><img src="images/subqueries-and-common-table-expressions.png" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Intro to subqueries</span></h3>
 <p>In addition to querying a table directly, subqueries allow you to query the results of the other queries. It’s also a way to make complex queries more manageable.</p>
 <pre>
@@ -144,7 +146,7 @@ SELECT  user_id
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Number of repeat customers</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Number of repeat customers&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -185,7 +187,7 @@ SELECT  COUNT(*) AS repeat_customers
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Id of the top-selling product in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Id of the top-selling product in 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -228,7 +230,7 @@ SELECT  product_id
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Name of the top-selling product in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Name of the top-selling product in 2022&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -279,7 +281,7 @@ SELECT  name
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Smoothed out average retail price</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Smoothed out average retail price&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -323,7 +325,7 @@ SELECT  ROUND(AVG(retail_price), 2) AS smoothed_out_average_retail_price
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Top 3 months with the highest average order value in the last 12 months</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Top 3 months with the highest average order value in the last 12 months&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -369,7 +371,7 @@ SELECT      month_year,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Percentage of products never ordered</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Percentage of products never ordered&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -424,7 +426,7 @@ SELECT  ROUND(( SELECT COUNT(*) FROM never_ordered_products) / (SELECT COUNT(*) 
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Top buyer in February 2022</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°7 — Top buyer in February 2022&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -474,7 +476,7 @@ SELECT  id, first_name, last_name
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Google Analytics unique page views by page in January 2021</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Google Analytics unique page views by page in January 2021&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -528,7 +530,7 @@ SELECT      page,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Google Analytics top 10 landing pages in January 2021</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Google Analytics top 10 landing pages in January 2021&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -579,7 +581,7 @@ SELECT DISTINCT (   SELECT  value.string_value
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — </span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — Google Analytics New and returning users in January 2021&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -640,7 +642,7 @@ SELECT
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Google Analytics session conversion rate in January 2021</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Google Analytics session conversion rate in January 2021&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -703,7 +705,7 @@ SELECT  (SELECT COUNT(*) FROM all_sessions) AS all_sessions,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Google Analytics user channel grouping in January 2021</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Google Analytics user channel grouping in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -785,7 +787,7 @@ SELECT      CASE
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°13 — Google Analytics session channel grouping in January 2021</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°13 — Google Analytics session channel grouping in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>

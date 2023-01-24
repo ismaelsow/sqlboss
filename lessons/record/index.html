@@ -5,6 +5,8 @@ previous_lesson: /lessons/null-values/
 next_lesson: /lessons/arrays/
 ---
 
+<p><img src="images/record-illustration.png" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Field of fields</span></h3>
 <p>A STRUCT, also known as a RECORD, is a column that’s made of other fields each with a type (required) and field name (optional).</p>
 <p><img src="images/schema.png" class="lesson-img" /></p>
@@ -43,7 +45,7 @@ SELECT  geo.continent
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Google Analytics user id, device category geo properties</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Google Analytics user id, device category geo properties&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
@@ -77,7 +79,7 @@ SELECT  user_pseudo_id, device.category, geo
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Google Analytics number of unique users by continent, country and city</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Google Analytics number of unique users by continent, country and city&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
@@ -115,7 +117,7 @@ SELECT      geo.continent AS continent,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — Google Analytics number of unique users by device category, operating system, and browser</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°3 — Google Analytics number of unique users by device category, operating system, and browser&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
@@ -152,7 +154,7 @@ SELECT      device.category AS device_category,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Google Analytics number of unique users by marketing campaign</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°4 — Google Analytics number of unique users by marketing campaign&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>

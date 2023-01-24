@@ -5,6 +5,8 @@ previous_lesson: /lessons/dense-rank/
 next_lesson: /lessons/lead/
 ---
 
+<p><img src="images/lag-illustration.png" class="illustration" /></p>
+
 <p><code>LAG</code> allows us to display values from previous rows. It takes up to 3 parameters:</p>
 <ol>
   <li>The column whose value we want to display.</li>
@@ -33,7 +35,7 @@ ORDER BY  signup_date ASC;
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Special formatting removing repeats in column</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Special formatting removing repeats in column&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>Resulting table from previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country">Most popular full names by country</a>)</p>
@@ -57,7 +59,7 @@ ORDER BY  signup_date ASC;
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average difference in order value between first order and second order</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average difference in order value between first order and second order&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -126,7 +128,7 @@ SELECT      ROUND(AVG(difference), 2) AS avg_difference
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Next day repeat customers in 2022</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Next day repeat customers in 2022&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -202,7 +204,7 @@ SELECT  COUNT(DISTINCT user_id) AS next_day_repeat_customers
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Average difference in order value between last order and second last order</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Average difference in order value between last order and second last order&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -271,7 +273,7 @@ SELECT      ROUND(AVG(difference), 2) AS avg_difference
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Growth in items shipped by shipping date and distribution center in December 2022</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Growth in items shipped by shipping date and distribution center in December 2022&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>

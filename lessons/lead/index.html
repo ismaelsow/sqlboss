@@ -5,6 +5,8 @@ previous_lesson: /lessons/lag/
 next_lesson: /lessons/first-value/
 ---
 
+<p><img src="images/lead-illustration.png" class="illustration" /></p>
+
 <p><code>LEAD</code> allows us to display values from subsequent rows. It takes up to 3 parameters:</p>
 <ol>
   <li>The column whose value we want to display.</li>
@@ -33,7 +35,7 @@ ORDER BY  signup_date DESC;
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°1 — Path exploration of a Google Analytics unique session</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°1 — Path exploration of a Google Analytics unique session&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104</p>
@@ -91,7 +93,7 @@ SELECT      example_dataset.strip_url(previous_page, 'all') AS previous_page,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average time between page views across Google Analytics unique sessions</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Average time between page views across Google Analytics unique sessions&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p> 
@@ -154,7 +156,7 @@ SELECT  CAST(AVG(delay) AS INTEGER) AS avg_delay_in_seconds
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Google Analytics customers with multiple orders in a seven day period</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Google Analytics customers with multiple orders in a seven day period&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>

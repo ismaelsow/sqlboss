@@ -5,6 +5,8 @@ previous_lesson: /lessons/inner-join/
 next_lesson: /lessons/full-outer-join/
 ---
 
+<p><img src="images/left-join-illustration.svg" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
 <p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
 
@@ -50,7 +52,7 @@ SELECT         *
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Users with no orders</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Users with no orders&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -80,7 +82,7 @@ SELECT      users.id
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Users with no events</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Users with no events&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -110,7 +112,7 @@ SELECT      users.id
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Percentage of inactive users</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Percentage of inactive users&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -156,7 +158,7 @@ SELECT  (SELECT user_count FROM inactive_users) AS inactive_users,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — ARPU per city</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — ARPU per city&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>

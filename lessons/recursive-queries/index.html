@@ -5,6 +5,8 @@ previous_lesson: /lessons/views/
 next_lesson: /lessons/aggregate-window-functions/
 ---
 
+<p><img src="images/recursive-queries.gif" class="illustration" /></p>
+
 <p>Recursive subqueries are query that reference themselves. How is that useful? It’s usually used when we have hierarchical or nested relationships, like parent and child elements.</p<
 
 <p>For example if we are dealing with managers and employees, how do we display the chain of managers above a particular employee? We would need to get the manager immediately above this employee. Let’s call this manager m. Then we would need to  use the same logic to get the manager of this manager, let’s call her m+1. Then manager m+2, manager m+3 until we get to the CEO of the company.</p>
@@ -40,7 +42,7 @@ SELECT      *
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Suite of integers from 1 to 25</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Suite of integers from 1 to 25&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>N/A</p>
@@ -73,7 +75,7 @@ SELECT      *
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Fibonacci sequence</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°2 — Fibonacci sequence&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>N/A</p>
@@ -117,7 +119,7 @@ SELECT      n,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Descendants of a Wikipedia category</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°3 — Descendants of a Wikipedia category&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>At your discretion 🙂</p>
@@ -163,7 +165,7 @@ SELECT      category
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Ascendants of a Wikipedia category</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Ascendants of a Wikipedia category&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>At your discretion 🙂</p>

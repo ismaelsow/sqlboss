@@ -5,6 +5,8 @@ previous_lesson: /lessons/having/
 next_lesson: /lessons/main-data-types-and-type-conversion/
 ---
 
+<p><img src="images/distinct-illustration.png" class="illustration" /></p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
 <p>If we display the values of the browsers column in the events table, we get something like this:</p>
 <pre>
@@ -57,7 +59,7 @@ SELECT  COUNT(browser) AS browser,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of unique customers</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of unique customers&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -90,7 +92,7 @@ SELECT  COUNT(DISTINCT user_id) AS unique_customers
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Unique countries users are coming from</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Unique countries users are coming from&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.users</p>
@@ -120,7 +122,7 @@ SELECT DISTINCT CASE
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Average number of orders by unique customer</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Average number of orders by unique customer&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
@@ -153,7 +155,7 @@ FROM    bigquery-public-data.thelook_ecommerce.orders;
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Checkout starters, buyers and checkout conversion rate</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Checkout starters, buyers and checkout conversion rate&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
@@ -196,7 +198,7 @@ SELECT  COUNT(DISTINCT(CASE WHEN event_name = 'begin_checkout' THEN user_pseudo_
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Checkout starters, buyers and checkout conversion rate by platform</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Checkout starters, buyers and checkout conversion rate by platform&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
@@ -242,7 +244,7 @@ SELECT      platform,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Firefox share of unique user traffic on the home page</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Firefox share of unique user traffic on the home page&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
