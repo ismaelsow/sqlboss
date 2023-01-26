@@ -1,5 +1,6 @@
 ---
 layout: default
+title: "Free SQL course and interview prep"
 ---
 
 <h1><span class="yellow-text-span" style="max-width:max-content">Get fluent in SQL</span><br>Finally 😉</h1>
@@ -9,13 +10,13 @@ layout: default
   <p><span style="font-weight:800">Hi there 👋</span></p>
   <p>It's easy to learn <strong>SQL syntax</strong> online. Finding resources to <strong>practice real-world SQL problem-solving</strong> is much more difficult.</p>
   <p>SQL Boss is a <strong>free SQL course + interview prep platform</strong> that focuses on <strong>practice</strong>. If you read the 50+ short lessons and do the <strong>180 carefully paced practice problems</strong>, you'll get good at SQL pretty fast.</p>
-  <p>It's one of the most complete courses for data analysis and reporting. We cover <strong>advanced subjects</strong> like window functions, user-defined functions, recursive queries, pivot etc. (<a href="#table-of-contents">👉 see table of contents below</a>).</p>
+  <p>It's a complete course for data analysis and reporting with SQL. We cover <strong>advanced subjects</strong> like window functions, user-defined functions, recursive queries, pivot etc. (<a href="#table-of-contents">👉 see table of contents below</a>).</p>
 
   <p style="margin-top:48px"><img src="/assets/images/boss-doodle-removebg.png" class="illustration" /></p>
 
   <div class="chapter">
     <span class="grey-text-span">What flavor of SQL will I learn?</span>
-    <p>You'll be using Google Standard SQL and the Google BigQuery database. The SQL syntax variations that exist between database engines (BigQuery, Snowflake, Oracle, PostgreSQL, MySQL, Microsoft SQL Server, etc.) are small and easy to pick up.</p>
+    <p>You'll be using <strong>Google Standard SQL</strong> and the <strong>Google BigQuery</strong> database. The SQL syntax variations that exist between database engines (BigQuery, Snowflake, Oracle, PostgreSQL, MySQL, Microsoft SQL Server, etc.) are small and easy to pick up.</p>
   </div>
 
   <div class="chapter">
@@ -27,13 +28,13 @@ layout: default
 </li>
       <li><strong><a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset" target="blank">The BigQuery Google Analytics 4 sample</a></strong>: this dataset contains 3 months' worth of Google Analytics event data (partially obfuscated). The data was collected on the Google Merchandise Store (an online store that sells Google-branded merchandise).
 </li>
-      <li><strong><a href="https://www.kaggle.com/datasets/danofer/dbpedia-classes" target="blank">DBPedia Classes</a></strong>: DBpedia (from "DB" for "database") is a project aiming to extract structured content from the information created in Wikipedia. This is an extract of the data that provides hierarchical categories ("classes") for almost 350K wikipedia articles.</li>
+      <li><strong><a href="https://www.kaggle.com/datasets/danofer/dbpedia-classes" target="blank">DBPedia Classes</a></strong>: a project aiming to extract structured content from the information created in Wikipedia. This is an extract of the data that provides hierarchical categories ("classes") for almost 350K wikipedia articles.</li>
     </ul>
   </div>
 
   <div class="chapter">
     <span class="grey-text-span">Does the course cover database design, modification or administration topics?</span>
-    <p>No. The course focuses on analysis and reporting, i.e answering business questions with SELECT-based queries. We cover user-defined functions, table functions, and views as they can be used to make better SELECT-based queries. We don't include anything that creates, updates or deletes database records.</p>
+    <p>Not at the moment. The course <strong>focuses on analysis and reporting</strong>, i.e answering business questions with SELECT-based queries. We cover user-defined functions, table functions, and views as they can be used to make better SELECT-based queries. We don't include anything that creates, updates or deletes database records.</p>
   </div>
 
 </div> 
@@ -55,12 +56,18 @@ layout: default
 
       <h2 id="table-of-contents"><span class="purple-text-span">Table of Contents</span></h2>
 
-      <h3><span class="grey-text-span">Basic selections</span></h3>
+      <h3><span class="grey-text-span">Getting started</span></h3>
       <div class="chapter">
         <ul>
+          <li><a href="lessons/readme/">README</a></li>
           <li><a href="lessons/key-concepts/">Key SQL concepts</a></li>
           <li><a href="lessons/big-query-setup-and-dataset-exploration/">BigQuery setup and dataset exploration</a></li>
-          <li><a href="lessons/readme/">README</a></li>
+        </ul>
+      </div>
+
+      <h3><span class="grey-text-span">Basic selections</span></h3>
+      <div class="chapter">
+        <ul> 
           <li><a href="lessons/select-from/">SELECT FROM</a></li>
           <li><a href="lessons/limit/">LIMIT</a></li>
           <li><a href="lessons/where-and-comparison-operators/">WHERE and comparison operators</a></li>
@@ -128,22 +135,22 @@ layout: default
       <div class="chapter">
         <ul>
           <li><a href="lessons/aggregate-window-functions/">Aggregate window functions</a></li>
-          <li><a href="lessons/row-number/">ROW_NUMBER (ranking window function)</a></li>
-          <li><a href="lessons/ntile/">NTILE (ranking window function)</a></li>
-          <li><a href="lessons/rank/">RANK (ranking window function)</a></li>
-          <li><a href="lessons/dense-rank/">DENSE_RANK (ranking function)</a></li>
-          <li><a href="lessons/lag/">LAG (offset function)</a></li>
-          <li><a href="lessons/lead/">LEAD (offset function)</a></li>
-          <li><a href="lessons/first-value/">FIRST_VALUE (offset function)</a></li>
-          <li><a href="lessons/last-value/">LAST_VALUE (offset function) and window frame specification</a></li>
-          <li><a href="lessons/nth-value/">NTH_VALUE (offset function)</a></li>
-          <li><a href="lessons/percent-rank/">PERCENT_RANK (statistical function)</a></li>
+          <li><a href="lessons/row-number/">ROW_NUMBER</a></li>
+          <li><a href="lessons/ntile/">NTILE</a></li>
+          <li><a href="lessons/rank/">RANK</a></li>
+          <li><a href="lessons/dense-rank/">DENSE_RANK</a></li>
+          <li><a href="lessons/lag/">LAG</a></li>
+          <li><a href="lessons/lead/">LEAD</a></li>
+          <li><a href="lessons/first-value/">FIRST_VALUE</a></li>
+          <li><a href="lessons/last-value/">LAST_VALUE and window frame specification</a></li>
+          <li><a href="lessons/nth-value/">NTH_VALUE</a></li>
+          <li><a href="lessons/percent-rank/">PERCENT_RANK</a></li>
           <li><a href="lessons/pivot/">PIVOT</a></li>
         </ul>
       </div>
 
       <div class="btn-wrapper" style="max-width:max-content">
-        <a href="/lessons/key-concepts/">
+        <a href="/lessons/readme/">
           <button class="btn btn-dark cta">👉&nbsp;&nbsp;Get started</button>
         </a>
       </div>

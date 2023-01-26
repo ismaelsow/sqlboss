@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: Regular expressions
+quote: "He wears a mask, and his face grows to fit it."
 previous_lesson: /lessons/strings/ 
 next_lesson: /lessons/dates-and-times/
 ---
@@ -13,15 +14,18 @@ next_lesson: /lessons/dates-and-times/
   <li><a href="https://rubular.com/" target="_blank">Rubular</a></li>
   <li><a href="https://regex101.com/" target="_blank">Regular Expressions 101</a></li>
 </ul>
-<p>There are many regular expressions engines, here is the one used by Google BigQuery:</p>
+<p>There are many regular expressions engines, here is the documentation of the one used by Google BigQuery:</p>
 <p><a href="https://github.com/google/re2/wiki/WhyRE2" target="_blank">https://github.com/google/re2/wiki/WhyRE2</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_CONTAINS</span></h3>
+<p><code>REGEXP_CONTAINS</code> checks if a string matches a given regular expression pattern.</code>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT REGEXP_CONTAINS('Mount Fuji is a japanese mountain', r'^mountain');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -30,14 +34,16 @@ SELECT REGEXP_CONTAINS('Mount Fuji is a japanese mountain', r'^mountain');
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_EXTRACT</span></h3>
+<p><code>REGEXP_EXTRACT</code> extracts the first substring that matches a given regular expression pattern.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT REGEXP_EXTRACT('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -46,23 +52,26 @@ SELECT REGEXP_EXTRACT('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_EXTRACT_ALL</span></h3>
+<p><code>REGEXP_EXTRACT_ALL</code> extracts all the substrings that match a given regular expression pattern.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT REGEXP_EXTRACT_ALL('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/regexp-extract-all.png" class="lesson-img" /></p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract_all" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_INSTR</span></h3>
+<p><code>REGEXP_INSTR</code> returns the position of the first substring that matches a given regular expression pattern.</p>
 <pre>
   <code class="language-sql">
 SELECT REGEXP_INSTR('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -71,14 +80,16 @@ SELECT REGEXP_INSTR('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_instr" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">REGEXP_REPLACE</span></h3>
+<p><code>REGEXP_REPLACE</code> replaces a substring s1 that matches a given regular expression pattern, with another string s2.</code>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT REGEXP_REPLACE('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan[a-zA-Z]*\b|japan[a-zA-Z]*$)', 'Pluto');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -87,7 +98,7 @@ SELECT REGEXP_REPLACE('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_replace" target="_blank">👉 Check out the official documentation</a></p>
+<p>Here we use the <strong>(?i)</strong> modifier, which indicates that we want a case-insensitive match.</p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -99,13 +110,13 @@ SELECT REGEXP_REPLACE('Mount Fuji is a japanese mountain in Japan', r'(?i)(japan
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>The Google Analytics 4 sample dataset uses different event tables partitioned by dates. For example, bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101 is the table of events recorded on January 1st, 2020.</p>
-  <p>If we want to query the data across different tables, we can use a regexp wildcard ‘*’ in our FROM clause:</p>
-  <p><code>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</code>, with the table name enclosed with backticks (this character: `).</p>
+  <p>The Google Analytics 4 sample dataset uses different event tables partitioned by dates. For example, bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101 is the table of events recorded on January 1st, 2021.</p>
+  <p>If we want to query the data across different tables, we can use a regexp wildcard ‘*’ in our <code>FROM</code> clause:</p>
+  <p><code>`bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`</code>, with the table name enclosed with backticks (this character: <code>`</code>).</p>
   <p>The date part we replaced with the regexp wildcard will then be accessible in a special column called <code>_table_suffix</code>.</p>
   <p>Here is an illustration:</p>
   <p><img src="images/illustration-1.png" class="lesson-img" /></p>
-  <p>Each user has a unique id stored in the user_pseudo_id column.</p>
+  <p>Each user has a unique id stored in the <strong>user_pseudo_id</strong> column.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
@@ -139,7 +150,7 @@ SELECT  COUNT(DISTINCT user_pseudo_id) AS january_2020_unique_users
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will show 100 street addresses that ends with an apartment or suite number.</p>
+  <p>Write a query that will show up to 100 street addresses that ends with an apartment or suite number.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -152,7 +163,7 @@ SELECT  COUNT(DISTINCT user_pseudo_id) AS january_2020_unique_users
         <code class="language-sql">
 SELECT  street_address
   FROM  bigquery-public-data.thelook_ecommerce.users
-  WHERE REGEXP_CONTAINS(street_address, r'\s\d+$')
+  WHERE REGEXP_CONTAINS(street_address, r'(\s(Apt\.|Suite)\s\d+$)')
   LIMIT 100;
         </code>
       </pre>
@@ -185,6 +196,13 @@ SELECT  street_address
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
+SELECT  COUNT(street_address) AS total_street_addresses,
+        COUNT(CASE WHEN REGEXP_CONTAINS(street_address, r'(\s(Apt\.|Suite)\s\d+$)') THEN 1 END) AS ending_with_number,
+        COUNT(CASE WHEN NOT REGEXP_CONTAINS(street_address, r'(\s(Apt\.|Suite)\s\d+$)') THEN 1 END) AS not_ending_with_number,
+        CAST(ROUND((COUNT(CASE WHEN REGEXP_CONTAINS(street_address, r'(\s(Apt\.|Suite)\s\d+$)') THEN 1 END)
+          / COUNT(street_address)) * 100) AS integer)
+          AS percent_ending_with_number
+  FROM  bigquery-public-data.thelook_ecommerce.users;
         </code>
       </pre>
     </div>
@@ -213,7 +231,7 @@ SELECT  street_address
       <pre>
         <code class="language-sql">
 SELECT      country,
-            COUNT(CASE WHEN REGEXP_CONTAINS(street_address, 'Apt.') THEN 1 END) AS users_in_apartments
+            COUNT(CASE WHEN REGEXP_CONTAINS(street_address, r'Apt\.') THEN 1 END) AS users_in_apartments
   FROM      bigquery-public-data.thelook_ecommerce.users
   
   GROUP BY  country

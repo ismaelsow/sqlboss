@@ -1,31 +1,22 @@
 ---
 layout: lesson
 title: INNER JOIN
+quote: "Your pain pained me."
 previous_lesson: /lessons/cross-join/
 next_lesson: /lessons/left-join-and-right-join/
 ---
 
 <p><img src="images/inner-join.png" class="illustration" /></p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
-<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<table class="table-with-header">
-  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<h3 class="h3-big-margin"><span class="grey-text-span">About INNER JOINs</span></h3>
+<p>An <code>INNER JOIN</code> is a type of <code>JOIN</code> where matching rows, and only matching rows from both tables are used to create a new table. The non-matching rows in both tables are ignored.<p>
+<p>The matching is usually done using an identifier column that's present in both tables. For example, rows where <code>table_1.primary_key_x = table_2.foreign_key_x</code>.</p>
+<p>The syntax looks like this: <code>SELECT column A, column B, ..., column N FROM table_1 INNER JOIN table_2 ON matching_set_of_conditions</code>.
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a> to see a visual representation of how it works.</p>
+<p>Now observe carefully the results of the following queries.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT        *
@@ -36,6 +27,7 @@ SELECT        *
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT        users.id, orders.order_id
@@ -50,6 +42,7 @@ SELECT        users.id, orders.order_id
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT        users.id, orders.order_id, order_items.product_id
@@ -57,6 +50,7 @@ SELECT        users.id, orders.order_id, order_items.product_id
   
   INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
   ON          users.id = orders.user_id
+
   INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
   ON          users.id = order_items.user_id
               AND orders.order_id = order_items.order_id
@@ -64,24 +58,26 @@ SELECT        users.id, orders.order_id, order_items.product_id
   GROUP BY    users.id,
               orders.order_id,
               order_items.product_id
+
   ORDER BY    users.id ASC;
   </code>
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT        users.id, orders.order_id, order_items.product_id, products.name
   FROM        bigquery-public-data.thelook_ecommerce.users
   
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders AS orders
   ON          users.id = orders.user_id
   
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS order_items
   ON          users.id = order_items.user_id
               AND orders.order_id = order_items.order_id
   
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
   ON          order_items.product_id = products.id
   
   GROUP BY    users.id,
@@ -117,10 +113,12 @@ SELECT        users.id, orders.order_id, order_items.product_id, products.name
         <code class="language-sql">
 SELECT        CONCAT(first_name, ' ', last_name) AS customer_name,
               order_id,
-              CAST(orders.created_at AS date) AS order_date
-  FROM        bigquery-public-data.thelook_ecommerce.users users
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders orders
+              CAST(orders.created_at AS DATE) AS order_date
+
+  FROM        bigquery-public-data.thelook_ecommerce.users
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
   ON          users.id = orders.user_id
+
   ORDER BY    order_date DESC;
         </code>
       </pre>
@@ -150,8 +148,8 @@ SELECT        CONCAT(first_name, ' ', last_name) AS customer_name,
 SELECT        category,
               COUNT(*) AS products_sold
   
-  FROM        bigquery-public-data.thelook_ecommerce.products products
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+  FROM        bigquery-public-data.thelook_ecommerce.products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
   ON          products.id = order_items.product_id
   
   GROUP BY    category
@@ -171,7 +169,7 @@ SELECT        category,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the number of customers who bought in 1 category.</p>
+  <p>Write a query that will display the number of customers who bought in only one category.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
@@ -191,11 +189,14 @@ SELECT        category,
         <code class="language-sql">
 WITH mono_category_customers AS
   ( SELECT        COUNT(DISTINCT category) AS number_of_categories_bought
-      FROM        bigquery-public-data.thelook_ecommerce.users users
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+
+      FROM        bigquery-public-data.thelook_ecommerce.users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
       ON          users.id = order_items.user_id
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
+
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.products
       ON          order_items.product_id = products.id
+
       GROUP BY    users.id
       HAVING      number_of_categories_bought = 1
   )
@@ -217,7 +218,7 @@ SELECT  COUNT(*) AS number_of_mono_category_customers
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display the purchase rate by country ⇒ i.e the percentage of users from each country that are also customers.</li>
+    <li>Write a query that will display the purchase rate by country ⇒ i.e the percentage of users from each country that made a purchase at least once.</li>
     <li>The results should be sorted by purchase rate in descending order.</li>
   </ul>
   
@@ -233,9 +234,11 @@ SELECT  COUNT(*) AS number_of_mono_category_customers
 WITH country_customers AS
   ( SELECT        users.country AS country,
                   COUNT(DISTINCT users.id) AS customers
-      FROM        bigquery-public-data.thelook_ecommerce.users users
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.orders orders
+
+      FROM        bigquery-public-data.thelook_ecommerce.users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.orders
       ON          users.id = orders.user_id
+
       GROUP BY    users.country
   ),
   
@@ -250,9 +253,11 @@ SELECT        country_customers.country AS country,
               country_users.users AS users,
               country_customers.customers AS customers,
               ROUND((country_customers.customers / country_users.users) * 100, 2) AS purchase_rate
+
   FROM        country_customers
   INNER JOIN  country_users
   ON          country_customers.country = country_users.country
+
   ORDER BY    purchase_rate DESC;
         </code>
       </pre>
@@ -293,15 +298,17 @@ WITH returned_orders AS
   returned_products AS
   (  SELECT       order_items.product_id AS product_id,
                   COUNT(DISTINCT order_items.order_id) AS number_of_returns
+
       FROM        returned_orders
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS order_items
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
       ON          returned_orders.order_id = order_items.order_id
+
       GROUP BY    product_id
   )
 
 SELECT        name, number_of_returns
   FROM        returned_products
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products
   ON          returned_products.product_id = products.id
   ORDER BY    number_of_returns DESC;
         </code>
@@ -342,9 +349,11 @@ WITH returned_orders AS
   returned_products AS
   (  SELECT       order_items.product_id AS product_id,
                   COUNT(DISTINCT order_items.order_id) AS number_of_returns
+
       FROM        returned_orders
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items AS order_items
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
       ON          returned_orders.order_id = order_items.order_id
+
       GROUP BY    product_id
   ),
     
@@ -359,12 +368,14 @@ SELECT        name,
               number_of_returns,
               total_orders,
               ROUND((number_of_returns / total_orders) * 100, 2) AS return_rate
-  
-	FROM        returned_products
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+
+  FROM        returned_products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products
   ON          returned_products.product_id = products.id
+
   INNER JOIN  total
   ON          returned_products.product_id = total.product_id
+
   ORDER BY    number_of_returns DESC;
         </code>
       </pre>
@@ -384,12 +395,13 @@ SELECT        name,
     <li>Write a query that will display the customer categories, the number of customers in each category and the percentage over the total of customers, for each category.</li>
     <li>The percentages should have 3 decimals. The results should be sorted by number of customers in descending order.</li>
   </ul>
-  <p>The category is function of the lifetime value:</p>
+  <p>The customer category is function of the lifetime value:</p>
   <ul>
     <li>If below 833, then the category is <i>small</i>.</li>
     <li>If above or equal to 833 and less than or equal to 1665, then <i>medium</i></li>
     <li>Otherwise, it should be <i>large</i>.</li>
   </ul>
+  <p>⚠️ This practice problem doesn't need <code>JOIN</code>s and the provided solution does not use any <code>JOIN</code>s.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-7.png" class="lesson-img" /></p>
@@ -483,7 +495,7 @@ SELECT        CONCAT(first_name, ' ', last_name) AS name,
               category
   
   FROM        customer_clv_category
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.users AS users
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.users
   ON          customer_clv_category.user_id = users.id
   ORDER BY    lifetime_value DESC;
         </code>
@@ -500,14 +512,17 @@ SELECT        CONCAT(first_name, ' ', last_name) AS name,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the name of the most expensive item that have been sold. If there are ties, take the product whose id comes first in ascending alphabetical order.</p>
+  <ul>
+    <li>Write a query that will display the name of the most expensive item that have been sold.</li>
+    <li>If there are ties, take the product whose id comes first in ascending alphabetical order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
   <table class="table-with-header">
-    <thead><th>name</th></thead>
+    <thead><th>name</th><th>sale_price</th></thead>
     <tbody>
-      <tr><td>Alpha Industries Rip Stop Short</td></tr>
+      <tr><td>Alpha Industries Rip Stop Short</td><td>999.0</td></tr>
     </tbody>
   </table>
 </div>
@@ -519,16 +534,16 @@ SELECT        CONCAT(first_name, ' ', last_name) AS name,
       <pre>
         <code class="language-sql">
 WITH top_item AS
-  (  SELECT     product_id
+  (  SELECT     product_id, sale_price
       FROM      bigquery-public-data.thelook_ecommerce.order_items
       ORDER BY  sale_price DESC,
                 product_id ASC
       LIMIT     1
   )
 
-SELECT        products.name
+SELECT        products.name, top_item.sale_price
   FROM        top_item
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.products AS products
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.products
   ON          top_item.product_id = products.id;
         </code>
       </pre>
@@ -544,9 +559,11 @@ SELECT        products.name
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the names of the customers who made at least a purchase of more than $500 in 2022</p>
-  <p>as well the value of their biggest order and the date of that biggest order.</p>
-  <p>The results should be sorted by biggest order value in descending order, and by order date in descending order.</p>
+  <ul>
+    <li>Write a query that will display the names of the customers who made at least one purchase of more than $500 in 2022</li>
+    <li>as well as the value of their biggest order and the date of that biggest order.</li>
+    <li>The results should be sorted by biggest order value in descending order, and by order date in descending order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-10.png" class="lesson-img" /></p>
@@ -562,8 +579,10 @@ WITH big_orders AS
                 CAST(created_at AS DATE) AS order_date,
                 user_id,
                 SUM(sale_price) AS order_value
+
       FROM      bigquery-public-data.thelook_ecommerce.order_items
       WHERE     EXTRACT(YEAR FROM CAST(created_at AS DATE)) = 2022
+
       GROUP BY  order_id,
                 order_date,
                 user_id
@@ -574,9 +593,11 @@ WITH big_orders AS
   (  SELECT     user_id,
                 ROUND(MAX(order_value), 2) AS biggest_order_value,
                 order_date
+
       FROM      big_orders
       GROUP BY  user_id,
                 order_date
+
       ORDER BY  biggest_order_value
   )
 
@@ -585,8 +606,9 @@ SELECT        CONCAT(first_name, ' ', last_name) AS vip_customer_name,
               order_date
   
   FROM        biggest_customer_orders
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.users AS users
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.users
   ON          biggest_customer_orders.user_id = users.id
+
   ORDER BY    biggest_order_value DESC,
               order_date DESC;
         </code>
@@ -622,8 +644,8 @@ SELECT        CONCAT(first_name, ' ', last_name) AS vip_customer_name,
 SELECT        name AS distribution_center,
               COUNT(*) AS items_shipped
   
-  FROM        bigquery-public-data.thelook_ecommerce.distribution_centers distribution_centers
-  INNER JOIN  bigquery-public-data.thelook_ecommerce.inventory_items inventory_items
+  FROM        bigquery-public-data.thelook_ecommerce.distribution_centers
+  INNER JOIN  bigquery-public-data.thelook_ecommerce.inventory_items
   ON          distribution_centers.id = inventory_items.product_distribution_center_id
   
   INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
@@ -647,7 +669,7 @@ SELECT        name AS distribution_center,
   <h4>Task</h4>
   <p>Write a query that will display:</p>
   <ul>
-    <li>the number of active users on January 8th, 2022 (i.e they generated an event)</li>
+    <li>the number of active users on January 8th, 2022 (i.e they generated at least one event)</li>
     <li>the number of users created on January 1st, 2022</li>
     <li>the d7 retention rate</li>
   </ul>
@@ -670,11 +692,11 @@ SELECT        name AS distribution_center,
         <code class="language-sql">
 WITH d7_active_users AS
   ( SELECT        COUNT(DISTINCT users.id) AS user_count
-      FROM        bigquery-public-data.thelook_ecommerce.users users
+      FROM        bigquery-public-data.thelook_ecommerce.users
       INNER JOIN  bigquery-public-data.thelook_ecommerce.events
       ON          users.id = events.user_id
                   AND (CAST (users.created_at AS DATE) = DATE('2022-01-01'))
-                  AND (DATE_TRUNC(CAST(events.created_at AS DATE), day) = DATE('2022-01-01') + MAKE_INTERVAL(day => 7))
+                  AND (DATE_TRUNC(CAST(events.created_at AS DATE), DAY) = DATE('2022-01-01') + MAKE_INTERVAL(DAY => 7))
   ),
 
   d0_users AS

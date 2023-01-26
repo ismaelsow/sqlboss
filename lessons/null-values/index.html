@@ -1,18 +1,22 @@
 ---
 layout: lesson
 title: NULL values
+quote: "For each person there is a sentence—a series of words—which has the power to destroy them."
 previous_lesson: /lessons/dates-and-times/
 next_lesson: /lessons/record/
 ---
 
 <p><img src="images/null-values-illustration.png" class="illustration" /></p>
 
+<p>We already discussed what <code>NULL</code> is in a <a href="/lessons/is-null/" target="_blank">previous lesson</a> Here we'll see a few related use cases and functions.
+
 <h3 class="h3-big-margin"><span class="grey-text-span">NULL vs empty strings</span></h3>
+<p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
 <p><pre><code class="language-sql">SELECT '' AS empty_string;</code></pre></p>
 <p><pre><code class="language-sql">SELECT NULL AS null_value;</code></pre></p>
-<p><pre><code class="language-sql">SELECT '' = '' empty_string_equals_empty_string;</code></pre></p>
-<p><pre><code class="language-sql">SELECT NULL = '' null_equals_empty_string;</code></pre></p>
-<p><pre><code class="language-sql">SELECT NULL = NULL null_equals_empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT '' = '' AS empty_string_equals_empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT NULL = '' AS null_equals_empty_string;</code></pre></p>
+<p><pre><code class="language-sql">SELECT NULL = NULL AS null_equals_null;</code></pre></p>
 <p>
   <pre>
     <code class="language-sql">
@@ -22,8 +26,10 @@ SELECT  COUNT(*) AS event_count,
     </code>
   </pre>
 </p>
+<p>In this last case, remember that the user_id_count is lower than the event_count because the rows where <strong>user_id</strong> is <code>NULL</code> are ignored by the aggregation function.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">IS NULL</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -33,6 +39,7 @@ SELECT  *
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">IS NOT NULL</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -42,9 +49,13 @@ SELECT  *
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">NULLIF</span></h3>
+<p><code>NULLIF</code> returns <code>NULL</code> if the two parameters are equal.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <p><pre><code class="language-sql">SELECT NULLIF('morning', 'morning');</code></pre></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">COALESCE</span></h3>
+<p>The <code>COALESCE</code> is useful handling <code>NULL</code> values. It checks if the first parameter is <code>NULL</code> and if that's the case, it returns the second parameter, as a kind of default value.</p> 
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  user_id,
@@ -58,15 +69,15 @@ SELECT  user_id,
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of non-user generated events broken down by event type&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Number of non-user-generated events grouped by event type&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display the number of non-user generated events broken down by event type.</li>
-    <li>Sort the results by the number of non-user generated events in descending order.</li>
+    <li>Write a query that will display the number of non-user-generated events grouped by event type.</li>
+    <li>Sort the results by the number of non-user-generated events in descending order.</li>
   </ul>
   
   <h4>Example results</h4>
@@ -79,7 +90,7 @@ SELECT  user_id,
       <pre>
         <code class="language-sql">
 SELECT      event_type,
-            COUNT(CASE  WHEN user_id IS NULL THEN 1 END) AS non_user_generated_events
+            COUNT(CASE WHEN user_id IS NULL THEN 1 END) AS non_user_generated_events
   FROM      bigquery-public-data.thelook_ecommerce.events
   GROUP BY  event_type
   ORDER BY  non_user_generated_events DESC;
@@ -90,15 +101,15 @@ SELECT      event_type,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replacing null user_id values&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Replacing NULL user_id values&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will replace NULL user_id values with the negative number -111111 in a new column named clean_user_id.</li>
-    <li>Sort the result by clean_user_id in ascending order.</li>
+    <li>Write a query that will replace NULL user_id values with the negative number -111111 in a new column named <strong>clean_user_id</strong>.</li>
+    <li>Sort the result by <strong>clean_user_id</strong> in ascending order.</li>
   </ul>
   
   <h4>Example results</h4>

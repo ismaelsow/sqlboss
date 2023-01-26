@@ -1,18 +1,21 @@
 ---
 layout: lesson
 title: PERCENT_RANK
+quote: "I couldn't claim that I was smarter than sixty-five other guys--but the average of sixty-five other guys, certainly!"
 previous_lesson: /lessons/nth-value/
 next_lesson: /lessons/pivot/
 ---
 
 <p><img src="images/percent-rank-illustration.png" class="illustration" /></p>
 
-<p><code>PERCENT_RANK</code> used to calculate the percentile of each row within a window. As a reminder, in you are in the 90th percentile (percentile is 0.9), it means that you are in the top 10%.</p>
+<p><code>PERCENT_RANK</code> is used to calculate the percentile of each row within a window. As a reminder, in you are in the 90th percentile (percentile is 0.9), it means that you are in the top 10%.</p>
 <p>It doesn’t take any parameters but the <code>ORDER BY</code> clause is required in the <code>OVER</code> function.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    id,
           name,
           retail_price,
@@ -20,25 +23,28 @@ SELECT    id,
   
   FROM    bigquery-public-data.thelook_ecommerce.products
 ORDER BY  retail_price DESC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Average Google Analytics purchase revenue of orders in 90th percentile in January 2021&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Average Google Analytics order value, for orders in 90th percentile in January 2021&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the average revenue of orders that are in the 90th percentile, in January 2021.</p>
+  <p>Write a query that will display the average revenue value of orders that are in the 90th percentile, in January 2021.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
     <table class="table-with-header">
-      <thead><th>ninetieth_percentile_avg_revenue</th></thead>
+      <thead><th>ninetieth_percentile_avg_order_value</th></thead>
       <tbody>
         <tr><td>195.04</td></tr>
       </tbody>
@@ -52,12 +58,12 @@ ORDER BY  retail_price DESC;
       <pre>
         <code class="language-sql">
 WITH order_percentiles AS
-  ( SELECT  ecommerce.purchase_revenue AS revenue,
+  ( SELECT  ecommerce.purchase_revenue AS order_value,
             PERCENT_RANK() OVER(ORDER BY ecommerce.purchase_revenue ASC) AS percentile
       FROM  example_dataset.valid_purchase_events('20210101', '20210131')
   )
 
-SELECT  ROUND(AVG(revenue), 2) AS ninetieth_percentile_avg_revenue
+SELECT  ROUND(AVG(order_value), 2) AS ninetieth_percentile_avg_order_value
   FROM  order_percentiles
   WHERE percentile >= 0.9;
         </code>

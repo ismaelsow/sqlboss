@@ -1,17 +1,18 @@
 ---
 layout: lesson
 title: NTILE
+quote: "Personally I'm always ready to learn, although I do not always like being taught."
 previous_lesson: /lessons/row-number/
 next_lesson: /lessons/rank/
 ---
 
 <p><img src="images/ntile.png" class="illustration" /></p>
 
-<p><code>NTILE</code> is used to create roughly equal buckets of each window. It takes one parameter: the number buckets we want to have per window.</p>
+<p><code>NTILE</code> is used to create roughly equal buckets in each window. It takes one parameter: the number buckets we want to have per window.</p>
 
 <p>Depending on that number, the buckets will all have the same size, or one bucket among the others will have 1 item more. For example:</p>
 <ul>
-  <li>If a window have 4 items and we want 2 buckets, each bucket will have 2 items</li>
+  <li>If a window have 4 items and we want 2 buckets, each bucket will have 2 items.</li>
   <li>If a window have 5 items and we want 2 buckets, one bucket will have 2 items and the other one will have 3 items. By default, the biggest bucket will be displayed first.</li>
 </ul>
 
@@ -30,6 +31,7 @@ SELECT      class_name,
 </pre>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT    user_id,
@@ -43,10 +45,14 @@ SELECT    user_id,
 ORDER BY  user_id ASC;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-2.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
-<pre>
-  <code class="language-sql">
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    user_id,
           order_id,
           num_of_item,
@@ -59,11 +65,11 @@ SELECT    user_id,
   FROM    bigquery-public-data.thelook_ecommerce.orders
   WHERE   FORMAT_DATE('%Y', created_at) = '2022'
 ORDER BY  user_id ASC;
-  </code>
-</pre>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#ntile" target="_blank">👉 Check out the official documentation</a></p>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-3.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -75,7 +81,7 @@ ORDER BY  user_id ASC;
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display 10 random customers along with their percentile in terms of sales.</p>
+  <p>Write a query that will display 10 random customers along with their percentile in terms of spend. As a reminder, in you are in the 90th percentile (percentile is 0.9), it means that you are in the top 10%.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -180,9 +186,11 @@ SELECT      *
 WITH product_sales AS
   ( SELECT      category,
                 SUM(sale_price) AS total_sales
+
     FROM        bigquery-public-data.thelook_ecommerce.products products
     INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
     ON          products.id = order_items.product_id
+
     GROUP BY    category
   ),
 

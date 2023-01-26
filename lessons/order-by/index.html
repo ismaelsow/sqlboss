@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: ORDER BY
+quote: "People sleep peacefully in their beds at night only because rough men stand ready to do violence on their behalf."
 previous_lesson: /lessons/not/
 next_lesson: /lessons/offset/
 ---
 
 <p><img src="images/order-by-illustration.png" class="illustration" /></p>
 
-<p>By default, the results returned by a SELECT query are not sorted in any specific order. By default, the order of the results is not guaranteed. If we want to ensure a specific order when displaying the result set, we can use the ORDER BY clause to sort the returned rows.</p>
+<p>By default, the results returned by a <code>SELECT</code> query are not sorted in any specific order. By default, the order of the results is not guaranteed. If we want to ensure a specific order when displaying the result set, we can use the <code>ORDER BY</code> clause. By default, rows are sorted in ascending order.</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      name, retail_price, cost
@@ -19,10 +21,13 @@ SELECT      name, retail_price, cost
   LIMIT     10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 <!-- Example 2 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p>We can use the <code>ASC</code> keyword to specify an ascending sort explicitly.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      name, retail_price, cost
@@ -31,10 +36,13 @@ SELECT      name, retail_price, cost
   LIMIT     10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-2.png" class="lesson-img" /></p>
 
 <!-- Example 3 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<p>We must use the <code>DESC</code> keyword to specify a descending sort.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      name, retail_price, cost
@@ -43,10 +51,13 @@ SELECT      name, retail_price, cost
   LIMIT     10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-3.png" class="lesson-img" /></p>
 
 <!-- Example 4 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<p>We can sort the results using several successive columns.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      name, cost, retail_price
@@ -56,7 +67,22 @@ SELECT      name, cost, retail_price
   LIMIT     10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-4.png" class="lesson-img" /></p>
+
+<!-- SQL order of operations -->
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
+<table class="table-with-header">
+  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+  <tbody>
+    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>SELECT</td><td>Displays the results.</td></tr>
+    <tr><td>4</td><td>ORDER BY</td><td>Sort the results.</td></tr>
+    <tr><td>3</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+  </tbody>
+</table>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -68,7 +94,7 @@ SELECT      name, cost, retail_price
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the names of the 10 youngest users, sorted by age from youngest to oldest.</p>
+  <p>Write a query that will display the names of up to 10 of the youngest users, sorted by age from youngest to oldest.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -96,7 +122,7 @@ SELECT      first_name, last_name, age
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the names of the 5 youngest and most recent users, sorted by age from youngest to oldest, and by creation date from most recent to less recent.</p>
+  <p>Write a query that will display the names of up to 5 of the youngest and most recent users, sorted by age from youngest to oldest, and by creation date from most recent to less recent.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -126,9 +152,9 @@ SELECT      first_name, last_name, age, created_at
   <h4>Task</h4>
   <ul>
     <li>Write a query that will show the profit margin ratio in percentage for each product.</li>
-    <li>Only display 12 rows.</li>
-    <li>The profit_margin_ratio_per_product column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
-    <li>We also want the profit margin ratio to be greater or equal to 50</li>
+    <li>Only display up to 12 rows.</li>
+    <li>The <strong>profit_margin_ratio_per_product</strong> column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+    <li>We also want the returned records to have a profit margin ratio to be greater or equal to 50%.</li>
     <li>Rank the rows by profit margin ratio from highest to lowest, retail price from highest to lowest, and cost from lowest to highest.</li>
   </ul>
   
@@ -148,7 +174,6 @@ SELECT      id,
             ((retail_price - cost) / retail_price) * 100 AS profit_margin_ratio_per_product
   
   FROM      bigquery-public-data.thelook_ecommerce.products
-  
   WHERE     ((retail_price - cost) / retail_price) * 100 >= 50
   
   ORDER BY  profit_margin_ratio_per_product DESC,
@@ -157,21 +182,7 @@ SELECT      id,
   LIMIT     12;
         </code>
       </pre>
-      <p>The aliased column defined in the SELECT clause will not be available in the WHERE clause but will be available in the ORDER BY clause. The reason? The order by which the database execute the different SQL clauses.</p>
-      <p><strong>SQL conceptual order of operations</strong></p>
-      <table class="table-with-header">
-        <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-        <tbody>
-          <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-          <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
-          <tr><td>3</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-          <tr><td>4</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-          <tr><td>5</td><td>SELECT</td><td>Returns the final data.</td></tr>
-          <tr><td>6</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-          <tr><td>7</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-        </tbody>
-      </table>
-      <p>So in our example, the <i>profit_margin_ratio_per_product</i> aliased column defined in our SELECT clause will only be available in step 5, but not in step 2 when the WHERE clause is actually evaluated by the database engine. That’s why we can use it in the ORDER BY clause.</p>
+      <p>Remember the order of operations. The <strong>profit_margin_ratio_per_product</strong> alias defined in the <code>SELECT</code> clause will not be available in the <code>WHERE</code> step but will be available in the <code>ORDER BY</code> step.</p>
     </div>
   </div>
 </div>

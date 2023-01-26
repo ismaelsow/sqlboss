@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: IN
+quote: "It really seems to me that in the midst of great tragedy, there is always the horrible possibility that something terribly funny will happen."
 previous_lesson: /lessons/like/
 next_lesson: /lessons/between/
 ---
 
 <p><img src="images/in-illustration.png" class="illustration" /></p>
 
-<p>Use the IN operator to filter column values that are in a list of pre-selected values.</p>
+<p>Use the <code>IN</code> operator to filter column values that are in a list of pre-selected values.</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -18,6 +20,7 @@ SELECT  *
   WHERE name IN ('Memphis TN', 'New Orleans LA', 'Mobile AL');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
@@ -30,7 +33,7 @@ SELECT  *
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 6 users that are either from Austria or Deutschland.</p>
+  <p>Write a query that displays up to 6 users who are either from Austria or Deutschland.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -58,7 +61,7 @@ SELECT  id, first_name, last_name, country
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 10 orders that have either 4 or 3 items.</p>
+  <p>Write a query that displays up to 10 orders that have either 4 or 3 items.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -86,7 +89,7 @@ SELECT  order_id, user_id, status, num_of_item
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 7 users whose postal code is either '63743', '80638', or '509-0206’.</p>
+  <p>Write a query that displays up to 7 users whose postal code is either '63743', '80638', or '509-0206’.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-3.png" class="lesson-img" /></p>

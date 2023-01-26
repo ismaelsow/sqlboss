@@ -1,27 +1,33 @@
 ---
 layout: lesson
 title: Table functions
+quote: "New friends can often have a better time together than old friends."
 previous_lesson: /lessons/user-defined-functions/
 next_lesson: /lessons/views/
 ---
 
 <p><img src="images/table-functions.png" class="illustration" /></p>
 
-<p>A table function, also called table-valued function (TVF) is a user-defined function that contains a SQL query and returns a table.</p>
+<p>A table function, also called table-valued function (TVF) is a user-defined function that contains a SQL query and returns a table, instead of a single value.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 CREATE OR REPLACE TABLE FUNCTION example_dataset.orders_for_year(yearParam INT) AS
-  ( SELECT  *
+  (
+    SELECT  *
       FROM  bigquery-public-data.thelook_ecommerce.orders
       WHERE EXTRACT(year FROM CAST(created_at AS DATE)) = yearParam
   );
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
 
-<pre>
-  <code class="language-sql">
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT      user_id,
             order_id,
             num_of_item,
@@ -29,8 +35,11 @@ SELECT      user_id,
   
   FROM      example_dataset.orders_for_year(2022)
   ORDER BY  created_at DESC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
 
 <p>At the moment, only persistent table functions are supported by BigQuery.</p>
 
@@ -68,7 +77,8 @@ SELECT  event_date,
       <pre>
         <code class="language-sql">
 CREATE OR REPLACE TABLE FUNCTION example_dataset.valid_purchase_events(start_date STRING, end_date STRING) AS
-  ( SELECT  *
+  (
+    SELECT  *
       FROM  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
       WHERE event_name = 'purchase'
             AND (example_dataset.is_valid_purchase(ecommerce.transaction_id, ecommerce.purchase_revenue) = TRUE)
@@ -105,7 +115,8 @@ SELECT  *
       <pre>
         <code class="language-sql">
 CREATE OR REPLACE TABLE FUNCTION example_dataset.cte_categories() AS
-  ( WITH l3_categories AS
+  ( 
+    WITH l3_categories AS
     ( SELECT  DISTINCT l3 AS category,
               l2 AS parent
         FROM  dbpedia.pages ),
@@ -153,7 +164,7 @@ CREATE OR REPLACE TABLE FUNCTION example_dataset.cte_categories() AS
   <p>dbpedia.pages</p>
 
   <h4>Task</h4>
-<p>Create a table function that returns the table described in the previous practice problem: (<a href="/lessons/union-and-union-all/#category-parent-table" target="_blank">Category parent table</a>). Don’t make use of a common table expression, only use subqueries (no common table expressions).</p>
+<p>Create a table function that returns the table described in the previous practice problem: (<a href="/lessons/union-and-union-all/#category-parent-table" target="_blank">Category parent table</a>). Don’t make use of a common table expression, only use "naked" subqueries.</p>
   
   <h4>Example results</h4>
   <pre>
@@ -203,7 +214,7 @@ CREATE OR REPLACE TABLE FUNCTION example_dataset.subqueries_only_categories() AS
   <p>N/A</p>
 
   <h4>Task</h4>
-  <p>Use the function defined the previous problem (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs)</a> to display each category along as well as their parent and grand parent.</p>
+  <p>Use the function defined in one of the previous problems (<a href="#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s">Table function returning Wikipedia list of category and parent category using CTEs)</a> to display each category along with their parent and grand parent.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-4.png" class="lesson-img" /></p>

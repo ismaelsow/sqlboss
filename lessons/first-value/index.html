@@ -1,37 +1,45 @@
 ---
 layout: lesson
 title: FIRST_VALUE
+quote: "I love her, and that's the beginning and end of everything."
 previous_lesson: /lessons/lead/
 next_lesson: /lessons/last-value/
 ---
 
 <p><img src="images/first-value-illustration.png" class="illustration" /></p>
 
-<p><code>FIRST_VALUE</code> is used to display a column value from the first row in a window. It takes as parameter the column we want to display.</p>
+<p><code>FIRST_VALUE</code> is used to display a value from the first row in a window. It takes as parameter the column we want to display.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    country,
           FIRST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC) AS first_user,
           FIRST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC) AS first_user_signup_date
 FROM      bigquery-public-data.thelook_ecommerce.users
 ORDER BY  country ASC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
 
-<pre>
-  <code class="language-sql">
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    DISTINCT country,
           FIRST_VALUE(CONCAT(first_name, ' ', last_name)) OVER(PARTITION BY country ORDER BY created_at ASC) AS first_user,
           FIRST_VALUE(created_at) OVER(PARTITION BY country ORDER BY created_at ASC) AS first_user_signup_date
 FROM      bigquery-public-data.thelook_ecommerce.users
 ORDER BY  country ASC;
-  </code>
-</pre>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#first_value" target="_blank">👉 Check out the official documentation</a></p>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1-2.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -43,7 +51,10 @@ ORDER BY  country ASC;
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the date of the first visit for each user. Sort the result by user pseudo id in ascending order.</p>
+  <ul>
+    <li>Write a query that will display the date of the first visit for each user in January 2021.</li>
+    <li>Sort the result by user pseudo id in ascending order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -80,7 +91,10 @@ SELECT      user_pseudo_id,
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the exit page by session on January 4th, 2021.</p>
+  <ul>
+    <li>Write a query that will display the exit page by session on January 4th, 2021.</li>
+    <li>An exit page is the last page visited by a user during a session.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -191,93 +205,27 @@ SELECT      exit_page,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Google Analytics daily user retention in January 2021&nbsp;🔥</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°4 — Google Analytics weekly user retention&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
   <ul>
-    <li>We define as a returning user any users who visit the site once <strong>during a given date range</strong> and return to the site <strong>within the same date range</strong>.</li>
-    <li>Write a query that will display the user retention percentage per day, in January 2021.</li>
-    <li>Sort the results by day number in ascending order.</li>
-  </ul>
-  <p><strong>Notes:</strong></p>
-  <ul>
-    <li>We consider only active users (for who there was at least one event with the engagement_time_msec event parameter greater than 0.</li>
-    <li>You can use the ga_session_number event parameter to determine if the user is new or returning.</li>
-  </ul>
-  
-  <h4>Example results</h4>
-  <p><img src="images/result-4.png" class="lesson-img" /></p>
-
-  <h4>Solution</h4>
-  <div class="collapsible-parent">
-    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
-    <div class="practice-problems-instructions collapsible-item">
-      <pre>
-        <code class="language-sql">
-WITH  user_sessions_info AS
-  ( SELECT      user_pseudo_id,
-                ( SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id') AS session_id,
-                ( SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_number') AS session_number,
-                MAX(( SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'engagement_time_msec' )) AS engagement_time_msec,
-                PARSE_DATE('%Y%m%d',event_date) AS session_date,
-                FIRST_VALUE(PARSE_DATE('%Y%m%d',event_date)) OVER (PARTITION BY user_pseudo_id ORDER BY event_date) AS first_session_date
-      
-      FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-      
-      WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
-      
-      GROUP BY  user_pseudo_id,
-                session_id,
-                session_number,
-                event_date
-      
-      ORDER BY  user_pseudo_id,
-                session_id,
-                session_number
-  )
-
-SELECT      DATE_DIFF(session_date,first_session_date,day) + 1 AS day_number,
-            COUNT(DISTINCT CASE WHEN session_number = 1 AND engagement_time_msec > 0 THEN user_pseudo_id END) AS new_users,
-            COUNT(DISTINCT CASE WHEN session_number > 1 AND engagement_time_msec > 0 THEN user_pseudo_id END) AS returning_users,
-            ROUND((COUNT(
-              DISTINCT CASE WHEN session_number > 1 AND engagement_time_msec > 0 THEN user_pseudo_id END)
-              / MAX(COUNT(DISTINCT CASE WHEN session_number = 1 AND engagement_time_msec > 0 THEN user_pseudo_id END)
-            ) OVER ()) * 100, 2) AS retention_percentage
-
-  FROM      user_sessions_info
-  GROUP BY  day_number
-  ORDER BY  day_number;
-        </code>
-      </pre>
-    </div>
-  </div>
-</div>
-
-
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — Google Analytics weekly user retention&nbsp;🧂</span></h3>
-<div class="problem">
-  <h4>Tables</h4>
-  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
-
-  <h4>Task</h4>
-  <ul>
-    <li>In the previous problem (<i>Google Analytics daily user retention in January 2021</i>), we built our first retention table. The issue with working with a daily range is that it’s too "micro", too noisy to get a clear picture on what’s happening.</li>
+    <li>We define as a returning user any user who visits the site once <strong>during a given date range</strong> and return to the site <strong>within the same date range</strong>.</li>
     <li>For this task, we’ll group users in cohorts, where each cohort represents a week’s worth of visits.</li>
     <li>Write a query that will display the user retention numbers per week (the raw numbers, not the percentages), in January 2021.</li>
     <li>Sort the results by week number in ascending order.</li>
   </ul>
   <p><strong>Notes:</strong></p>
   <ul>
-    <li>We consider only active users (for who there was at least one event with the engagement_time_msec event parameter greater than 0.</li>
-    <li>You can use the ga_session_number event parameter to determine if the user is new or returning.</li>
-    <li>You should use ISOYEAR instead of YEAR and ISOWEEK instead of WEEK. Learn more on this with the following links: <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#extract" target="_blank">EXTRACT</a>, <a href="https://en.wikipedia.org/wiki/ISO_week_date" target="_blank">ISO week date</a>, <a href="https://en.wikipedia.org/wiki/ISO_8601#Years" target="_blank">ISO year</a>.</li>
+    <li>We consider only active users (for who there was at least one event where the <strong>engagement_time_msec</strong> field of the <strong>event_params</strong> column was greater than 0.</li>
+    <li>You can use the <strong>ga_session_number</strong> field of the <strong>event_params</strong> column to determine if the user is new or returning.</li>
+    <li>You should use <code>ISOYEAR</code> instead of <code>YEAR</code> and <code>ISOWEEK</code> instead of <code>WEEK</code>. Learn more on this with the following links: <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#extract" target="_blank">EXTRACT</a>, <a href="https://en.wikipedia.org/wiki/ISO_week_date" target="_blank">ISO week date</a>, <a href="https://en.wikipedia.org/wiki/ISO_8601#Years" target="_blank">ISO year</a>.</li>
   </ul>
   
   <h4>Example results</h4>
-  <p><img src="images/result-5.png" class="lesson-img" /></p>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
 
   <h4>Solution</h4>
   <div class="collapsible-parent">
@@ -354,7 +302,7 @@ SELECT DISTINCT CONCAT(EXTRACT(ISOYEAR FROM first_session_date), '-', format('%0
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Google Analytics average lifetime revenue per user&nbsp;🔥</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°5 — Google Analytics average lifetime revenue per user&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -362,11 +310,11 @@ SELECT DISTINCT CONCAT(EXTRACT(ISOYEAR FROM first_session_date), '-', format('%0
   <h4>Task</h4>
   <ul>
     <li>Here, we’ll define the concept of “lifetime value” as the revenue generated by a user during the month of January 2021, but the same approach would hold for any larger time frame.</li>
-    <li>Write a query that will display the average lifetime value per user for reach day of January 2021.</li>
+    <li>Write a query that will display the average lifetime value per user for each day of January 2021.</li>
   </ul>
   
   <h4>Example results</h4>
-  <p><img src="images/result-6.png" class="lesson-img" /></p>
+  <p><img src="images/result-5.png" class="lesson-img" /></p>
 
   <h4>Solution</h4>
   <div class="collapsible-parent">

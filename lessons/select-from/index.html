@@ -1,7 +1,8 @@
 ---
 layout: lesson
 title: SELECT FROM
-previous_lesson: /lessons/readme/
+quote: "My tastes are simple: I am easily satisfied with the best."
+previous_lesson: /lessons/big-query-setup-and-dataset-exploration/
 next_lesson: /lessons/limit/
 ---
 
@@ -9,6 +10,13 @@ next_lesson: /lessons/limit/
 
 <!-- Selecting everything -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Selecting everything</span></h3>
+
+<p>Here's the schema of the dataset we will be working with in this lesson:</p>
+<p><img src="/assets/images/the-look.png" class="lesson-img" /></p>
+
+<p>The <code>SELECT</code> command allows us to display the content of a specific table. The general syntax is <code>SELECT column_1, column_2, ..., column_n FROM table_name</code>. In the example below, we use the wildcard symbol '*', which "asks" the <code>SELECT</code> to display all the table's columns.</p>
+<p>We can add comments to our code to make it clearer and more maintainable. <code>--</code> is used for single-line comments, and <code>/* */</code> is used for multi-line comments.</p>
+<p>Type the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it.</p>
 <pre>
   <code class="language-sql">
   /*
@@ -23,38 +31,53 @@ next_lesson: /lessons/limit/
 
 <!-- Visualizing query size in the BigQuery console -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Visualizing query size in the BigQuery console</span></h3>
+<p>When writing your query, BigQuery will show before you run it, how much data your query will process. Cost-wise, you should worry only about multi-gigabytes queries. Try to minimize query size in general by avoiding to display unneeded columns.</p>
+
 <p><figure><img src="images/query-preview.png" class="lesson-img" /><figcaption>Query size preview</figcaption></figure></p>
+
+<p>After running your query, BigQuery will show you the total number of results returned by your query and paginate them if they are above fifty.</p>
+
 <p><figure><img src="images/query-size-returned-rows.png" class="lesson-img" /><figcaption>Number of returned rows</figcaption></figure></p>
 
 <!-- Selecting specific columns -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Selecting specific columns</span></h3>
+
+<p>You can select specific columns by writing their names separated by a comma.</p>
+<p>Type the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it.</p>
 <pre>
   <code class="language-sql">
 SELECT  id, name
   FROM  bigquery-public-data.thelook_ecommerce.distribution_centers;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/selecting-specific-columns.png" class="lesson-img" /></p>
 
 <!-- Column aliasing -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Column aliasing</span></h3>
+<p>You can choose to display a column with a different name from the original, by using the <code>AS</code> keyword. That's called <i>aliasing</i>.</p><p>Type the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it.</p>
 <pre>
   <code class="language-sql">
 SELECT  first_name, last_name, id, id AS user_id
   FROM  bigquery-public-data.thelook_ecommerce.users;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/selecting-specific-columns-2.png" class="lesson-img" /></p>
 
 <!-- Calculated columns -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Calculated columns</span></h3>
+<p>In addition to the values of the original columns, you can instruct the <code>SELECT</code> command to display the result of a calculation. In BigQuery, by default a column resulting from a calculation will get assigned a name like _f0 or _f1. It's a good idea to alias it with the <code>AS</code> keyword.</p>
 <pre>
   <code class="language-sql">
 SELECT  id,
-        name, cost, cost * 1.2 AS increased_cost
+        name,
+        cost,
+        cost * 1.2 AS increased_cost
   FROM  bigquery-public-data.thelook_ecommerce.products;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/calculated-columns-2.png" class="lesson-img" /></p>
 
 <!-- PRACTICE PROBLEMS -->
@@ -66,7 +89,7 @@ SELECT  id,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display a new column named margin showing the difference between the retail_price and the cost.</p>
+  <p>Write a query that will display a new column named <strong>margin</strong> showing the difference between the <strong>retail_price</strong> and the <strong>cost</strong> columns.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -96,7 +119,7 @@ SELECT  id,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the id, name, retail_price columns, plus a new column called retail_price_increased that shows retail prices increased by 10%.</p>
+  <p>Write a query that will display the <strong>id</strong>, <strong>name</strong>, <strong>retail_price</strong> columns, plus a new column called <strong>retail_price_increased</strong> that shows retail prices increased by 10%.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -127,10 +150,10 @@ SELECT  id,
   <h4>Task</h4>
   <p>Write a query that will display:</p>
   <ul>
-    <li>the id, name, cost, retail_price columns</li>
-    <li>Plus a new column named margin that will show the difference between the retail_price and the cost</li>
-    <li>Plus a new column called retail_price_increased that shows retail prices increased by 10%</li>
-    <li>And another column called retail_priced_increased_margin that will show the new margin with this 10% increase.</li>
+    <li>the <strong>id</strong>, <strong>name</strong>, <strong>cost</strong>, <strong>retail_price</strong> columns.</li>
+    <li>Plus a new column named <strong>margin</strong> that will show the difference between the <strong>retail_price</strong> and the <strong>cost</strong> columns.</li>
+    <li>Plus a new column called <strong>retail_price_increased</strong> that will show retail prices increased by 10%.</li>
+    <li>And another column called <strong>retail_priced_increased_margin</strong> that will show the new margin resulting from this 10% increase in the retail prices.</li>
   </ul>
   
   <h4>Example results</h4>

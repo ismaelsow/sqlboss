@@ -1,20 +1,25 @@
 ---
 layout: lesson
 title: Common aggregation functions
+quote: "I'm smart enough to know that I'm dumb."
 previous_lesson: /lessons/case-when/
 next_lesson: /lessons/group-by/
 ---
 
 <p><img src="images/common-aggregation-functions.png" class="illustration" /></p>
 
+<p>Aggregation functions are SQL functions that apply a calculation to several rows and return one single value (also called a <strong>scalar value</strong>). For example counting a number of items in a collection, averaging the values of a column, finding the minimum of the values in a column etc.</p>
+
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
-<p>Here we count the total number of rows in the distribution_centers table.</p>
+<p>The <code>COUNT</code> function counts the number of non-<code>NULL</code> items in a table. <code>NULL</code> values are ignored. Here we count the total number of rows in the distribution_centers table.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  COUNT(*) AS distribution_centers_count
   FROM  bigquery-public-data.thelook_ecommerce.distribution_centers;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>distribution_centers_count</th></thead>
   <tbody>
@@ -23,7 +28,8 @@ SELECT  COUNT(*) AS distribution_centers_count
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
-<p>Here we count the number of non-null cells in the user_id column, in addition to counting the total number of rows in the distribution_centers table.</p>
+<p>Here we count the total number of rows in the distribution_centers table, and the number of rows with non-<code>NULL</code> values in the user_id column.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT    COUNT(*) AS total_row_count,
@@ -31,6 +37,7 @@ SELECT    COUNT(*) AS total_row_count,
   FROM    bigquery-public-data.thelook_ecommerce.events;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>total_row_count</th><th>user_id_count</th></thead>
   <tbody>
@@ -39,12 +46,15 @@ SELECT    COUNT(*) AS total_row_count,
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
+<p>The <code>SUM</code> function performs an addition of all the values in a specific column. <code>NULL</code> values are ignored.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  SUM(num_of_item) AS total_items_sold
   FROM  bigquery-public-data.thelook_ecommerce.orders;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>total_items_sold</th></thead>
   <tbody>
@@ -53,12 +63,15 @@ SELECT  SUM(num_of_item) AS total_items_sold
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
+<p>The <code>MIN</code> function returns the smallest of all the values in a specific column. <code>NULL</code> values are ignored.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  MIN(age) AS youngest
   FROM  bigquery-public-data.thelook_ecommerce.users;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>youngest</th></thead>
   <tbody>
@@ -67,12 +80,15 @@ SELECT  MIN(age) AS youngest
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 5</span></h3>
+<p>The <code>MAX</code> function returns the biggest of all the values in a specific column. <code>NULL</code> values are ignored.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  MAX(age) AS oldest
         FROM  bigquery-public-data.thelook_ecommerce.users;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>oldest</th></thead>
   <tbody>
@@ -81,12 +97,14 @@ SELECT  MAX(age) AS oldest
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 6</span></h3>
+<p>The <code>AVG</code> function returns the average of all the values in a specific column. <code>NULL</code> values are ignored.</p>
 <pre>
   <code class="language-sql">
 SELECT  AVG(age) AS average_age
   FROM  bigquery-public-data.thelook_ecommerce.users;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <table class="table-with-header">
   <thead><th>average_age</th></thead>
   <tbody>
@@ -104,7 +122,7 @@ SELECT  AVG(age) AS average_age
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the number of users from the United States.</p>
+  <p>Write a query that will display the total number of users from the United States.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
@@ -250,9 +268,9 @@ SELECT  AVG(age) AS us_users_average_age
   <h4>Example results</h4>
   <div class="table-wrapper">
     <table class="table-with-header">
-      <thead><th>total_items_sold</th><th></th>total_items_sold_to_men<th>total_items_sold_to_women</th></thead>
+      <thead><th>total_items_sold</th><th>total_items_sold_to_men</th><th>total_items_sold_to_women</th></thead>
       <tbody>
-        <tr><td>182427</td><td>91156</td>91271<td></td></tr>
+        <tr><td>182427</td><td>91156</td><td>91271</td></tr>
       </tbody>
     </table>
   </div>
@@ -264,8 +282,8 @@ SELECT  AVG(age) AS us_users_average_age
       <pre>
         <code class="language-sql">
 SELECT  SUM(num_of_item) AS total_items_sold,
-        SUM(CASE WHEN gender = 'M' THEN num_of_item ELSE 0 END) AS total_items_sold_to_men,
-        SUM(CASE WHEN gender = 'F' THEN num_of_item ELSE 0 END) AS total_items_sold_to_women,
+        SUM(CASE WHEN gender = 'M' THEN num_of_item END) AS total_items_sold_to_men,
+        SUM(CASE WHEN gender = 'F' THEN num_of_item END) AS total_items_sold_to_women,
   FROM  bigquery-public-data.thelook_ecommerce.orders;
         </code>
       </pre>
@@ -316,9 +334,9 @@ SELECT  COUNT(*) AS users_from_email
   <h4>Task</h4>
   <p>Write a query that will show:</p>
   <ul>
-    <li>the total number of users that came from email</li>
-    <li>the total number of female users that came from email</li>
-    <li>and the total number of male users that came from email</li>
+    <li>the total number of users who came from email</li>
+    <li>the total number of female users who came from email</li>
+    <li>and the total number of male users who came from email</li>
   </ul>
   
   <h4>Example results</h4>
@@ -357,19 +375,19 @@ SELECT  COUNT(*) AS users_from_email,
   <h4>Task</h4>
   <p>Write a query that will show:</p>
   <ul>
-    <li>the total number of users that came from email</li>
-    <li>the total number of female users that came from email</li>
-    <li>the share of female users over the users that came from email</li>
-    <li>the total number of male users that came from email</li>
-    <li>the share of male users over the users that came from email</li>
+    <li>the total number of users who came from email</li>
+    <li>the total number of female users who came from email</li>
+    <li>the share (in %) of female users over the users who came from email</li>
+    <li>the total number of male users who came from email</li>
+    <li>the share (in %) of male users over the users who came from email</li>
   </ul>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
     <table class="table-with-header">
-      <thead><th>users_from_email</th><th>female_users_from_email</th><th>female_users_from_email_share</th><th>male_users_from_email</th><th>male_users_from_email_share</th></thead>
+      <thead><th>users_from_email</th><th>female_users_from_email</th><th>share_of_female_users_from_email</th><th>male_users_from_email</th><th>share_of_male_users_from_email</th></thead>
       <tbody>
-        <tr><td>5078</td><td2556></td><td>50.334777471445449</td><td>2522</td><td>49.665222528554551</td></tr>
+        <tr><td>5078</td><td>2556</td><td>50.334777471445449</td><td>2522</td><td>49.665222528554551</td></tr>
       </tbody>
     </table>
   </div>
@@ -382,9 +400,9 @@ SELECT  COUNT(*) AS users_from_email,
         <code class="language-sql">
 SELECT  COUNT(*) AS users_from_email,
         COUNT(CASE WHEN gender = 'F' THEN 1 END) AS female_users_from_email,
-        (COUNT(CASE WHEN gender = 'F' THEN 1 END) / COUNT(*)) * 100 AS female_users_from_email_share,
+        (COUNT(CASE WHEN gender = 'F' THEN 1 END) / COUNT(*)) * 100 AS share_of_female_users_from_email,
         COUNT(CASE WHEN gender = 'M' THEN 1 END) AS male_users_from_email,
-        (COUNT(CASE WHEN gender = 'M' THEN 1 END) / COUNT(*)) * 100 AS male_users_from_email_share,
+        (COUNT(CASE WHEN gender = 'M' THEN 1 END) / COUNT(*)) * 100 AS share_of_male_users_from_email,
   
   FROM  bigquery-public-data.thelook_ecommerce.users
   WHERE traffic_source = 'Email';
@@ -401,7 +419,7 @@ SELECT  COUNT(*) AS users_from_email,
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
 
   <h4>Task</h4>
-  <p>Write a query that will count the number of page_view events in the table specified above.</p>
+  <p>Write a query that will count the number of page_view events in the table specified above. The page_view events are the rows for which the event_name field is equal to 'page_view'.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">

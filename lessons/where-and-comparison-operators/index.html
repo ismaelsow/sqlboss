@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: WHERE and comparison operators
+quote: "All animals are equal, but some animals are more equal than others."
 previous_lesson: /lessons/limit/
 next_lesson: /lessons/like/
 ---
 
 <p><img src="images/where-comparison-illustration.png" class="illustration" /></p>
 
-<p>The WHERE clause is used to filter the data we want to return. Following the WHERE clause, comes a condition that will be evaluated to either true or false. That type of condition represents what’s called a boolean value.</p>
+<p>The <code>WHERE</code> clause is used to filter the data we want to return. Following the <code>WHERE</code> clause, comes a set of conditions that will be evaluated to either true or false. Only rows for which the set of conditions evaluates to true will be returned.</p>
 
 <!-- Filtering records from a table -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Filtering records from a table</span></h3>
+<p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -25,7 +27,7 @@ SELECT  column_name, data_type
   WHERE table_name = 'sic_codes';
   </code>
 </pre>
-<p>To specify the condition for our WHERE clause, we can use many different operators. Below are the comparison operators that are commonly used.</p>
+<p>To specify the set of conditions used in the <code>WHERE</code> clause, we can use different operators. Below are the comparison operators that are commonly used.</p>
 
 <!-- Comparison operators -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Comparison operators</span></h3>
@@ -40,17 +42,14 @@ SELECT  column_name, data_type
 
 <!-- SQL order of operations -->
 <h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
 <table class="table-with-header">
   <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
   <tbody>
     <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>4</td><td>SELECT</td><td>Displays the results.</td></tr>
+    <tr><td>3</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
   </tbody>
 </table>
 
@@ -97,7 +96,7 @@ SELECT  first_name AS cool_name
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 5 orders whose status is different from “Shipped”.</p>
+  <p>Write a query that displays 5 orders whose status is different from 'Shipped'. Note that literal text values must be enclosed within quotes, preferably single quotes.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -110,7 +109,7 @@ SELECT  first_name AS cool_name
         <code class="language-sql">
 SELECT  order_id, status, gender, created_at, returned_at
   FROM  bigquery-public-data.thelook_ecommerce.orders
-  WHERE status <> "Shipped" -- status != "Shipped" would work also
+  WHERE status != 'Shipped' -- status <> 'Shipped' would work also
   LIMIT 5;
         </code>
       </pre>
@@ -174,13 +173,13 @@ SELECT  *
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — 10 products that sells for more than 500&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — 10 products that sell for more than $500&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 10 products that sell for more than 500.</p>
+  <p>Write a query that displays 10 products that sell for more than $500. We assume that all monetary values in our dataset are in US dollars.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-5.png" class="lesson-img" /></p>
@@ -221,7 +220,7 @@ SELECT  id, cost, category, name, brand, retail_price, department
         <code class="language-sql">
 SELECT  id, first_name, last_name, country
   FROM  bigquery-public-data.thelook_ecommerce.users
-  WHERE country <= 'M'
+  WHERE country < 'N'
   LIMIT 5;
         </code>
       </pre>
@@ -239,7 +238,7 @@ SELECT  id, first_name, last_name, country
   <ul>
     <li>Write a query that will show the profit margin ratio in percentage for each product.</li>
     <li>Only display 10 rows.</li>
-    <li>The profit_margin_ratio_per_product column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+    <li>The <strong>profit_margin_ratio_per_product</strong> column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
   </ul>
   
   <h4>Example results</h4>
@@ -262,6 +261,7 @@ SELECT  id,
   LIMIT 10;
         </code>
       </pre>
+      <p>We can not use the <strong>profit_margin_ratio_per_product</strong> alias in our <code>WHERE</code> clause because aliases are defined in the <code>SELECT</code> step of the order of operations. The <code>SELECT</code> step happens after the <code>WHERE</code> step. That's why the alias is not available in the <code>WHERE</code> step, as well as in all the steps that come before <code>SELECT</code>. The solution is simply to reuse the required calculation in the <code>WHERE</code> clause, since the calculation only uses prexisting column names.</p>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: UNION and UNION ALL
+quote: "History will be kind to me for I intend to write it."
 previous_lesson: /lessons/self-join/
 next_lesson: /lessons/user-defined-functions/
 ---
@@ -8,12 +9,14 @@ next_lesson: /lessons/user-defined-functions/
 <p><img src="images/union-and-union-all.svg" class="illustration" /></p>
 
 <p>The <code>UNION ALL</code> operator is used to add the result of queries on top of each other. The result sets of each query must have the same number of columns, with the same types, and in the same order.</p>
-<p>It can be very useful when you’re dealing with a table that’s cut in different parts, for size reasons for example.</p>
-<p>There’s also a <code>UNION</code> operator which deduplicates the different result sets and is not supported by Google BigQuery.</p>
+<p>It can be very useful when you’re dealing with a table that has been partitioned by date for size/storage considerations.</p>
+<p>There’s also a <code>UNION</code> operator which deduplicates the different result sets (it's not supported by Google BigQuery at the moment).</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 (SELECT 11 AS id,
         'Boston MA' AS state,
         42.3601 AS latitude,
@@ -35,8 +38,11 @@ UNION ALL
         25.7617 AS latitude,
     80.1918 AS longitude
 );
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -50,7 +56,7 @@ UNION ALL
   <h4>Task</h4>
   <ul>
     <li>Write a query that will add three distribution centers to the existing table.</li>
-    <li>You can populate the new distribution centers with any id, name, geographic coordinates you’d like.</li>
+    <li>You can populate the new distribution centers with any id, name, geographic coordinates you like.</li>
     <li>Sort the results by id in ascending order.</li>
   </ul>
   
@@ -143,10 +149,12 @@ SELECT  DISTINCT state
 
   <h4>Task</h4>
   <ul>
-    <li>Create a new BigQuery dataset called dbpedia.</li>
-    <li>Inside this dataset, load the DBP_wiki_data.csv file into a BigQuery table called pages. You can find the file on this page: <a href="Inside this dataset, load the DBP_wiki_data.csv file into a BigQuery table called pages. You can find the file on this page: https://www.kaggle.com/datasets/danofer/dbpedia-classes" target="_blank">https://www.kaggle.com/datasets/danofer/dbpedia-classes</a></li>
+    <li><a href="https://www.youtube.com/watch?v=eh5ETIoMzOw" target="_blank">Create a Google Cloud Storage bucket and upload the dataset CSV file</a> there. You can find the file on this page: <a href="https://www.kaggle.com/datasets/danofer/dbpedia-classes"
+        target="_blank">https://www.kaggle.com/datasets/danofer/dbpedia-classes</a>.</li>
+    <li><a href="https://cloud.google.com/bigquery/docs/datasets#create-dataset" target="_blank">Create a new BigQuery dataset</a> and call it <strong>dbpedia</strong>.</li>
+    <li>Inside this dataset, create a table named <strong>pages</strong> by <a href="https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv" target="_blank">loading the DBP_wiki_data.csv file into a BigQuery table</a> called pages.</li> 
     <li>Write a query that will create a table with a category and parent relationship.</li>
-    <li>Category without parents should have the parent column set to an empty string.</li>
+    <li>Categories without parents should have the parent column set to an empty string.</li>
   </ul>
   
   <h4>Example results</h4>

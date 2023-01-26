@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: LEAD
+quote: "Show me a hero, and I'll write you a tragedy."
 previous_lesson: /lessons/lag/
 next_lesson: /lessons/first-value/
 ---
@@ -10,13 +11,15 @@ next_lesson: /lessons/first-value/
 <p><code>LEAD</code> allows us to display values from subsequent rows. It takes up to 3 parameters:</p>
 <ol>
   <li>The column whose value we want to display.</li>
-  <li>The offset, how are many rows further we want to go. By default, this is equal to 1.</li>
-  <li>The default output to return if the offset is outside the bond of the window. By default, this is NULL.</li>
+  <li>The offset (how are many rows further we want to go). By default, this is equal to 1.</li>
+  <li>The default output to return if the offset is outside the bond of the window. By default, this is <code>NULL</code>.</li>
 </ol>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    id,
           created_at AS signup_date,
           CONCAT(first_name, ' ', last_name) AS user,
@@ -24,12 +27,11 @@ SELECT    id,
   
   FROM    bigquery-public-data.thelook_ecommerce.users
 ORDER BY  signup_date DESC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/lead.png" class="lesson-img" /></p>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#lead" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -41,12 +43,12 @@ ORDER BY  signup_date DESC;
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210104</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display a path exploration for a unique Google Analytics 4 session defined by user_pseudo_id '1065673.0722289663’ and the session id 8521814404, for January 4th, 2021.</p>
+  <p>Write a query that will display a path exploration for a unique Google Analytics 4 session defined by <strong>user_pseudo_id</strong> '1065673.0722289663’ and <strong>ga_session_id</strong> 8521814404, for January 4th, 2021.</p>
   <p><strong>Notes:</strong></p>
   <ul>
     <li>Only the page paths (i.e the page location without the domain, protocol and query parameters) should be displayed. You can use one of the user-defined functions we created earlier to help.</li>
-    <li>If the previous page is NULL, replace it with the following string: <i>(entrance)</i></li>
-    <li>If the next page is NULL, replace it with the following string: <i>(exit)</i></li>
+    <li>If the previous page is <code>NULL</code>, replace it with the following string: <strong>(entrance)</strong></li>
+    <li>If the next page is <code>NULL</code>, replace it with the following string: <strong>(exit)</strong></li>
     <li>Look at Google Analytics 4 documentation in the <a href="https://developers.google.com/analytics/bigquery/web-ecommerce-demo-dataset" target="_blank">GA4 Ecommerce dataset</a> to find what event parameters you need to manipulate.</li>
     <li>The event time should be in the <i>hour:minute:second</i> format (we don’t need to display the date since we already know the date, and we don’t need to display  microseconds and smaller units of time).</li>
   </ul>
@@ -100,7 +102,7 @@ SELECT      example_dataset.strip_url(previous_page, 'all') AS previous_page,
 
   <h4>Task</h4>
   <ul>
-    <li>Using the LEAD function, write a query that will display the average delay between page_view events across unique sessions, in January 2021</li>
+    <li>Using the LEAD function, write a query that will display the average delay between <strong>page_view</strong> events across unique sessions, in January 2021</li>
     <li>The result should be expressed in seconds, as an integer</li>
     <li>To make the code cleaner, you can use a temporary function to make some of the time interval calculations</li>
   </ul>
@@ -162,7 +164,10 @@ SELECT  CAST(AVG(delay) AS INTEGER) AS avg_delay_in_seconds
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the number of customers who made a valid purchase during a 7-day period in January 2021.</p>
+  <p>
+    <li>Write a query that will display the number of customers who made a valid purchase during a 7-day period in January 2021.</li>
+    <li>By 7-day period, we mean the purchase date (d0) and the six following days (d1 to d6).</li>
+  </p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">

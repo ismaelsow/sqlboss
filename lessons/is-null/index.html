@@ -1,16 +1,21 @@
 ---
 layout: lesson
 title: IS NULL
+quote: "Now I am become Death, the destroyer of worlds."
 previous_lesson: /lessons/between/
 next_lesson: /lessons/and/
 ---
 
 <p><img src="images/is-null-illustration.png" class="illustration" /></p>
 
-<p>NULL values mean that there’s no value, not even an empty string. We can not compare null values using the regular operators. We need to use some special syntax and functions to handle null values. To check for NULL in a column value, we use IS NULL.</p>
+<p><code>NULL</code> is a special entity that means that there’s no value, not even an empty string. It means there's <strong>nothing</strong> in there.</p>
+<p>Let's think about buildings (🏢) and elevators (🛗). We ask how many people are in a particular building's elevator. There could be five people (people_in_elevator = 5), ten people (people_in_elevator = 10), or even zero people. Zero means the elevator is empty but it's still a value (people_in_elevator = 0). Now, what if the building has no elevators? Since the building's elevator does not exist, there are not even zero people <strong>in it</strong>. In SQL, this nonexistence is represented
+by <code>NULL</code> (people_in_elevator IS NULL).</p>
+<p>We can not compare <code>NULL</code> using the regular operators. We need special syntax and functions to handle <code>NULL</code>. To check for <code>NULL</code> in a column, we use <code>IS NULL</code>.</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  order_id, user_id, status, created_at, shipped_at
@@ -19,6 +24,7 @@ SELECT  order_id, user_id, status, created_at, shipped_at
   LIMIT 5;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
@@ -31,7 +37,7 @@ SELECT  order_id, user_id, status, created_at, shipped_at
   <p>bigquery-public-data.thelook_ecommerce.events</p>
 
   <h4>Task</h4>
-  <p>Write a query that shows 10 events that are not attributable to any users.</p>
+  <p>Write a query that shows up to 10 events that we can not attribute to any users.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>

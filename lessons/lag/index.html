@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: LAG
+quote: "Life can only be understood backwards; but it must be lived forwards."
 previous_lesson: /lessons/dense-rank/
 next_lesson: /lessons/lead/
 ---
@@ -10,13 +11,15 @@ next_lesson: /lessons/lead/
 <p><code>LAG</code> allows us to display values from previous rows. It takes up to 3 parameters:</p>
 <ol>
   <li>The column whose value we want to display.</li>
-  <li>The offset, how are many rows back we want to go. By default, this is equal to 1.</li>
-  <li>The default output to return if the offset is outside the bond of the window. By default, this is NULL.</li>
+  <li>The offset (how are many rows back we want to go). By default, this is equal to 1.</li>
+  <li>The default output to return if the offset is outside the bond of the window. By default, this is <code>NULL</code>.</li>
 </ol>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    id,
           created_at AS signup_date,
           CONCAT(first_name, ' ', last_name) AS user,
@@ -24,24 +27,23 @@ SELECT    id,
   
   FROM    bigquery-public-data.thelook_ecommerce.users
 ORDER BY  signup_date ASC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/lag.png" class="lesson-img" /></p>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/navigation_functions#lag" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Special formatting removing repeats in column&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°1 — Special formatting removing repeats in column&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
-  <p>Resulting table from previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country">Most popular full names by country</a>)</p>
+  <p>Resulting table from the previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country" target="_blank">Most popular full names by country</a>)</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the table from the previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country">Most popular full names by country</a>) in such a way that that each country value only appears once.</p>
+  <p>Write a query that will display the table from the previous practice problem (<a href="/lessons/dense-rank/#most-popular-full-names-by-country" target="_blank">Most popular full names by country</a>) in such a way that each country value only appears once.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -52,6 +54,67 @@ ORDER BY  signup_date ASC;
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
+WITH country_population AS
+  ( SELECT      country,
+                COUNT(*) AS total_users
+      FROM      bigquery-public-data.thelook_ecommerce.users
+      GROUP BY  country
+  ),
+
+  country_common_full_names AS
+  ( SELECT      country,
+                CONCAT(first_name, ' ', last_name) AS full_name,
+                COUNT(*) AS people
+
+      FROM      bigquery-public-data.thelook_ecommerce.users
+      GROUP BY  country, full_name
+      HAVING    people > 1
+  ),
+
+  ranked_country_common_full_names AS
+  ( SELECT  country,
+            full_name,
+            people,
+            DENSE_RANK() OVER(PARTITION BY country ORDER BY people DESC) AS name_rank
+      FROM  country_common_full_names
+  ),
+
+  country_top_names AS
+  ( SELECT      country,
+                full_name,
+                people,
+                name_rank
+
+      FROM      ranked_country_common_full_names
+      WHERE     name_rank = 1
+  ),
+
+  most_popular_names_by_country AS
+  ( SELECT        c1.country,
+                  full_name,
+                  people,
+                  total_users,
+                  ROUND((people / total_users) * 100, 2) AS percentage_of_total
+      
+      FROM        country_top_names c1
+      INNER JOIN  country_population c2
+      ON          c1.country = c2.country
+      ORDER BY    country ASC, percentage_of_total DESC, full_name ASC
+  )
+
+SELECT      CASE
+              WHEN LAG(country) OVER(PARTITION BY country ORDER BY full_name ASC) = country THEN ''
+              ELSE country
+            END AS country,
+            full_name,
+            people,
+            total_users,
+            percentage_of_total
+  
+  FROM      most_popular_names_by_country
+  ORDER BY  most_popular_names_by_country.country ASC,
+            percentage_of_total DESC,
+            full_name ASC;
         </code>
       </pre>
     </div>
@@ -87,6 +150,7 @@ ORDER BY  signup_date ASC;
 WITH repeat_customers AS
   ( SELECT      user_id,
                 COUNT(*) AS order_count
+
       FROM      bigquery-public-data.thelook_ecommerce.orders
       GROUP BY  user_id
       HAVING    order_count > 1
@@ -97,6 +161,7 @@ WITH repeat_customers AS
                 created_at AS order_date,
                 order_id,
                 SUM(sale_price) AS order_value
+
       FROM      bigquery-public-data.thelook_ecommerce.order_items
       GROUP BY  user_id, created_at, order_id
   ),
@@ -107,15 +172,18 @@ WITH repeat_customers AS
             order_id,
             order_value,
             ROW_NUMBER() OVER(PARTITION BY user_id ORDER BY order_date ASC) AS row_num
+
       FROM  orders_with_values
   ),
 
   differences_by_repeat_users AS
   ( SELECT        r1.user_id,
                   order_value - LAG(order_value) OVER(PARTITION BY r1.user_id ORDER BY row_num ASC) AS difference
+
       FROM        row_numbered_orders_with_values AS r1
       INNER JOIN  repeat_customers AS r2
       ON          r1.user_id = r2.user_id
+
       WHERE       row_num IN (1,2)
   )
 
@@ -282,7 +350,7 @@ SELECT      ROUND(AVG(difference), 2) AS avg_difference
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display the growth of total items shipped by distribution center, by shipping date</li>
+    <li>Write a query that will display the growth of total items shipped by distribution center, by shipping date, in December 2022</li>
     <li>Format the growth rate without decimals and with a '%' sign</li>
     <li>Ensure that you’re not risking dividing by zero or NULL when calculating the growth rate</li>
   </ul>
@@ -329,6 +397,7 @@ WITH items_shipped_by_center AS
             center_name,
             items_shipped,
             CONCAT(CAST(COALESCE(growth_by_shipping_date, 0) AS INTEGER), '%') AS growth_by_shipping_date
+
       FROM  growth_by_shipping_dates
   )
 

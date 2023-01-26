@@ -1,42 +1,66 @@
 ---
 layout: lesson
 title: Arrays
+quote: "I think for lesson number one, to learn a mystic formula for answering questions is very bad."
 previous_lesson: /lessons/record/
 next_lesson: /lessons/subqueries-and-common-table-expressions/
 ---
 
 <p><img src="images/arrays.png" class="illustration" /></p>
 
-<p>An array is an ordered list of zero or more elements.</p>
+<p>An <code>ARRAY</code> is an ordered list of zero or more elements. Each element is indexed by an integer number, usually starting from zero. Each element of the array can be accessed via its index.</p>
+<p>Here we can see an <code>ARRAY</code> (or list) of countries with their indices:
+  <table class="table-with-header">
+    <thead><th>0</th><th>1</th><th>2</th><th>3</th></thead>
+    <tbody><td>United States</td><td>Algeria</td><td>Spain</td><td>Thailand</td></tbody>
+  </table>
+</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Basic array</span></h3>
+<p>We can create arrays by enclosing the different items inside square brackets, and separating them with a comma.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre><code class="language-sql">SELECT ['United States', 'Belgium', 'Cyprus'] as column_of_one_array;</code></pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/basic-array.png" class="lesson-img" /></p>
+<p>We can see that we have only one row returned, but the <strong>column_of_one_array</strong> column is an array that contains 3 items.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Accessing array elements</span></h3>
+<p>Each element of the array can be accessed via its index and the <code>OFFSET</code> function using the syntax below.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre><code class="language-sql">SELECT ['United States', 'Belgium', 'Cyprus'][OFFSET(0)];</code></pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
     <tbody><td>United States</td></tbody>
   </table>
 </p>
+<p>In the example above, we're accessing the item at index 0 of the array.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Array of records</span></h3>
+<p>An array can contains any item that's not another array. Below we can see an array of records (or array of <code>STRUCT</code>).
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  event_params
   FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/array-of-records.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">GENERATE_DATE_ARRAY</span></h3>
+<p><code>GENERATE_DATE_ARRAY</code> is used to generate arrays of <code>DATE</code> items. As parameters, it takes a start date, and an end date.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre><code class="language-sql">SELECT GENERATE_DATE_ARRAY('2023-01-01', '2023-01-15');</code></pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/generate-date-array.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">ARRAY_LENGTH</span></h3>
+<p><code>ARRAY_LENGTH</code> returns the number of items contained in an array.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre><code class="language-sql">SELECT ARRAY_LENGTH(['United States', 'Belgium', 'Cyprus']);</code></pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -45,65 +69,29 @@ SELECT  event_params
 </p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">UNNEST</span></h3>
+<p><code>UNNEST</code> can be used to return a table from an array. Doing so "flattens" the array, meaning that from one entity that include for example, 20 items, we'll get a table with 20 different rows.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
-SELECT  CONCAT(user_pseudo_id, '.', event_timestamp) AS event_identifier,
-        unnested_params
-  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
-        UNNEST(event_params) AS unnested_params;
+SELECT  *
+  FROM  UNNEST(['United States', 'Belgium', 'Cyprus']) AS countries;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/unnest.png" class="lesson-img" /></p>
-<p>Here, you must have noticed that we used two items in the FROM clause. This is called a JOIN, something we’ll see in the very next lesson. 😉</p>
 
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics number of sessions per date&nbsp;&nbsp;🌶️</span></h3>
-<div class="problem">
-  <h4>Tables</h4>
-  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
-  <h4>Task</h4>
-  <ul>
-    <li>A session is uniquely defined by the combination of the pseudo_user_id and the ga_session_id event parameter</li>
-    <li>Write a query that will display the number of sessions per date for all days for which we have data</li>
-    <li>Sort the result set by session date in ascending order</li>
-  </ul>
-  
-  <h4>Example results</h4>
-  <p><img src="images/result-1.png" class="lesson-img" /></p>
-
-  <h4>Solution</h4>
-  <div class="collapsible-parent">
-    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
-    <div class="practice-problems-instructions collapsible-item">
-      <pre>
-        <code class="language-sql">
-SELECT      PARSE_DATE('%Y%m%d', _table_suffix) AS session_date,
-            COUNT(CONCAT(user_pseudo_id, '.', unnested_params.value.int_value)) AS sessions
-  
-  FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`,
-            UNNEST(event_params) AS unnested_params
-  WHERE     unnested_params.key = 'ga_session_id'
-  
-  GROUP BY  session_date
-  ORDER BY  session_date ASC;
-        </code>
-      </pre>
-    </div>
-  </div>
-</div>
-
-
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Anonymized ip address using the SPLIT function&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Anonymized ip address using the SPLIT function&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
 
   <h4>Task</h4>
-  <p>Write a query that will add an anonymized ip address column using the SPLIT function.</p>
+  <p>Write a query that will add an anonymized ip address column using the <code>SPLIT</code> function instead of a regular expression.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>
@@ -121,43 +109,6 @@ SELECT  id,
         AS anonymized_ip_address
   
   FROM  bigquery-public-data.thelook_ecommerce.events;
-        </code>
-      </pre>
-    </div>
-  </div>
-</div>
-
-
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Google Analytics number of scroll events by page location&nbsp;&nbsp;🌶️</span></h3>
-<div class="problem">
-  <h4>Tables</h4>
-  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
-
-  <h4>Task</h4>
-  <ul>
-    <li>Write a query that will display the number of scroll events by page location</li>
-    <li>The results should be sorted by the number of scroll events in descending order</li>
-  </ul>
-  
-  <h4>Example results</h4>
-  <p><img src="images/result-3.png" class="lesson-img" /></p>
-
-  <h4>Solution</h4>
-  <div class="collapsible-parent">
-    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
-    <div class="practice-problems-instructions collapsible-item">
-      <pre>
-        <code class="language-sql">
-SELECT      unnested_params.value.string_value AS page_location,
-            COUNT(*) AS scrolls
-  
-  FROM      bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
-            UNNEST(event_params) AS unnested_params
-  WHERE     event_name = 'scroll'
-            AND unnested_params.key = 'page_location'
-  
-  GROUP BY  page_location
-  ORDER BY  scrolls DESC;
         </code>
       </pre>
     </div>

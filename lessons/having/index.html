@@ -1,32 +1,35 @@
 ---
 layout: lesson
 title: HAVING
+quote: "Nothing was your own except the few cubic centimetres inside your skull."
 previous_lesson: /lessons/group-by/
 next_lesson: /lessons/distinct/
 ---
 
 <p><img src="images/having-illustration.png" class="illustration" /></p>
 
-<p>In order to filter the result set returned by a SELECT clause, we’ve already seen how to use the WHERE clause. But what if we need to filter the result of a GROUP BY clause? We can’t use the WHERE clause there as the WHERE clause is evaluated before the GROUP BY and can’t filtered the aggregated data.</p>
+<p>In order to filter the results returned by a <code>SELECT</code> clause, we’ve already seen how to use <code>WHERE</code>. But what if we need to filter the results of a <code>GROUP BY</code>? We can’t use <code>WHERE</code> there because the <code>WHERE</code> step happens before <code>GROUP BY</code>, and can’t filter the aggregated data.</p>
 
-<p>To filter the aggregated data, we’ll use a new clause: HAVING.</p>
+<p>To filter data aggregated with a <code>GROUP BY</code>, we’ll use a new clause: <code>HAVING</code>.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
 <table class="table-with-header">
   <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
   <tbody>
     <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>3</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>4</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+    <tr><td>5</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>6</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>7</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
   </tbody>
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<code>HAVING</code> is used in the same way as <code>WHERE</code>, but comes after <code>GROUP BY</code>.
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      country,
@@ -36,6 +39,7 @@ SELECT      country,
   HAVING    users_average_age >= 42;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
@@ -73,7 +77,7 @@ SELECT      user_id,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Number of home events in the state of New York in the first quarter of 2022 broken down by traffic source and browser with a filter&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Number of 'home' events in the state of New York in the first quarter of 2022 grouped by traffic source and browser&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
@@ -81,9 +85,9 @@ SELECT      user_id,
   <h4>Task</h4>
   <p>Write a query that will:</p>
   <ul>
-    <li>display the number of home events in the state of New York in the first quarter of 2022</li>
-    <li>broken down by traffic source and browser</li>
-    <li>filtering out rows that have less than 100 home events</li>
+    <li>display the number of 'home' events in the state of New York in the first quarter of 2022</li>
+    <li>Grouped (broken down) by traffic source and browser</li>
+    <li><strong>filtering out</strong> rows that have less than 100 'home' events</li>
     <li>and sorting by number of events in descending order</li>
   </ul>
   

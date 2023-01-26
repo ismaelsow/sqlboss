@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: NOT
+quote: "Perhaps one did not want to be loved so much as to be understood."
 previous_lesson: /lessons/or/
 next_lesson: /lessons/order-by/
 ---
 
 <p><img src="images/not-illustration.png" class="illustration" /></p>
 
-<p>The NOT keyword is used to specify a “negative condition”.</p>
+<p>The <strong>NOT</strong> operator is used to specify a “negative condition”, usually accompanying other operators like <code>IN</code>, <code>BETWEEN</code>, <code>LIKE</code> etc.</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -18,10 +20,12 @@ SELECT  *
   WHERE name NOT IN ('Memphis TN', 'Savannah GA');
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 <!-- Example 2 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  email
@@ -30,11 +34,13 @@ SELECT  email
   LIMIT 10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-2.png" class="lesson-img" /></p>
 
 <!-- Example 3 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
-<p>Since we can’t use normal operators or NULL, when we want to test that something has a value, we use the ‘IS NOT NULL’ construct.</p>
+<p>Since we can’t use normal comparison operators for <code>NULL</code>, when we want to test that something has a value, we use the <code>IS NOT NULL</code> construct.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -43,19 +49,20 @@ SELECT  *
   LIMIT 10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-3.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — 10 products that don’t have “Men’s” in their name&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — 10 products that don’t have "Men's" in their name&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will show 10 products that don’t have Men’s in their name.</p>
+  <p>Write a query that will show 10 products that don’t have the string <strong>Men’s</strong> in their name.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>

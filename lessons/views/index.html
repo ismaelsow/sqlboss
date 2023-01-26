@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: Views
+quote: "The creatures outside looked from pig to man, and from man to pig, and from pig to man again; but already it was impossible to say which was which."
 previous_lesson: /lessons/table-functions/
 next_lesson: /lessons/recursive-queries/
 ---
@@ -9,33 +10,42 @@ next_lesson: /lessons/recursive-queries/
 
 <blockquote>A view is a virtual table defined by a SQL query. When you create a view, you query it in the same way you query a table. When a user queries the view, the query results contain data only from the tables and fields specified in the query that defines the view.<br><br><a href="https://cloud.google.com/bigquery/docs/views-intro">https://cloud.google.com/bigquery/docs/views-intro</a></blockquote>
 
-<p>You create a view to make data more accessible: shorter name, shorter query length, customized number and names of columns etc.</p>
+<p>You can create a view to make data more accessible or controlled: shorter names, shorter query lengths, customized number and names of columns etc.</p>
 <p>A view is similar to a table function but does not take any parameters. A view is also attached to a specific dataset.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
-CREATE VIEW example_dataset.orders_2022 AS
-  ( SELECT  *
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+CREATE OR REPLACE VIEW example_dataset.orders_public_fields_view AS
+  ( 
+    SELECT  order_id, num_of_item, status, created_at
       FROM  bigquery-public-data.thelook_ecommerce.orders
-      WHERE FORMAT_DATE('%Y', created_at) = '2022'
   );
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
 
-<pre>
-  <code class="language-sql">
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT      *
-  FROM      example_dataset.orders_2022
+  FROM      example_dataset.orders_public_fields_view
   ORDER BY  created_at
   LIMIT     10;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
 
-<p>A view can be deleted from the UI or using <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-definition-language#drop_view_statement" target="_blank">DROP VIEW</a> statement.</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
+
+<p>A view can be deleted from the user interface or using the <code>DROP VIEW</code> statement.</p>
+<p><img src="images/delete-view.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<a href="https://cloud.google.com/bigquery/docs/views-intro" target="_blank">👉 Introduction to views</a>
+<a href="https://cloud.google.com/bigquery/docs/views-intro" target="_blank">👉 Introduction to views (official documentation)</a>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -91,7 +101,8 @@ SELECT  COUNT(*) AS event_count
       <pre>
         <code class="language-sql">
 CREATE OR REPLACE VIEW example_dataset.user_events_view AS
-  ( SELECT  *
+  ( 
+    SELECT  *
       FROM  bigquery-public-data.thelook_ecommerce.events
       WHERE user_id IS NOT NULL
   );

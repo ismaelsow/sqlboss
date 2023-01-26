@@ -1,52 +1,57 @@
 ---
 layout: lesson
 title: LEFT JOIN and RIGHT JOIN
+quote: "The king must die so that the country can live."
 previous_lesson: /lessons/inner-join/
 next_lesson: /lessons/full-outer-join/
 ---
 
-<p><img src="images/left-join-illustration.svg" class="illustration" /></p>
+<p>
+  <img src="images/left-join-illustration.svg" class="illustration" />
+  <img src="images/right-join-illustration.svg" class="illustration" />
+</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
-<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
+<h3 class="h3-big-margin"><span class="grey-text-span">About OUTER JOINs</span></h3>
+<p>A <code>LEFT OUTER JOIN</code>, or simply <code>LEFT JOIN</code>, is a type of <code>JOIN</code> where <strong>matching rows, AND non-matching rows from the left table</strong>, are combined with matching rows, <strong>and only matching rows</strong> from the right table to create a new table. <strong>The non-matching rows in the right table are ignored</strong>.<p>
+<p>The matching is usually done using an identifier column that's present in both tables. For example, rows where <code>table_1.primary_key_x = table_2.foreign_key_x</code>.</p>
+<p>The syntax looks like this: <code>SELECT column A, column B, ..., column N FROM table_1 LEFT JOIN table_2 ON matching_set_of_conditions</code>.</p>
+<p><code>RIGHT OUTER JOIN</code>, or simply <code>RIGHT JOIN</code>, follows the same logic in reverse. It's not often used since you can accomplish the same results by switching the order of the tables in your <code>LEFT JOIN</code>.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<table class="table-with-header">
-  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a> to see a visual representation of how it works.</p>
+<p>Now observe carefully the results of the following queries.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
-<pre>
-  <code class="language-sql">
-SELECT      *
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+SELECT      users.id AS users_id, orders.user_id AS orders_user_id
   FROM      bigquery-public-data.thelook_ecommerce.users
   LEFT JOIN bigquery-public-data.thelook_ecommerce.orders
   ON        users.id = orders.user_id;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /><p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
-<pre>
-  <code class="language-sql">
-SELECT         *
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+SELECT        users.id AS users_id, events.id AS events_id
   FROM        bigquery-public-data.thelook_ecommerce.users
   RIGHT JOIN  bigquery-public-data.thelook_ecommerce.events
-  ON          users.id = events.user_id;
-  --WHERE     users.id IS NULL;
-  </code>
-</pre>
-
-<p>The RIGHT join is rarely used since the same result can be obtained by changing the order of the table in the LEFT JOIN.</p>
+  ON          users.id = events.user_id
+  
+  WHERE events.id IN (504328, 943261, 1436668,494251, 2117349, 1041573, 1615717, 2372632)
+  ORDER BY RAND();
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-2.png" class="lesson-img" /><p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -71,8 +76,8 @@ SELECT         *
       <pre>
         <code class="language-sql">
 SELECT      users.id
-  FROM      bigquery-public-data.thelook_ecommerce.users users
-  LEFT JOIN bigquery-public-data.thelook_ecommerce.orders orders
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  LEFT JOIN bigquery-public-data.thelook_ecommerce.orders
   ON        users.id = orders.user_id
   WHERE     orders.order_id IS NULL;
         </code>
@@ -101,8 +106,8 @@ SELECT      users.id
       <pre>
         <code class="language-sql">
 SELECT      users.id
-  FROM      bigquery-public-data.thelook_ecommerce.users users
-  LEFT JOIN bigquery-public-data.thelook_ecommerce.events events
+  FROM      bigquery-public-data.thelook_ecommerce.users
+  LEFT JOIN bigquery-public-data.thelook_ecommerce.events
   ON        users.id = events.user_id
   WHERE     events.id IS NULL;
         </code>
@@ -139,8 +144,8 @@ SELECT      users.id
         <code class="language-sql">
 WITH inactive_users as
   (   SELECT      COUNT(users.id) as user_count
-        FROM      bigquery-public-data.thelook_ecommerce.users users
-        LEFT JOIN bigquery-public-data.thelook_ecommerce.events events
+        FROM      bigquery-public-data.thelook_ecommerce.users
+        LEFT JOIN bigquery-public-data.thelook_ecommerce.events
         ON        users.id = events.user_id
         WHERE     events.id IS NULL
   )
@@ -189,8 +194,8 @@ WITH city_stats AS
                 COUNT(DISTINCT user_id) AS total_users,
                 ROUND(SUM(CASE WHEN sale_price IS NOT NULL THEN sale_price ELSE 0 END), 2) AS total_revenue,
       
-      FROM      bigquery-public-data.thelook_ecommerce.users users
-      LEFT JOIN bigquery-public-data.thelook_ecommerce.order_items order_items
+      FROM      bigquery-public-data.thelook_ecommerce.users
+      LEFT JOIN bigquery-public-data.thelook_ecommerce.order_items
       ON        users.id = order_items.user_id
       GROUP BY  city
   )

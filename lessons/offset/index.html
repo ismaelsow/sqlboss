@@ -1,14 +1,15 @@
 ---
 layout: lesson
 title: OFFSET
+quote: "My heart is lost; the beasts have eaten it."
 previous_lesson: /lessons/order-by/
 next_lesson: /lessons/case-when/
 ---
 
 <p><img src="images/offset-illustration.png" class="illustration" /></p>
 
-<p>The OFFSET clause helps us paginate the result set returned by our SELECT. It has to be used together with the LIMIT clause. So the following code:</p>
-
+<p>The <code>OFFSET</code> clause helps us paginate the returned results. It allows us to "skip" a given number of rows. It has to be used together with the <code>LIMIT</code> clause. For example, the following code will return the 91th to 100th most expensive products.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      id, name, retail_price
@@ -18,7 +19,7 @@ SELECT      id, name, retail_price
   OFFSET    90;
   </code>
 </pre>
-<p>Will return the 91th to 100th most expensive products:</p>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
@@ -33,7 +34,7 @@ SELECT      id, name, retail_price
   <h4>Task</h4>
   <ul>
     <li>Write a query that shows the 41th to 50th oldest users.</li>
-    <li>Sort by age in descending order</li>
+    <li>Sort the results by age in descending order.</li>
   </ul>
   
   <h4>Example results</h4>

@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: CASE WHEN
+quote: "War is peace. Freedom is slavery. Ignorance is strength."
 previous_lesson: /lessons/offset/
 next_lesson: /lessons/common-aggregation-functions/
 ---
@@ -8,7 +9,7 @@ next_lesson: /lessons/common-aggregation-functions/
 <p><img src="images/case-when.png" class="illustration" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Calculated columns</span></h3>
-<p>Earlier, we saw the use simple calculated columns:</p>
+<p>Earlier, we saw how to use simple calculated columns:</p>
 <pre>
   <code class="language-sql">
 SELECT  id,
@@ -19,9 +20,12 @@ SELECT  id,
   </code>
 </pre>
 <p><img src="images/calculated-columns.png" class="lesson-img" /></p>
+<p>Now we're going to see a slightly more advanced way to create calculated columns.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Calculated columns with conditional values</span></h3>
-<p>The CASE expression can be used to attribute conditional values, with a if..else logic. The conditions are evaluated from top to bottom and the evaluation stops as soon as a true condition is met.</p>
+<p>The <code>CASE</code> expression can be used to create a column of conditional values. The conditions are created using the <code>WHEN</code> keyword. They are evaluated from top to bottom and the evaluation process stops as soon as one of them evaluates to true. The value computed by the first truthy condition is returned. If no conditions evaluate to true, <code>NULL</code> is returned.</p>
+<p>We can use the keyword <code>ELSE</code> to return a default value, in case none of the conditions are met.</code>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id,
@@ -40,10 +44,12 @@ SELECT  id,
 FROM  bigquery-public-data.thelook_ecommerce.products;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/calculated-columns-with-conditional-values.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Calculated columns for labelling</span></h3>
-<p>It is also very useful to group values into labels:</p>
+<p>The <code>CASE WHEN</code> construct is also very useful to group values into labels.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id,
@@ -58,6 +64,7 @@ SELECT  id,
 FROM  bigquery-public-data.thelook_ecommerce.products;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/calculated-columns-for-labelling.png" class="lesson-img" /></p>
 
 
@@ -70,10 +77,10 @@ FROM  bigquery-public-data.thelook_ecommerce.products;
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
+  <p>Here, your goal is to write a query that will fix one issue in the current country column.</p>
   <ul>
-    <li>Write a query that will fix the issues that exist with the current country column.</li>
-    <li>Create a new column called <i>clean_country</i> where <i>España</i> is replaced with Spain and Deutschland replaced with Germany using a CASE expression.</li>
-    <li>Show only rows where country is either España or Deutschland.</li>
+    <li>Create a new column called <strong>clean_country</strong> where 'España' is replaced with 'Spain' and 'Deutschland' replaced with 'Germany'.</li>
+    <li>Show only rows where the <strong>country</strong> column's value is either España or Deutschland.</li>
   </ul>
   
   <h4>Example results</h4>
@@ -103,17 +110,17 @@ SELECT  id,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — New full_state_name column in the distribution_centers table&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Full names of the distribution centers' states&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.distribution_centers</p>
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display a new column called full_state_name that will show the full name of the distribution center’s state.</li>
+    <li>Write a query that will display a new column called <strong>full_state_name</strong> that will show the full name of each distribution center’s state.</li>
     <li>Your solution should still work when new distribution centers from states already in the table are added.</li>
-    <li>For row 6, the full state name should be <i>New York/New Jersey</i>.</li>
-    <li>Sort the rows by full_state_name in ascending order.</li>
+    <li>For the row where the <strong>name</strong> is 'Port Authority of New York/New Jersey NY/NJ', the full state name should be <i>New York/New Jersey</i>.</li>
+    <li>Sort the rows by <strong>full_state_name</strong> in ascending order.</li>
   </ul>
   
   <h4>Example results</h4>
@@ -126,20 +133,20 @@ SELECT  id,
       <pre>
         <code class="language-sql">
 SELECT      id,
-						name,
-						latitude,
-						longitude,
+            name,
+            latitude,
+            longitude,
             CASE
-              WHEN name LIKE '% TN' THEN 'Tennessee'
-              WHEN name LIKE '% IL' THEN 'Illinois'
-              WHEN name LIKE '% TX' THEN 'Texas'
-              WHEN name LIKE '% CA' THEN 'California'
-              WHEN name LIKE '% LA' THEN 'Louisiana'
-              WHEN name LIKE '% NY/NJ' THEN 'New York/New Jersey'
-              WHEN name LIKE '% PA' THEN 'Pennsylvania'
-              WHEN name LIKE '% AL' THEN 'Alabama'
-              WHEN name LIKE '% SC' THEN 'South Carolina'
-              WHEN name LIKE '% GA' THEN 'Georgia'
+              WHEN name LIKE '% TN'     THEN 'Tennessee'
+              WHEN name LIKE '% IL'     THEN 'Illinois'
+              WHEN name LIKE '% TX'     THEN 'Texas'
+              WHEN name LIKE '% CA'     THEN 'California'
+              WHEN name LIKE '% LA'     THEN 'Louisiana'
+              WHEN name LIKE '% NY/NJ'  THEN 'New York/New Jersey'
+              WHEN name LIKE '% PA'     THEN 'Pennsylvania'
+              WHEN name LIKE '% AL'     THEN 'Alabama'
+              WHEN name LIKE '% SC'     THEN 'South Carolina'
+              WHEN name LIKE '% GA'     THEN 'Georgia'
             END AS full_name_state
   
   FROM      bigquery-public-data.thelook_ecommerce.distribution_centers

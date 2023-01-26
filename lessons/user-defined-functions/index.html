@@ -1,20 +1,28 @@
 ---
 layout: lesson
 title: User-defined functions
+quote: "The first principle is that you must not fool yourself and you are the easiest person to fool."
 previous_lesson: /lessons/union-and-union-all/
 next_lesson: /lessons/table-functions/
 ---
 
 <p><img src="images/user-defined-functions.svg" class="illustration" /></p>
 
-<p>A user-defined function is a piece of reusable SQL code that can accepts columns as inputs and return a calculated result.</p>
+<p>A user-defined function is a piece of reusable SQL code that can accept inputs, also called parameters or arguments, and returns a calculated result.</p>
+<p>The data types of the function's parameters must be specified in the function definition, as well as the data type of the returned result.</p>
+<p>⚠️ Before going forward, <a href="https://cloud.google.com/bigquery/docs/datasets#create-dataset" target="_blank">create a new BigQuery dataset</a> and call it <strong>example_dataset</strong>.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Temporary user-defined functions</span></h3>
 <p>Temporary user-defined functions are only available in the query they are written in.</p>
-<pre>
-  <code class="language-sql">
-CREATE TEMP FUNCTION  full_name(first_name STRING, last_name STRING)
-RETURNS STRING  AS (CONCAT(first_name, ' ', last_name));
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+CREATE TEMP FUNCTION full_name(first_name STRING, last_name STRING)
+RETURNS STRING AS
+  (
+    CONCAT(first_name, ' ', last_name)
+  );
 
 SELECT  id,
         first_name,
@@ -22,34 +30,49 @@ SELECT  id,
         full_name(first_name, last_name) AS name
 
   FROM  bigquery-public-data.thelook_ecommerce.users;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/temporary-user-defined-functions.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Persistent user-defined functions</span></h3>
-<p>Persistent user-defined functions are available across queries. They much be attached to a dataset.</p>
-<pre>
-  <code class="language-sql">
-CREATE OR REPLACE FUNCTION  example_dataset.full_name(first_name STRING, last_name STRING)
-RETURNS STRING  AS (CONCAT(first_name, ' ', last_name));
-  </code>
-</pre>
-
-<pre>
-  <code class="language-sql">
+<p>Persistent user-defined functions are available across queries. They must be attached to a dataset.</p>
+<p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+CREATE OR REPLACE FUNCTION example_dataset.full_name(first_name STRING, last_name STRING)
+RETURNS STRING AS
+  (
+    CONCAT(first_name, ' ', last_name)
+  );
+    </code>
+  </pre>
+</p>
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT  id,
         first_name,
         last_name,
         example_dataset.full_name(first_name, last_name) AS full_name
   FROM  bigquery-public-data.thelook_ecommerce.users;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/persistent-user-defined-functions.png" class="lesson-img" /></p>
 
-<p>Persistent user-defined functions can be deleted using the UI or the DROP FUNCTION statement.</p>
+<p>Persistent user-defined functions can be deleted in the user interface or using the <code>DROP FUNCTION</code> statement:</p>
+<p><img src="images/delete-function.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Scalar subqueries</span></h3>
 <p>A user-defined function can also return a scalar subquery.</p>
-<pre>
-  <code class="language-sql">
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 CREATE TEMP FUNCTION  count_users_by_country(countryParam STRING)
 RETURNS INTEGER AS
 (
@@ -62,8 +85,18 @@ RETURNS INTEGER AS
 SELECT  count_users_by_country('France') AS france_users,
         count_users_by_country('United States') AS us_users,
         count_users_by_country('Germany') AS germany_users;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<div class="table-wrapper">
+    <table class="table-with-header">
+      <thead><th>france_users</th><th>us_users</th><th>germany_users</th></thead>
+      <tbody>
+        <tr><td>4597</td><td>22601</td><td>4155</td></tr>
+      </tbody>
+    </table>
+  </div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
 <ul>
@@ -81,10 +114,10 @@ SELECT  count_users_by_country('France') AS france_users,
   <p>N/A</p>
 
   <h4>Task</h4>
-  <p>Create a persistent user-defined function that takes a decimal as parameter and return this number no more than 2 decimals.</p>
+  <p>Create a persistent user-defined function that takes a decimal number as parameter and return this number rounded to 2 decimals at most.</p>
   
   <h4>Example results</h4>
-  <pre><code class="language-sql">SELECT example_dataset.pretty_number(12.455454524)</code></pre>
+  <pre><code class="language-sql">SELECT example_dataset.pretty_number(12.455454524);</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">
       <thead><th>f0_</th></thead>
@@ -101,7 +134,10 @@ SELECT  count_users_by_country('France') AS france_users,
       <pre>
         <code class="language-sql">
 CREATE OR REPLACE FUNCTION example_dataset.pretty_number(number NUMERIC)
-AS (ROUND(number, 2));
+RETURNS NUMERIC AS
+  (
+    ROUND(number, 2)
+  );
         </code>
       </pre>
     </div>
@@ -115,10 +151,10 @@ AS (ROUND(number, 2));
   <p>N/A</p>
 
   <h4>Task</h4>
-  <p>Write a user-defined function that replaces '(not set)' with NULL. It can be very useful when dealing with the Google Analytics 4 sample dataset.</p>
+  <p>Write a persistent user-defined function that replaces <strong>(not set)</strong> with <code>NULL</code>. It can be very useful when dealing with the Google Analytics 4 sample dataset.</p>
   
   <h4>Example results</h4>
-  <pre><code class="language-sql">SELECT example_dataset.nullify_not_set('(not set)')</code></pre>
+  <pre><code class="language-sql">SELECT example_dataset.nullify_not_set('(not set)');</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">
       <thead><th>f0_</th></thead>
@@ -134,8 +170,11 @@ AS (ROUND(number, 2));
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
-        CREATE OR REPLACE FUNCTION example_dataset.nullify_not_set(value STRING)
-AS (REPLACE(value, '(not set)', NULL));
+CREATE OR REPLACE FUNCTION example_dataset.nullify_not_set(value STRING)
+RETURNS STRING AS
+  (
+    REPLACE(value, '(not set)', NULL)
+  );
         </code>
       </pre>
     </div>
@@ -187,9 +226,10 @@ SELECT  event_timestamp,
       <pre>
         <code class="language-sql">
 CREATE OR REPLACE FUNCTION example_dataset.is_valid_purchase(transaction_id STRING, revenue FLOAT64)
-RETURNS BOOL AS ( transaction_id IS NOT NULL
-                  AND revenue IS NOT NULL
-                  AND revenue > 0 );
+RETURNS BOOL AS
+  (
+    (transaction_id IS NOT NULL) AND (revenue IS NOT NULL) AND (revenue > 0)
+  );
         </code>
       </pre>
     </div>
@@ -203,16 +243,16 @@ RETURNS BOOL AS ( transaction_id IS NOT NULL
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210101</p>
 
   <h4>Task</h4>
-  <p>Write a function that will strip the page_location event parameter of the Google Analytics 4 sample dataset. As parameters, we should have the page location (a url) and an option parameter which is defined as follow:</p>
+  <p>Write a function that will strip the <strong>page_location</strong> event parameter of the Google Analytics 4 sample dataset. As parameters, we should have the page location (a URL) and an option parameter which is defined as follow:</p>
   <ul>
-    <li>If option equals query <i>parameters</i>, remove the query parameters from the url</li>
-    <li>If option equals <i>protocol</i>, remove the http:// or https:// part of from the url</li>
-    <li>If option equals <i>domain</i>, remove the protocol and url domain from the url</li>
-    <li>If option equals <i>all</i>, then remove the 3 components mentioned in the previous bullet points</li>
+    <li>If option equals <strong>query parameters</strong>, remove the query parameters from the url</li>
+    <li>If option equals <strong>protocol</strong>, remove the http:// or https:// part of from the url</li>
+    <li>If option equals <strong>domain</strong>, remove the protocol and url domain from the url</li>
+    <li>If option equals <strong>all</strong>, then remove the 3 components mentioned in the previous bullet points</li>
   </ul>
   
   <h4>Example results</h4>
-  <p>With option = ‘query parameters’</p>
+  <p><strong>With option = 'query parameters'</strong></p>
   <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'query parameters')</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">
@@ -223,7 +263,7 @@ RETURNS BOOL AS ( transaction_id IS NOT NULL
     </table>
   </div>
 
-  <p style="margin-top:48px">With option = ‘protocol’</p>
+  <p style="margin-top:48px"><strong>With option = 'protocol'</strong></p>
   <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'protocol')</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">
@@ -234,7 +274,7 @@ RETURNS BOOL AS ( transaction_id IS NOT NULL
     </table>
   </div>
 
-  <p style="margin-top:48px">With option = ‘domain’</p>
+  <p style="margin-top:48px"><strong>With option = 'domain'</strong></p>
   <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'domain')</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">
@@ -245,7 +285,7 @@ RETURNS BOOL AS ( transaction_id IS NOT NULL
     </table>
   </div>
 
-  <p style="margin-top:24px">With option = ‘all’</p>
+  <p style="margin-top:24px"><strong>With option = 'all'</strong></p>
   <pre><code class="language-sql">SELECT example_dataset.strip_url('https://shop.googlemerchandisestore.com/Google+Redesign/Apparel/Google+Google+Premium+Sunglasses?utm_campaign=new-year', 'all')</code></pre>
   <div class="table-wrapper">
     <table class="table-with-header">

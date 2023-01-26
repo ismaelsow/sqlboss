@@ -1,16 +1,17 @@
 ---
 layout: lesson
 title: DENSE RANK
+quote: "We always plan too much and always think too little."
 previous_lesson: /lessons/rank/
 next_lesson: /lessons/lag/
 ---
 
 <p><img src="images/dense-rank-illustration.png" class="illustration" /></p>
 
-<p><code>DENSE_RANK</code> is similar to <a href="/lessons/rank/">RANK (ranking function)</a>. Its output is based on the value of the ranking column used in the ORDER BY inside the OVER clause.</p>
-<p>Here the rank is always consecutive: rows with the same ranking column’s value are assigned the same rank, but the next rank value is one greater than the previously assigned rank.</p>
+<p><code>DENSE_RANK</code> is similar to <a href="/lessons/rank/">RANK</a>. Its output is based on the value of the ranking column used in the <code>ORDER BY</code> inside the <code>OVER</code> clause.</p>
+<p>Here the rank is always consecutive (it never "jumps" as it's the case with <code>RANK</code>): rows with the same ranking column’s value are assigned the same rank, but the next rank value is one greater than the previously assigned rank.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
 <pre>
   <code class="language-sql">
 SELECT      category,
@@ -23,9 +24,6 @@ SELECT      category,
   </code>
 </pre>
 <p><img src="images/dense-rank.png" class="lesson-img" /></p>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#dense_rank" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -40,7 +38,7 @@ SELECT      category,
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display, for each country, the top 3 customers with the most items bought in descending order</li>
-    <li>Sort the final results by country in ascending order</li>
+    <li>Sort the final results by country and rank in ascending order</li>
     <li>Allow for ties</li>
   </ul>
   
@@ -156,6 +154,7 @@ WITH country_population AS
   ( SELECT      country,
                 CONCAT(first_name, ' ', last_name) AS full_name,
                 COUNT(*) AS people
+
       FROM      bigquery-public-data.thelook_ecommerce.users
       GROUP BY  country, full_name
       HAVING    people > 1
@@ -174,6 +173,7 @@ WITH country_population AS
                 full_name,
                 people,
                 name_rank
+
       FROM      ranked_country_common_full_names
       WHERE     name_rank = 1
   )

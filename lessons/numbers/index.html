@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: Numbers
+quote: "In philosophy, or religion, or ethics, or politics, 2 and 2 might make 5, but when one was designing a gun or an aeroplane they had to make 4."
 previous_lesson: /lessons/main-data-types-and-type-conversion/
 next_lesson: /lessons/strings/
 ---
@@ -8,17 +9,22 @@ next_lesson: /lessons/strings/
 <p><img src="images/numbers-illustration.png" class="illustration" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Numeric types and functions</span></h3>
+<p>To deal with numbers, SQL offers a wide range of numeric types and mathematical functions. Have a quick look at the official BigQuery documentation to get an idea:</p>
 <ul>
   <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#numeric_types" target="_blank">Numeric types</a></li>
   <li><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions" target="_blank">Mathematical functions</a></li>
 </ul>
+<p>In the course, we'll mostly focus on the functions that are regularly used in day-to-day work.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">ROUND</span></h3>
+<p><code>ROUND</code> takes as parameters the decimal number we want to round, and the number of decimals we want in the end.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT ROUND(2.4561, 1);
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -27,14 +33,16 @@ SELECT ROUND(2.4561, 1);
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#round" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">TRUNCATE</span></h3>
+<p><code>TRUNCATE</code> takes as parameters the decimal number we want to truncate, and the number of decimals we want in the end.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT TRUNC(2.4561, 1);
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -43,14 +51,16 @@ SELECT TRUNC(2.4561, 1);
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#trunc" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">FLOOR</span></h3>
+<p><code>FLOOR</code> returns the largest integer that's less than or equal to a given number.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT FLOOR(2.4561);
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -59,14 +69,16 @@ SELECT FLOOR(2.4561);
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#floor" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">CEIL</span></h3>
+<p><code>FLOOR</code> returns the smallest integer that's greater than or equal to a given number.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT CEIL(2.4561); -- or SELECT CEILING(2.4561)
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -75,14 +87,16 @@ SELECT CEIL(2.4561); -- or SELECT CEILING(2.4561)
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#ceil" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">SAFE_DIVIDE</span></h3>
+<p>By default, dividing by zero triggers an error. To prevent that from happening, you can use the <code>SAFE_DIVIDE</code> function. As parameters, it takes the numerator and the denominator of the fraction. It returns <code>NULL</code> when a division by zero happens.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT SAFE_DIVIDE(2.4561, 0);
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -91,14 +105,16 @@ SELECT SAFE_DIVIDE(2.4561, 0);
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#ceil" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">RAND</span></h3>
+<p><code>RAND</code> returns a random number between 0 (included) and 1 (excluded). It's used to generate all kind of random numbers, and can also be used in the <code>ORDER BY</code> clause to display the results of <code>SELECT</code> query in random order.
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT RAND();
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -107,14 +123,16 @@ SELECT RAND();
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#rand" target="_blank">👉 Check out the official documentation</a></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">ABS</span></h3>
+<p><code>ABS</code> returns the <a href="https://simple.wikipedia.org/wiki/Absolute_value" target="_blank">absolute value</a> of a given number</code>.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT ABS(-2.4561);
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -123,7 +141,6 @@ SELECT ABS(-2.4561);
     </tbody>
   </table>
 </p>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/mathematical_functions#abs" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -136,8 +153,9 @@ SELECT ABS(-2.4561);
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will show the rounded profit margin ratio of 10 products</li>
-    <li>The profit_margin_ratio_per_product column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+    <li>Write a query that will show the profit margin ratio of up to 10 products, as an integer value.</li>
+    <li>The <strong>profit_margin_ratio_per_product</strong> column is defined as the difference between the retail price and the cost, divided by the retail price, and expressed as a percentage (i.e multiplied by 100).</li>
+    <li>Only the rows where the <strong>profit_margin_ratio_per_product</strong> is at least 50% should be displayed.</li>
   </ul>
   
   <h4>Example results</h4>
@@ -153,10 +171,10 @@ SELECT  id,
         name,
         cost,
         retail_price,
-        CAST(((retail_price - cost) / retail_price) * 100 AS integer) AS profit_margin_ratio_per_product
+        CAST(((retail_price - cost) / retail_price) * 100 AS INTEGER) AS profit_margin_ratio_per_product
   
   FROM  bigquery-public-data.thelook_ecommerce.products
-  WHERE CAST(((retail_price - cost) / retail_price) * 100 AS integer) >= 50
+  WHERE CAST(((retail_price - cost) / retail_price) * 100 AS INTEGER) >= 50
   LIMIT 10;
         </code>
       </pre>
@@ -171,7 +189,7 @@ SELECT  id,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display 10 products randomly each time it’s run.</p>
+  <p>Write a query that will display up to 10 products randomly each time it’s run.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>

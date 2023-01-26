@@ -101,12 +101,6 @@ img {
   max-width: 100%;
 }
 
-img.illustration {
-  max-width: 50%;
-  margin-bottom: 24px;
-  border-radius: 4px;
-}
-
 
 /* CONTENT SECTION */
 .chapter {
@@ -328,10 +322,11 @@ blockquote p {
   background-color: #151718;
   overflow: hidden;
   width: 100%;
+  margin-bottom:24px;
 }
 
 div.screenshot-window-top {
-  padding: 0 .5em 0 .5em;
+  padding: 0.5em;
   width: 100%;
   line-height: 1.4em !important;
   text-align: left;
@@ -362,6 +357,12 @@ div.screenshot-frame img {
 
 
 /* LESSONS */
+img.illustration {
+  max-width: 50%;
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+
 table {
   background-color: white;
   max-width: 100%;
@@ -379,7 +380,7 @@ table.table-with-header th {
   background-color: #f7f6f3;
 }
 div.table-wrapper {
-  overflow-y: scroll !important;
+  overflow-x: auto;
   margin-bottom: 24px;
 }
 
@@ -387,6 +388,7 @@ div.table-wrapper {
 figure {
   background-color: white;
   padding: 8px;
+  margin-bottom: 0;
 }
 figcaption a {
   font-size: 0.75em;

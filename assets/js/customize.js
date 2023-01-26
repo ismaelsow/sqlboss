@@ -9,8 +9,13 @@ window.addClicktoEnlargeImages = function() {
   let images = Array.from(document.querySelectorAll(".lesson-img"));
   for (let image of images) {
     let parentItem = image.parentElement;
+
+    let screenshotWrapperHTML = '<div class="screenshot-frame"><div class="screenshot-window-top">';
+    screenshotWrapperHTML += '<div class="screenshot-frame-button" style="background-color: #f03e3e;"></div><div class="screenshot-frame-button" style="background-color: #ffd43b;">';
+    screenshotWrapperHTML += '</div><div class="screenshot-frame-button" style="background-color: #51cf66;"></div></div>';
     let newHTML = `<a href='${image.src}' target='_blank'><figure>${image.outerHTML}<figcaption><a href='${image.src}' target='_blank'>👉 Click to view in full screen</a></figcaption></figure></a>`;
-    parentItem.innerHTML = newHTML;
+
+    parentItem.innerHTML = screenshotWrapperHTML + newHTML + '</div> ';
   }
 };
 

@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: Subqueries and common table expressions
+quote: "What I cannot create, I do not understand."
 previous_lesson: /lessons/arrays/
 next_lesson: /lessons/cross-join/
 ---
@@ -9,6 +10,7 @@ next_lesson: /lessons/cross-join/
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Intro to subqueries</span></h3>
 <p>In addition to querying a table directly, subqueries allow you to query the results of the other queries. It’s also a way to make complex queries more manageable.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -18,10 +20,11 @@ SELECT  *
         );
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/intro-to-subqueries.png" class="lesson-img" /></p>
 
-<p>Table resulting from subqueries can also be aliased and we can access their column names using the dot notation.</p>
-
+<p>Tables resulting from subqueries can also be aliased and we can access their column names using the dot notation.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  subquery.event_type
@@ -31,9 +34,12 @@ SELECT  subquery.event_type
         ) AS subquery;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/dot-notation.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Common table expressions</span></h3>
-<p>As our queries grow more complex with many levels of nested subqueries, the code can become harder to read. A great way to make subqueries more usable is to use the WITH…AS clause, also known as common table expressions.</p>
+<p>As our queries grow more complex with many levels of nested subqueries, the code can become harder to read. A great way to make subqueries more usable is to use the <code>WITH</code> clause, also known as a common table expression.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 WITH subquery AS (
@@ -46,9 +52,11 @@ SELECT  event_type
   FROM  subquery;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/dot-notation.png" class="lesson-img" /></p>
 
-<p>We can use several common table expressions, separated by a comma:</p>
-
+<p>We can use several common table expressions, separated by a comma.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 WITH subquery_1 AS (
@@ -65,9 +73,21 @@ SELECT  *
   FROM  subquery_2;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
+<p>
+  <table class="table-with-header">
+    <thead><th>event_type_count</th></thead>
+    <tbody>
+      <tr><td>5</td></tr>
+    </tbody>
+  </table>
+</p>
+
+<p>As they are way more readable, most of the time we'll prefer using common table expressions to "naked subqueries" from now on in the course.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Scalar subqueries</span></h3>
-<p>Scalar subqueries are subquery that return a table that has just one row and one column, basically a cell.</p>
+<p>Scalar subqueries are subquery that return a table that has just one row and one column, basically a cell. <strong>They are wrapped inside parentheses</strong>.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  number_of_users
@@ -77,6 +97,7 @@ SELECT  number_of_users
     ) AS user_count;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p>
   <table class="table-with-header">
     <thead><th>number_of_users</th></thead>
@@ -85,6 +106,7 @@ SELECT  number_of_users
 </p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Multi-rows subqueries and the IN operator</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  user_id
@@ -94,8 +116,11 @@ SELECT  user_id
     ) AS customer_ids;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/multi-rows.png" class="lesson-img" /></p>
-<p>We can use this kind of subqueries in our WHERE clause with the IN and NOT…IN constructs:</p>
+
+<p>The previous query returns a result set with one column (<strong>user_id</strong>) and several rows. We can use this kind of subqueries in our <code>WHERE</code> clause with the <code>IN</code> and <code>NOT IN</code> constructs.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id AS non_customer_id
@@ -106,10 +131,14 @@ SELECT  id AS non_customer_id
     );
   </code>
 </pre>
-<p>In the case we want to test our condition on several columns, we would use parentheses: WHERE (id, first_name, last_name,…) not in …</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/in.png" class="lesson-img" /></p>
+<p>In the case we wanted to test our condition on several columns, we would use a subquery that returns multiple rows and columns. The code would look like this: <code>... WHERE (id, first_name, last_name,…) NOT IN (SELECT id, first_name, last_name FROM ...);</code></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Correlated subqueries and the EXISTS operator</span></h3>
-<p>A correlated subquery is a subquery that refers to a field in the outer query and gets executed for each record in the outer query. EXISTS is an operator that’s always followed by a subquery. It returns true if the table used as argument has at least 1 row, false otherwise. If we rewrite our previous example with a correlated query, we get:</p>
+<p>A correlated subquery is a subquery that refers to a field in the outer query and gets executed for each record in the outer query. <code>EXISTS</code> is an operator that’s followed by a subquery. It returns <code>TRUE</code> if the table used as parameter has at least 1 row, <code>FALSE</code> otherwise.</p>
+<p>If we rewrite our previous example with a correlated query, we get something like the code below.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id AS non_customer_id
@@ -121,26 +150,36 @@ SELECT  id AS non_customer_id
     );
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/not-exists.png" class="lesson-img" /></p>
 
 <p>We can see that while the previous subquery was self-sufficient:</p>
 <pre>
   <code class="language-sql">
-SELECT  DISTINCT user_id
-  FROM  bigquery-public-data.thelook_ecommerce.orders;
+SELECT  id AS non_customer_id
+  FROM  bigquery-public-data.thelook_ecommerce.users
+  WHERE id NOT IN
+    ( SELECT  DISTINCT user_id
+        FROM  bigquery-public-data.thelook_ecommerce.orders -- no references to the outer query
+    );
   </code>
 </pre>
 
 <p>The correlated subquery needs data from the outer query to execute (i.e the id column in the users table):</p>
 <pre>
   <code class="language-sql">
-SELECT  user_id
-  FROM  bigquery-public-data.thelook_ecommerce.orders orders
-  WHERE users.id = orders.user_id;
+SELECT  id AS non_customer_id
+  FROM  bigquery-public-data.thelook_ecommerce.users users
+  WHERE NOT EXISTS
+    ( SELECT  user_id
+        FROM  bigquery-public-data.thelook_ecommerce.orders orders
+        WHERE users.id = orders.user_id -- users.id is a reference to a table mentioned in the outer query (bigquery-public-data.thelook_ecommerce.users)
+    );
   </code>
 </pre>
 
-<p>There are some SQL problems where correlated queries are needed to solve them. This is especially true for problems where you are looking for negatives. When looking for positives, a JOIN will usually be a better solution. We will see JOINs in later lessons.</p>
-<p>The main drawback of using correlated queries is that they are really slow, as they re-evaluated for each record in the outer query.</p>
+<p>There are some SQL problems where correlated queries are needed. This is especially true for problems where you are looking for negatives (for ex: find records in table A that do not match a set conditions in table B). When looking for positives, a <code>JOIN</code> will usually be a better solution. We will see <code>JOIN</code>s in later lessons.</p>
+<p>The main drawback of using correlated queries is that <strong>they are slow</strong>, as they are re-evaluated for each record processed by the outer query.</p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -193,7 +232,7 @@ SELECT  COUNT(*) AS repeat_customers
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
 
   <h4>Task</h4>
-  <p>Write a query that will show the id of the top selling product in 2022.</p>
+  <p>Write a query that will show the id of the top selling product (in terms of number of sales) in 2022.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
@@ -238,7 +277,7 @@ SELECT  product_id
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will show the name of the top selling product in 2022</li>
+    <li>Write a query that will show the name of the top selling product (in terms of number of sales) in 2022</li>
     <li>In case of ties, sort by product id in ascending order</li>
   </ul>
   
@@ -272,7 +311,7 @@ WITH top_product_sales AS
 SELECT  name
   FROM (  SELECT  name
             FROM  bigquery-public-data.thelook_ecommerce.products products
-            WHERE products.id = ( SELECT product_id FROM top_product_sales )
+            WHERE products.id IN ( SELECT product_id FROM top_product_sales )
   );
         </code>
       </pre>
@@ -334,7 +373,6 @@ SELECT  ROUND(AVG(retail_price), 2) AS smoothed_out_average_retail_price
   <p>Write a query that will:</p>
   <ul>
     <li>display the top 3 months with the highest average order value in the last 12 months (excluding the current month)</li>
-    <li>the average order value should be displayed with 2 decimals</li>
     <li>sort the results by average order value in descending order</li>
   </ul>
   
@@ -351,15 +389,18 @@ WITH order_value_by_month AS
   (  SELECT     FORMAT_DATE('%b %Y', created_at) AS month_year,
                 order_id,
                 SUM(sale_price) AS order_value
+
       FROM      bigquery-public-data.thelook_ecommerce.order_items
-      WHERE     CAST(created_at AS date) < DATE_TRUNC(CURRENT_DATE(), month)
-                AND CAST(created_at AS date) >= DATE_TRUNC(CURRENT_DATE(), month) - MAKE_INTERVAL(month => 12)
+      WHERE     CAST(created_at AS DATE) < DATE_TRUNC(CURRENT_DATE(), MONTH)
+                AND CAST(created_at AS DATE) >= DATE_TRUNC(CURRENT_DATE(), MONTH) - MAKE_INTERVAL(MONTH => 12)
+
       GROUP BY  month_year,
                 order_id
   )
 
 SELECT      month_year,
             ROUND(AVG(order_value), 2) AS average_order_value
+
   FROM      order_value_by_month
   GROUP BY  month_year
   ORDER BY  average_order_value DESC
@@ -380,8 +421,8 @@ SELECT      month_year,
   <h4>Task</h4>
   <ul>
     <li>Write two queries that will display the percentage of products that have never been ordered</li>
-    <li>One query should use NOT IN</li>
-    <li>The other one should use NOT EXISTS</li>
+    <li>One query should use <code>NOT IN</code></li>
+    <li>The other one should use <code>NOT EXISTS</code></li>
     <li>Discuss the merits of the 2 approaches</li>
   </ul>
   
@@ -399,6 +440,7 @@ SELECT      month_year,
   <div class="collapsible-parent">
     <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
     <div class="practice-problems-instructions collapsible-item">
+      <p><strong>Using <code>NOT IN</code>:</strong></p>
       <pre>
         <code class="language-sql">
 WITH all_products AS
@@ -412,15 +454,46 @@ WITH all_products AS
   ),
 
   never_ordered_products AS
-  ( SELECT  all_products.product_id
+  ( SELECT  product_id
       FROM  all_products
-      WHERE all_products.product_id NOT IN ( SELECT ordered_products.product_id FROM ordered_products )
+      WHERE all_products.product_id NOT IN ( SELECT product_id FROM ordered_products )
   )
 
 SELECT  ROUND(( SELECT COUNT(*) FROM never_ordered_products) / (SELECT COUNT(*) FROM all_products) * 100, 2)
           AS percentage_of_nevered_ordered_products;
         </code>
       </pre>
+
+      <p><strong>Using <code>NOT EXISTS</code>:</strong></p>
+      <p>
+      <pre>
+        <code class="language-sql">
+WITH all_products AS
+  ( SELECT DISTINCT   id AS product_id
+                FROM  bigquery-public-data.thelook_ecommerce.products
+  ),
+
+  ordered_products AS
+  ( SELECT DISTINCT   product_id
+                FROM  bigquery-public-data.thelook_ecommerce.order_items
+  ),
+
+  never_ordered_products AS
+  ( SELECT  product_id
+      FROM  all_products
+      WHERE NOT EXISTS( SELECT  product_id
+                          FROM  ordered_products
+                          WHERE all_products.product_id = ordered_products.product_id )
+  )
+
+SELECT
+  ROUND((SELECT count(*) FROM never_ordered_products) / (SELECT count(*) FROM all_products) * 100, 2)
+    AS percentage_of_nevered_ordered_products;
+        </code>
+      </pre>
+      </p>
+
+      <p>💡 Both solutions do the same thing but have different trade-offs when it comes to maintainability (allowing for <code>NULL</code> values later for ex.) or performance (bad if the correlated query is run for every row). More details in the following Stack Overflow link: <a href="https://stackoverflow.com/questions/173041/not-in-vs-not-exists/11074428#11074428" target="_blank">NOT IN vs NOT EXISTS</a>.<p>
     </div>
   </div>
 </div>
@@ -433,7 +506,7 @@ SELECT  ROUND(( SELECT COUNT(*) FROM never_ordered_products) / (SELECT COUNT(*) 
   <p>bigquery-public-data.thelook_ecommerce.users</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the top buyer in February 2022.</p>
+  <p>Write a query that will display the top buyer, in terms of total spend, in February 2022.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
@@ -468,7 +541,7 @@ WITH top_buyer_id AS
 
 SELECT  id, first_name, last_name
   FROM  users
-  WHERE id = ( SELECT user_id FROM top_buyer_id );
+  WHERE id IN ( SELECT user_id FROM top_buyer_id );
         </code>
       </pre>
     </div>
@@ -476,7 +549,7 @@ SELECT  id, first_name, last_name
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Google Analytics unique page views by page in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°8 — Google Analytics unique views by page in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -484,8 +557,8 @@ SELECT  id, first_name, last_name
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display the number of total page views and the number of unique page views by page</li>
-    <li>A session is defined by a combination of the user_pseudo_id and the ga_session_id numbers</li>
-    <li>So basically, we want to display the number of sessions where each page was visited at least once</li>
+    <li>A session is defined by a combination of the <strong>user_pseudo_id</strong> and the <strong>ga_session_id</strong> numbers</li>
+    <li>Basically, we want to display the number of sessions where each page was visited at least once</li>
   </ul>
   
   <h4>Example results</h4>
@@ -530,16 +603,17 @@ SELECT      page,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Google Analytics top 10 landing pages in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°10 — Google Analytics top 10 landing pages in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
+  <p>A landing page is the first page that a user visits in a browsing session on a website.</p>
   <ul>
     <li>Write a query that will display the top 10 landing pages in January 2021</li>
     <li>Sorted by entrances in descending order</li>
-    <li>We get a landing page when we have the page_view event where the entrance event parameter is equal to 1</li>
+    <li>We get a landing page when we have a page_view event where the <strong>entrance</strong> field (a record inside the <strong>event_params</strong> column) is equal to 1</li>
   </ul>
   
   <h4>Example results</h4>
@@ -557,13 +631,11 @@ SELECT DISTINCT (   SELECT  value.string_value
                             AND event_name = 'page_view'
                 ) AS page,
   
-                SUM(COALESCE(
-                  (   SELECT  value.int_value
-                        FROM  UNNEST(event_params)
-                        WHERE key = 'entrances'
-                        AND event_name = 'page_view'
-                  ), 0)
-                ) AS entrances
+                SUM((   SELECT  value.int_value
+                          FROM  UNNEST(event_params)
+                          WHERE key = 'entrances'
+                          AND event_name = 'page_view'
+                )) AS entrances
   
   FROM      `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
   WHERE     _table_suffix BETWEEN '20210101' AND '20210131'
@@ -581,7 +653,7 @@ SELECT DISTINCT (   SELECT  value.string_value
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°10 — Google Analytics New and returning users in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°11 — Google Analytics new and returning users in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -589,7 +661,7 @@ SELECT DISTINCT (   SELECT  value.string_value
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display the number of new and returning users in January 2021</li>
-    <li>We get a new user when we have an event for which the ga_session_number event params field is equal to 1</li>
+    <li>We get a new user when we have an event for which the <strong>ga_session_number</strong> field of the <strong>event_params</strong> column is equal to 1</li>
   </ul>
   
   <h4>Example results</h4>
@@ -642,7 +714,7 @@ SELECT
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°11 — Google Analytics session conversion rate in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Google Analytics session conversion rate in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -694,9 +766,8 @@ WITH sessions_with_purchases AS
 
 SELECT  (SELECT COUNT(*) FROM all_sessions) AS all_sessions,
         (SELECT COUNT(*) FROM sessions_with_purchases) AS sessions_with_purchases,
-        ROUND(
-            (SELECT COUNT(*) FROM sessions_with_purchases)
-            / (SELECT COUNT(*) FROM all_sessions) * 100,
+        ROUND((SELECT COUNT(*) FROM sessions_with_purchases)
+              / (SELECT COUNT(*) FROM all_sessions) * 100,
         2) AS session_conversion_rate;
         </code>
       </pre>
@@ -705,7 +776,7 @@ SELECT  (SELECT COUNT(*) FROM all_sessions) AS all_sessions,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°12 — Google Analytics user channel grouping in January 2021&nbsp;🔥</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°13 — Google Analytics user channel grouping in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
@@ -787,7 +858,7 @@ SELECT      CASE
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°13 — Google Analytics session channel grouping in January 2021&nbsp;🔥</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°14 — Google Analytics session channel grouping in January 2021&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>

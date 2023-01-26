@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: CROSS JOIN
+quote: "The die is cast."
 previous_lesson: /lessons/subqueries-and-common-table-expressions/
 next_lesson: /lessons/inner-join/
 ---
@@ -8,11 +9,12 @@ next_lesson: /lessons/inner-join/
 <p><img src="images/cross-join-illustration.png" class="illustration" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<p>A <code>JOIN</code> is an operation that combines columns from one table with columns from another table, to form a new table with the combined columns. Here's the <strong>full view</strong> of the SQL order of execution, including <code>JOIN</code>.</p>
 <table class="table-with-header">
   <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
   <tbody>
     <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
+    <tr><td>2</td><td>JOIN</td><td>Joins tables.</td></tr>
     <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
     <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
     <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
@@ -23,6 +25,14 @@ next_lesson: /lessons/inner-join/
 </table>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">CROSS JOIN</span></h3>
+<p>A <code>CROSS JOIN</code> is specific type of <code>JOIN</code> that combines every rows from one table with every rows from another table, to form a new table. In maths, this is called a <a href="https://en.wikipedia.org/wiki/Cartesian_product" target="_blank">cartesian product</a>.
+
+To illustrate this, here's an example adapted from the <a href="https://en.wikipedia.org/wiki/Join_(SQL)" target="_blank">Wikipedia page</a>:
+<p style="background-color:white;border-radius:4px"><img src="images/cross-join-diagram.svg" style="width:100%" /></p>
+
+<p>Now is your turn to cross the Rubicon! Observe carefully the results of the following queries.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
 <pre>
   <code class="language-sql">
 WITH customer_count AS
@@ -40,10 +50,22 @@ WITH customer_count AS
 
 SELECT        *
   FROM        customer_count
-  CROSS JOIN  user_count; -- customer_count, join user_count;
+  CROSS JOIN  user_count;
   </code>
 </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p>
+<table class="table-with-header">
+  <thead><th>c_count</th><th>u_count</th></thead>
+  <tbody>
+    <tr><td>79992</td><td>100000</td></tr>
+  </tbody>
+</table>
+</p>
 
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
 <pre>
   <code class="language-sql">
 WITH customer_count AS
@@ -63,11 +85,29 @@ SELECT        customer_count.c_count,
               user_count.u_count,
               customer_count.c_count / user_count.u_count * 100 AS customer_percentage
   FROM        customer_count
-  CROSS JOIN  user_count; -- customer_count, join user_count
+  CROSS JOIN  user_count;
   </code>
 </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p>
+<table class="table-with-header">
+  <thead><th>c_count</th><th>u_count</th><th>customer_percentage</th></thead>
+  <tbody>
+    <tr><td>79992</td><td>100000</td><td>79.99199999999999</td></tr>
+  </tbody>
+</table>
+</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Shorthand syntax</span></h3>
+<p>There's a shorthand syntax for cross joins. Instead of <code>... FROM table_1 CROSS JOIN table_2</code>, you could also write <code>... FROM table_1, table_2</code>. Following our style guide, we prefer to always write them in full form.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">CROSS JOIN UNNEST</span></h3>
+<p>When you have in your table, a column of the <code>ARRAY</code> type, you can "flatten" these arrays fields by using <code>UNNEST</code>, and cross joining the result with the origin table. This is technique that's indispensable when working with Google Analytics 4 BigQuery sample dataset, as it contains a lot of arrays, the main ones being the <strong>event_params</strong> and <strong>user_properties</strong> columns.</p>
+<p>Observe carefully the results of the following queries.</p>
+
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
 <pre>
   <code class="language-sql">
 SELECT  event_params
@@ -78,7 +118,12 @@ SELECT  event_params
     AND user_pseudo_id = '1026454.4271112504';
   </code>
 </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/cross-join-unnest-1.png" class="lesson-img" /></p>
 
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
 <pre>
   <code class="language-sql">
 SELECT  user_pseudo_id, event_name, event_params
@@ -89,80 +134,63 @@ SELECT  user_pseudo_id, event_name, event_params
     AND user_pseudo_id = '1026454.4271112504';
   </code>
 </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/cross-join-unnest-2.png" class="lesson-img" /></p>
 
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+<pre>
+  <code class="language-sql">
+WITH event_params AS
+  (
+    SELECT  event_params
+      FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+      WHERE event_date = '20210131'
+            AND event_timestamp = 1612069510766593
+            AND event_name = 'page_view'
+            AND user_pseudo_id = '1026454.4271112504'
+  )
+
+SELECT        *
+  FROM        UNNEST((SELECT * FROM event_params));
+  </code>
+</pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/cross-join-unnest-3.png" class="lesson-img" /></p>
+
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
 <pre>
   <code class="language-sql">
 SELECT        user_pseudo_id, event_name, unnested_params
+  
   FROM        bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
   CROSS JOIN  UNNEST(event_params) AS unnested_params
+  
   WHERE       event_date = '20210131'
               AND event_timestamp = 1612069510766593
               AND event_name = 'page_view'
               AND user_pseudo_id = '1026454.4271112504';
   </code>
 </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/cross-join-unnest-4.png" class="lesson-img" /></p>
 
-<pre>
-  <code class="language-sql">
-SELECT  user_pseudo_id, event_name, unnested_params
-  FROM  bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131,
-        UNNEST(event_params) AS unnested_params
-  WHERE event_date = '20210131'
-    AND event_timestamp = 1612069510766593
-    AND event_name = 'page_view'
-    AND user_pseudo_id = '1026454.4271112504';
-  </code>
-</pre>
+<!-- PRACTICE PROBLEMS -->
+{% include practice_problems_intructions.html %}
 
-
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°1 — Google Analytics homepage unique visitors in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Google Analytics engaged users in January 2021&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display the number of unique users who have visited the home page in January 2021</li>
-    <li>This number should be broken down by device category</li>
-  </ul>
-  
-  <h4>Example results</h4>
-  <p><img src="images/result-1.png" class="lesson-img" /></p>
-
-  <h4>Solution</h4>
-  <div class="collapsible-parent">
-    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
-    <div class="practice-problems-instructions collapsible-item">
-      <pre>
-        <code class="language-sql">
-SELECT        device.category AS device_category,
-              COUNT(DISTINCT user_pseudo_id) AS homepage_unique_visitors
-  
-  FROM        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-  CROSS JOIN  UNNEST(event_params) AS unnested_params
-  
-  WHERE       event_name = 'page_view'
-              AND (_table_suffix BETWEEN '20210101' AND '20210131')
-              AND (unnested_params.key = 'page_location')
-              AND (unnested_params.value.string_value = 'https://googlemerchandisestore.com/')
-  
-  GROUP BY    device_category;
-        </code>
-      </pre>
-    </div>
-  </div>
-</div>
-
-
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°2 — Google Analytics engaged users in January 2021&nbsp;🧂</span></h3>
-<div class="problem">
-  <h4>Tables</h4>
-  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
-
-  <h4>Task</h4>
-  <ul>
-    <li>Write a query that will display the number of unique engaged users in January 2021</li>
-    <li>An engaged users is a user with at least one event where the event parameter field engagement_time_msec is greater than 0</li>
+    <li>Write a query that will display the number of unique engaged users in January 2021.</li>
+    <li>An engaged user is a user with at least one event where the <strong>engagement_time_msec</strong> field of the <strong>event_params</strong> column is greater than 0.</li>
   </ul>
   
   <h4>Example results</h4>
@@ -189,6 +217,120 @@ SELECT        COUNT(DISTINCT user_pseudo_id) AS unique_engaged_users
   WHERE       (_table_suffix BETWEEN '20210101' AND '20210131')
               AND (unnested_params.key = 'engagement_time_msec')
               AND (unnested_params.value.int_value > 0);
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°2 — Google Analytics number of sessions per date&nbsp;&nbsp;🌶️</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>A session is uniquely defined by the combination of the <strong>pseudo_user_id</strong> event parameter, and the <strong>ga_session_id</strong> field of the <strong>event_params</strong> event column.</li>
+    <li><strong>event_params</strong> is an array of records. For example, <strong>ga_session_id</strong> is one of these records.</li>
+    <li>Write a query that will display the number of sessions per date for all days for which we have data.</li>
+    <li>Sort the results by session date in ascending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-2.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        PARSE_DATE('%Y%m%d', _table_suffix) AS session_date,
+              COUNT(CONCAT(user_pseudo_id, '.', unnested_params.value.int_value)) AS sessions
+  
+  FROM        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  WHERE       unnested_params.key = 'ga_session_id'
+  
+  GROUP BY    session_date
+  ORDER BY    session_date ASC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°3 — Google Analytics 'scroll' events by page location&nbsp;&nbsp;🌶️</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of 'scroll' events by page location.</li>
+    <li>The results should be sorted by the number of 'scroll' events in descending order.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-3.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        unnested_params.value.string_value AS page_location,
+              COUNT(*) AS scrolls
+  
+  FROM        bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_20210131
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  WHERE       event_name = 'scroll'
+              AND unnested_params.key = 'page_location'
+  
+  GROUP BY    page_location
+  ORDER BY    scrolls DESC;
+        </code>
+      </pre>
+    </div>
+  </div>
+</div>
+
+
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°4 — Google Analytics homepage unique visitors in January 2021&nbsp;&nbsp;🌶️</span></h3>
+<div class="problem">
+  <h4>Tables</h4>
+  <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
+
+  <h4>Task</h4>
+  <ul>
+    <li>Write a query that will display the number of unique users who have visited the home page in January 2021.</li>
+    <li>This number should be broken down by device category.</li>
+    <li>Note that the page location of the home page is 'https://googlemerchandisestore.com/'.</li>
+  </ul>
+  
+  <h4>Example results</h4>
+  <p><img src="images/result-4.png" class="lesson-img" /></p>
+
+  <h4>Solution</h4>
+  <div class="collapsible-parent">
+    <p><a href="#" class="hide-control">🙈 Hide</a><a href="#" class="show-control">👀 Show</a></p>
+    <div class="practice-problems-instructions collapsible-item">
+      <pre>
+        <code class="language-sql">
+SELECT        device.category AS device_category,
+              COUNT(DISTINCT user_pseudo_id) AS homepage_unique_visitors
+  
+  FROM        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+  CROSS JOIN  UNNEST(event_params) AS unnested_params
+  
+  WHERE       event_name = 'page_view'
+              AND (_table_suffix BETWEEN '20210101' AND '20210131')
+              AND (unnested_params.key = 'page_location')
+              AND (unnested_params.value.string_value = 'https://googlemerchandisestore.com/')
+  
+  GROUP BY    device_category;
         </code>
       </pre>
     </div>

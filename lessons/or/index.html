@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: OR
+quote: "Doublethink means the power of holding two contradictory beliefs in one's mind simultaneously, and accepting both of them."
 previous_lesson: /lessons/and/
 next_lesson: /lessons/not/
 ---
 
 <p><img src="images/or.png" class="illustration" /></p>
 
-<p>We can also use the OR keyword to combine multiple conditions in the WHERE clause. We use the OR keyword to specify conditions where AT LEAST ONE needs to be true</p>
+<p>We can also use the <code>OR</code> keyword to combine multiple conditions in our <code>WHERE</code> clause. We use the <code>OR</code> keyword to specify conditions where <strong>AT LEAST ONE</strong> needs to be true</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id, first_name, last_name, email, state, city, country
@@ -19,6 +21,7 @@ SELECT  id, first_name, last_name, email, state, city, country
   LIMIT 10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 

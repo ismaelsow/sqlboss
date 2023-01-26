@@ -1,7 +1,8 @@
 ---
 layout: lesson
 title: Key SQL Concepts
-previous_lesson: /
+quote: "I would rather have questions that can't be answered than answers that can't be questioned."
+previous_lesson: /lessons/readme/
 next_lesson: /lessons/big-query-setup-and-dataset-exploration/
 ---
 
@@ -9,35 +10,49 @@ next_lesson: /lessons/big-query-setup-and-dataset-exploration/
 
 <!-- Relation databases -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Relational databases</span></h3>
+
 <p>SQL is the language used to query relational databases.</p>
+
 <blockquote>A relational database is a collection of information that organizes data in predefined relationships where data is stored in one or more tables (or "relations") of columns and rows, making it easy to see and understand how different data structures relate to each other. Relationships are a logical connection between different tables, established on the basis of interaction among these tables.<br><br><a href="https://cloud.google.com/learn/what-is-a-relational-database">https://cloud.google.com/learn/what-is-a-relational-database</a></blockquote>
-<p><figure><img src="images/simple-table.png" class="lesson-img" /><figcaption>Table: bigquery-public-data.thelook_ecommerce.distribution_centers</figcaption></figure></p>
+
+<p><figure><img src="images/simple-table.png" class="lesson-img" /><figcaption></figcaption></figure>The picture above shows how a typical relational database table looks like.</p>
+
 <blockquote>In a relational database, each row in the table is a record with a unique ID called the key. The columns of the table hold attributes of the data, and each record usually has a value for each attribute, making it easy to establish the relationships among data points.<br><br><a href="https://www.oracle.com/database/what-is-a-relational-database/">https://www.oracle.com/database/what-is-a-relational-database/</a></blockquote>
+
 <p>There are 3 types of relations in SQL:</p>
 <ul>
-  <li>One-to-one (an order belongs to one customer)</li>
-  <li>One-to-many (one customer has many orders)</li>
-  <li>Many-to-many (a product has many categories, a category has many products)</li>
+  <li>One-to-one (for ex: an order belongs to one customer)</li>
+  <li>One-to-many (for ex: one customer has many orders)</li>
+  <li>Many-to-many (for ex: a product belongs to many categories, a category has many products)</li>
 </ul>
 
 <!-- Relation databases -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Keys</span></h3>
-<blockquote>A table typically has a column or combination of columns that contain values that uniquely identify each row in the table. This column, or columns, is called the primary key (PK) of the table and enforces the entity integrity of the table. Because primary key constraints guarantee unique data, they are frequently defined on an identity column. <strong>⇒ It will usually be a column called ID or a variation around that theme (user_id, product_id etc.)</strong></blockquote>
+<blockquote>A table typically has a column or combination of columns that contain values that uniquely identify each row in the table. This column, or columns, is called the <strong>primary key (PK)</strong> of the table and enforces the entity integrity of the table. Because primary key constraints guarantee unique data, they are frequently defined on an identity column. <strong>⇒ It will usually be a column called ID or a variation around that theme (user_id, product_id etc.)</strong></blockquote>
+
 <blockquote>When you specify a primary key constraint for a table, the Database Engine enforces data uniqueness by automatically creating a unique index for the primary key columns. This index also permits fast access to data when the primary key is used in queries.</blockquote>
-<blockquote>A foreign key (FK) is a column or combination of columns that is used to establish and enforce a link between the data in two tables to control the data that can be stored in the foreign key table. In a foreign key reference, a link is created between two tables when the column or columns that hold the primary key value for one table are referenced by the column or columns in another table. This column becomes a foreign key in the second table. ⇒ to make it simple, it’s a
-  special column that points to a record in another table. It’s an external ID.<br><br><a href="https://learn.microsoft.com/en-us/sql/relational-databases/tables/primary-and-foreign-key-constraints?view=sql-server-ver16">https://learn.microsoft.com/en-us/sql/relational-databases/tables/primary-and-foreign-key-constraints?view=sql-server-ver16</a></blockquote>
-<p><figure><img src="images/keys.svg" class="lesson-img" /><figcaption>A picture is worth 1000 words, right? 😉</figcaption></figure></p>
+
+<blockquote>A foreign key (FK) is a column or combination of columns that is used to establish and enforce a link between the data in two tables to control the data that can be stored in the foreign key table. In a foreign key reference, a link is created between two tables when the column or columns that hold the primary key value for one table are referenced by the column or columns in another table. This column becomes a foreign key in the second table. <strong>⇒ to make it simple, it’s a
+    special column that points to a record in another table. It’s an external ID</strong>.<br><br><a href="https://learn.microsoft.com/en-us/sql/relational-databases/tables/primary-and-foreign-key-constraints?view=sql-server-ver16">https://learn.microsoft.com/en-us/sql/relational-databases/tables/primary-and-foreign-key-constraints?view=sql-server-ver16</a></blockquote>
+<p><figure><img src="images/keys.svg" class="lesson-img" /><figcaption>A picture is worth 1000 words, right? 😉</figcaption></figure>The picture above shows the product table, the distribution center table, and the relationships between the two.</p>
 
 <!-- Database schema -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Database schema</span></h3>
-<blockquote>A database schema defines how data is organized within a relational database; this is inclusive of logical constraints such as, table names, fields, data types, and the relationships between these entities. Schemas commonly use visual representations to communicate the architecture of the database, becoming the foundation for an organization’s data management discipline. This process of database schema design is also known as data modeling.<br><br>https://www.ibm.com/topics/database-schema</blockquote>
-<p><figure><img src="images/schema.png" class="lesson-img" /><figcaption>Relational schema for TheLook Ecommerce database used in the course. The line connectors indicate foreign keys.</figcaption></figure></p>
+<blockquote>
+  A database schema defines how data is organized within a relational database; this is inclusive of logical constraints such as, table names, fields, data types, and the relationships between these entities. Schemas commonly use visual representations to communicate the architecture of the database, becoming the foundation for an organization’s data management discipline. This process of database schema design is also known as data modeling.
+  <br><br>
+  <a href="https://www.ibm.com/topics/database-schema" target="_blank">https://www.ibm.com/topics/database-schema</a>
+</blockquote>
+<p>
+  <figure><img src="images/schema.png" class="lesson-img" /><figcaption></figcaption></figure>
+The diagram above displays the relational schema for the TheLook Ecommerce database used in the course. The line connectors indicate foreign keys.
+</p>
 
 <!-- Normalization -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Normalization</span></h3>
 <blockquote>Database normalization is a method of designing good relational databases. There are several "normal forms", each of which have rules which the database should be designed to meet.<br><br><a href="https://simple.wikipedia.org/wiki/Database_normalisation">https://simple.wikipedia.org/wiki/Database_normalisation</a></blockquote>
-<p>For example, one of the rule of normalization is to avoid duplicate data, to make the database as compact as possible and make things easier to manage. In the schema below, we can see the category information is repeated across two tables. That costs more in storage and make our queries error-prone and hard to standardize, as the data could be in different places. The goal of normalization is to avoid this type of issues.</p>
-<p><figure><img src="images/denormalized.svg" class="lesson-img" /></figure></p>
+<p>For example, one of the rule of normalization is to avoid duplicate data, to make the database as compact as possible and make things easier to manage. In the schema below, we can see the category information is repeated across two tables. That costs more in storage and make our queries error-prone and hard to standardize, as the duplicate fields in different tables could diverge over time. The goal of normalization is to avoid this type of issues.</p>
+<p><figure><img src="images/denormalized.svg" class="lesson-img" /></figure>Above, an example of a field duplicated across two tables.</p>
 
 <!-- SQL commands -->
 <h3 class="h3-big-margin"><span class="grey-text-span">SQL commands</span></h3>
@@ -47,7 +62,7 @@ next_lesson: /lessons/big-query-setup-and-dataset-exploration/
   <li><strong>DQL:</strong> the Data Query Language ⇒ used for performing queries.</li>
   <li><strong>DML:</strong> the Data Manipulation Language ⇒ used to select, insert, update or delete the data present in the database. The DDL (Data Definition Language) and the DCL (Data Control Language) are actually subsets of the DML (Data Manipulation Language).</li>
   <li><strong>DCL:</strong> the Data Control Language ⇒ used for managing rights, permissions, and other controls of the database and its components.</li>
-  <li><strong>TCL:</strong> the Transaction Control Language ⇒ used to control the execution of <a href="https://en.wikipedia.org/wiki/Database_transaction">transactions</a>.</li>
+  <li><strong>TCL:</strong> the Transaction Control Language ⇒ used to control the execution of <a href="https://en.wikipedia.org/wiki/Database_transaction" target="_blank">transactions</a>.</li>
 </ul>
 <p>The mind map below helps visualize these commands:</p>
 <p><figure><img src="images/sql-mindmap.jpeg" class="lesson-img" /><figcaption><a href="https://bit.ly/3CIDV2c">https://bit.ly/3CIDV2c</a></figcaption></figure></p>

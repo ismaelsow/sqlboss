@@ -1,20 +1,23 @@
 ---
 layout: lesson
 title: GROUP BY
+quote: "If people cannot write well, they cannot think well, and if they cannot think well, others will do their thinking for them."
 previous_lesson: /lessons/common-aggregation-functions/
 next_lesson: /lessons/having/
 ---
 
 <p><img src="images/group-by.png" class="illustration" /></p>
 
-<p>Key things to know:</p>
+<p><strong>Key things to know:</strong></p>
 <ol>
-  <li>The GROUP BY clause allows to break down aggregation metrics by specific dimensions.</li>
-  <li>An aggregation metric is a number calculated using one of the aggregation functions we saw earlier (COUNT, SUM, MAX, MIN, AVG etc.). A dimension is usually a column with a non-numerical value, for example job, gender, city, age, date etc.</li>
-  <li>When you hear GROUP BY, you can think break down by.</li>
+  <li>The <code>GROUP BY</code> clause allows us to break down (we also say group) aggregation metrics by specific dimensions.</li>
+  <li>An aggregation metric is a number calculated using one of the aggregation functions we saw earlier (COUNT, SUM, MAX, MIN, AVG etc.). <strong>It's used to measure things</strong>. A dimension is usually a column with a non-numerical value, for example job, gender, city, date etc. <strong>It's used to describe things</strong>.</li>
+  <li>When you hear <code>GROUP BY</code>, you can think break down by.</li>
 </ol>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p>Here we break down (or group) the average age of the users, by country.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      country,
@@ -23,9 +26,12 @@ SELECT      country,
   GROUP BY  country;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
+<p>Here we break down (or group) the average age of the users, by country, then by city.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      country,
@@ -35,20 +41,20 @@ SELECT      country,
   GROUP BY  country, city;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-2.png" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
 <table class="table-with-header">
 <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
   <tbody>
     <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+    <tr><td>3</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+    <tr><td>4</td><td>SELECT</td><td>Returns the final data.</td></tr>
+    <tr><td>5</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+    <tr><td>6</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
   </tbody>
 </table>
 
@@ -169,6 +175,7 @@ SELECT      CASE
   WHERE     country = 'Brasil'
   
   GROUP BY  age_group
+  ORDER BY  number_of_users DESC
   LIMIT     1;
         </code>
       </pre>
@@ -186,7 +193,7 @@ SELECT      CASE
   <p>Write a query that will:</p>
   <ul>
     <li>display the number of events from Facebook and YouTube in July 2022</li>
-    <li>broken down by event_type and traffic_source</li>
+    <li>broken down by (grouped by) event_type and traffic_source</li>
     <li>sorted by event count in descending order</li>
   </ul>
   
@@ -217,13 +224,17 @@ SELECT      event_type,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — Top two order status by number of items&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°5 — Top 2 order status values by number of items&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the top two order status by number of items, sorted by number of items in descending order.</p>
+  <p>Write a query that will display:</p>
+  <ul>
+    <li>the top 2 order status values by number of items</li>
+    <li>sorted by number of items in descending order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-5.png" class="lesson-img" /></p>
@@ -255,7 +266,7 @@ SELECT      status,
   <h4>Task</h4>
   <p>Write a query that will:</p>
   <ul>
-    <li>display the number of orders broken down by size group</li>
+    <li>display the number of orders broken down (grouped by) by size group</li>
     <li>sorted by number of orders in descending order</li>
   </ul>
   <p>Size groups are defined this way:</p>
@@ -299,8 +310,8 @@ SELECT      CASE
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display the country with the smallest number of users.</li>
-    <li>Deutschland should be counted as Germany</li>
-    <li>España should be counted as Spain</li>
+    <li><i>Deutschland</i> should be counted as <i>Germany</i></li>
+    <li><i>España</i> should be counted as <i>Spain</i></li>
   </ul>
   
   <h4>Example results</h4>
@@ -338,7 +349,7 @@ SELECT      CASE
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of home events in the state of New York in the first quarter of 2022 broken down by traffic source and browser&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°8 — Number of 'home' events in the state of New York in the first quarter of 2022 broken down by traffic source and browser&nbsp;&nbsp;🌶️</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.events</p>
@@ -346,8 +357,8 @@ SELECT      CASE
   <h4>Task</h4>
   <p>Write a query that will:</p>
   <ul>
-    <li>display the number of home events in the state of New York in the first quarter of 2022</li>
-    <li>broken down by traffic source and browser</li>
+    <li>display the number of 'home' events in the state of New York in the first quarter of 2022</li>
+    <li>broken down (grouped) by traffic source and browser</li>
     <li>sorted by number of events in descending order</li>
   </ul>
   

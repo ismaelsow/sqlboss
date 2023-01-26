@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: ROW_NUMBER
+quote: "There are some ideas so absurd that only an intellectual could believe them."
 previous_lesson: /lessons/aggregate-window-functions/
 next_lesson: /lessons/ntile/
 ---
 
 <p><img src="images/row-number.png" class="illustration" /></p>
 
-<p><code>ROW_NUMBER</code> is a the simplest of the window functions that deal with ranking items. In BigQuery, these ranking functions are called numbering functions:</p<
-<blockquote>Returns the sequential row ordinal (1-based) of each row for each ordered partition. If the ORDER BYclause is unspecified then the result is non-deterministic (⇒ i.e not sorted in any particular way).</blockquote>
+<p><code>ROW_NUMBER</code> is the simplest of the window functions that deal with ranking items. In BigQuery, these ranking functions are called numbering functions.</p>
+<p><code>ROW_NUMBER</code>'s output is the index of each returned row inside each window.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT      country,
@@ -23,9 +25,6 @@ SELECT      country,
   ORDER BY  country ASC;
   </code>
 </pre>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#row_number" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -180,8 +179,8 @@ WITH orders_countries AS
   ( SELECT        country,
                   order_id,
                   orders.created_at
-      FROM        bigquery-public-data.thelook_ecommerce.orders orders
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.users users
+      FROM        bigquery-public-data.thelook_ecommerce.orders
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.users
       ON          orders.user_id = users.id
   ),
 
@@ -214,8 +213,10 @@ WITH orders_countries AS
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will return the name of the top selling product in each country.</p>
-  <p>Sort the results by country in ascending order.</p>
+  <ul>
+    <li>Write a query that will return the name of the top selling product in each country.</li>
+    <li>Sort the results by country in ascending order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-5.png" class="lesson-img" /></p>
@@ -232,9 +233,10 @@ WITH product_sales_by_country AS
                   retail_price,
                   order_items.created_at AS order_timestamp
       
-      FROM        bigquery-public-data.thelook_ecommerce.users users
-      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
+      FROM        bigquery-public-data.thelook_ecommerce.users
+      INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items
       ON          users.id = order_items.user_id
+
       INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
       ON          order_items.product_id = products.id
   ),
@@ -243,6 +245,7 @@ WITH product_sales_by_country AS
   ( SELECT      country,
                 product_name,
                 SUM(retail_price) AS sales
+
       FROM      product_sales_by_country
       GROUP BY  country, product_name
       ORDER BY  sales DESC
@@ -277,7 +280,7 @@ SELECT      country,
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will return the names and the sales of the top 3 selling products in China and the US, on Jan 1st, 2023, separately.</li>
+    <li>Write a query that will return the names and the sales (as in revenue generated) of the top 3 selling products in China and the US, on Jan 1st, 2023, separately (China's rows together, US' rows together).</li>
     <li>Which country is displayed first does not matter.</li>
   </ul>
   
@@ -299,6 +302,7 @@ WITH product_sales_by_country AS
       FROM        bigquery-public-data.thelook_ecommerce.users users
       INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
       ON          users.id = order_items.user_id
+
       INNER JOIN  bigquery-public-data.thelook_ecommerce.products products
       ON          order_items.product_id = products.id
       
@@ -309,6 +313,7 @@ WITH product_sales_by_country AS
   ( SELECT      country,
                 product_name,
                 SUM(retail_price) AS sales
+
       FROM      product_sales_by_country
       GROUP BY  country, product_name
       ORDER BY  sales DESC
@@ -343,8 +348,10 @@ SELECT  country,
   <p>bigquery-public-data.thelook_ecommerce.products</p>
 
   <h4>Task</h4>
-  <p>Write a query that will return the name of the top selling product in each category.</p>
-  <p>Sort the results by category in ascending order.</p>
+  <ul>
+    <li>Write a query that will return the name of the top selling product in each category.</li>
+    <li>Sort the results by category in ascending order.</li>
+  </ul>
   
   <h4>Example results</h4>
   <p><img src="images/result-7.png" class="lesson-img" /></p>
@@ -370,6 +377,7 @@ WITH product_sales_by_category AS
   ( SELECT      category,
                 product_name,
                 SUM(retail_price) AS sales
+
       FROM      product_sales_by_category
       GROUP BY  category, product_name
       ORDER BY  sales DESC
@@ -385,6 +393,7 @@ WITH product_sales_by_category AS
       
 SELECT      category,
             product_name
+
   FROM      row_numbered_top_products
   WHERE     row_num = 1
   ORDER BY  category ASC;
@@ -436,6 +445,7 @@ WITH numbered_users_orders AS
             order_id,
             order_timestamp AS first_user_order_timestamp,
             order_num
+
       FROM  numbered_users_orders
       WHERE (SELECT COUNT(*) FROM numbered_users_orders) >= 4
             AND order_num = 1
@@ -446,6 +456,7 @@ WITH numbered_users_orders AS
             order_id,
             order_timestamp AS fourth_user_order_timestamp,
             order_num
+
       FROM  numbered_users_orders
       WHERE (SELECT COUNT(*) FROM numbered_users_orders) >= 4
             AND order_num = 4
@@ -456,6 +467,7 @@ WITH numbered_users_orders AS
                   first_user_order_timestamp,
                   fourth_user_order_timestamp,
                   (EXTRACT(HOUR FROM (fourth_user_order_timestamp - first_user_order_timestamp)) / 24) AS days_between
+
       FROM        first_users_orders AS f1
       INNER JOIN  fourth_users_orders AS f2
       ON          f1.user_id = f2.user_id
@@ -470,7 +482,7 @@ SELECT  CAST(AVG(days_between) AS INTEGER) AS average_days_to_vip
 </div>
 
 
-<h3 class="h3-big-margin"><span class="medium-problem-text-span">N°9 — Most popular and less popular brands&nbsp;&nbsp;🌶️</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°9 — Most popular and less popular brands&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.products</p>
@@ -480,9 +492,10 @@ SELECT  CAST(AVG(days_between) AS INTEGER) AS average_days_to_vip
   <ul>
     <li>Write a query that will display the most popular brand (highest number of items sold)</li>
     <li>and the least popular brand (lowest number of items sold)</li>
-    <li>as well as they corresponding number of items sold.</li>
+    <li>as well as their corresponding number of items sold</li>
+    <li>If they are ties, the brand that comes first in alphabetical order should be preferred</li>
+    <li>The final result should display the most popular brand first</li>
   </ul>
-  <p>Don’t worry about handling ties.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-9.png" class="lesson-img" /></p>
@@ -496,9 +509,12 @@ SELECT  CAST(AVG(days_between) AS INTEGER) AS average_days_to_vip
 WITH brand_products AS
   ( SELECT        brand,
                   products.id AS item_id
+
       FROM        bigquery-public-data.thelook_ecommerce.products products
       INNER JOIN  bigquery-public-data.thelook_ecommerce.order_items order_items
       ON          products.id = order_items.product_id
+
+      WHERE       brand IS NOT NULL
   ),
 
   row_numbered_brand_products AS
@@ -509,25 +525,24 @@ WITH brand_products AS
   ),
 
   max_brand AS
-  ( SELECT  brand, 'Most popular' AS label, items_sold
-      FROM  row_numbered_brand_products
-      WHERE items_sold = (SELECT MAX(items_sold) FROM row_numbered_brand_products)
+  ( SELECT      brand, 'Most popular' AS label, items_sold
+      FROM      row_numbered_brand_products
+      WHERE     items_sold = (SELECT MAX(items_sold) FROM row_numbered_brand_products)
+      ORDER BY  brand ASC
+      LIMIT     1
   ),
 
   min_brand AS
-  ( SELECT  brand, 'Least popular' AS label, items_sold
-      FROM  row_numbered_brand_products
-      WHERE items_sold = (SELECT MIN(items_sold) FROM row_numbered_brand_products)
+  ( SELECT      brand, 'Least popular' AS label, items_sold
+      FROM      row_numbered_brand_products
+      WHERE     items_sold = (SELECT MIN(items_sold) FROM row_numbered_brand_products)
+      ORDER BY  brand ASC
       LIMIT 1
   )
 
-SELECT  *
-  FROM  max_brand
-
-UNION ALL
-
-SELECT  *
-  FROM  min_brand;
+SELECT      *
+  FROM      ((SELECT  * FROM  max_brand) UNION ALL (SELECT  * FROM  min_brand))
+  ORDER BY  items_sold DESC;
         </code>
       </pre>
     </div>

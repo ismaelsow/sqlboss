@@ -1,17 +1,19 @@
 ---
 layout: lesson
 title: RANK
+quote: "You must look at facts because they look at you."
 previous_lesson: /lessons/ntile/
 next_lesson: /lessons/dense-rank/
 ---
 
 <p><img src="images/rank.png" class="illustration" /></p>
 
-<p><code>RANK</code> is similar to the <a href="/lessons/row-number/">ROW_NUMBER (ranking window function)</a> but its output is based on the value of the ranking column used in the ORDER BY inside the OVER clause. The rank may not be consecutive (for example, jumping from 1 to 5), taking into account rows with the same rank.</p>
+<p><code>RANK</code> is similar to the <a href="/lessons/row-number/">ROW_NUMBER</a> function but its output is based on the value of the ranking column used in the <code>ORDER BY</code> inside the <code>OVER</code> clause. The rank may not be consecutive (for example, jumping from 1 to 5), taking into account rows with the same rank.</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
+<p>
+  <pre>
+    <code class="language-sql">
 SELECT    category,
           id,
           TRUNC(retail_price, 2) AS retail_price,
@@ -19,12 +21,11 @@ SELECT    category,
   
   FROM    bigquery-public-data.thelook_ecommerce.products
 ORDER BY  category ASC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/numbering_functions#rank" target="_blank">👉 Check out the official documentation</a></p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -38,8 +39,8 @@ ORDER BY  category ASC;
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display the full name of the three oldest people per country.</li>
-    <li>In case of ties for the ranking function, sort by full name and by sign up date in ascending order</li>
-    <li>The final results should be sorted by country and age rank in ascending order</li>
+    <li>In case of ties for the ranking function, sort by age in descending order, by full name and by sign up date in ascending order, and display them all (even if they are more than 3)</li>
+    <li>The final results should be sorted by country in ascending order</li>
   </ul>
   
   <h4>Example results</h4>
@@ -66,7 +67,7 @@ SELECT      country,
   
   FROM      age_ranked_country_users
   WHERE     age_rank IN (1, 2, 3)
-  ORDER BY  country ASC, age_rank ASC;
+  ORDER BY  country ASC;
         </code>
       </pre>
     </div>

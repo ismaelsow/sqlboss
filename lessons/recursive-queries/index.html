@@ -1,54 +1,67 @@
 ---
 layout: lesson
 title: Recursive queries
+quote: "I... a universe of atoms, an atom in the universe."
 previous_lesson: /lessons/views/
 next_lesson: /lessons/aggregate-window-functions/
 ---
 
 <p><img src="images/recursive-queries.gif" class="illustration" /></p>
 
-<p>Recursive subqueries are query that reference themselves. How is that useful? It’s usually used when we have hierarchical or nested relationships, like parent and child elements.</p<
+<p>Recursive queries are query that reference themselves. How is that useful? It’s usually used when we have <strong>hierarchical or nested relationships</strong>, like parent and child elements.</p>
 
-<p>For example if we are dealing with managers and employees, how do we display the chain of managers above a particular employee? We would need to get the manager immediately above this employee. Let’s call this manager m. Then we would need to  use the same logic to get the manager of this manager, let’s call her m+1. Then manager m+2, manager m+3 until we get to the CEO of the company.</p>
+<p>For example if we are dealing with managers and employees, how do we display the chain of managers above a particular employee? We would need to get the manager immediately above this employee. Let’s call her manager m. Then we would need to  use the same logic to get the manager of this manager, let’s call her m+1. Then manager m+2, manager m+3 until we get to the CEO of the company.</p>
 
-<p>How to display all sub-managers under a specific manager? We would need to get the manager immediately under this manger. Let’s call this manager m. Then we would need to  use the same logic to get the manager under this manager, let’s call her m-1. Then manager m-2, manager m-3 until we get someone without direct reports.</p>
+<p>How to display all sub-managers under a specific manager? We would need to get the manager immediately under this manger. Let’s call him manager m. Then we would need to  use the same logic to get the manager under this manager, let’s call her m-1. Then manager m-2, manager m-3 until we get someone without direct reports.</p>
 
-<p>Here are the steps to write a recursive query:</p>
+<p><strong>Here are the steps to write a recursive query:</strong></p>
 <ol>
   <li>Write a common table expression using the <code>WITH RECURSIVE</code> clause</li>
-  <li>Write an initial subquery for the first item we need to display. Give it a column name using as.</li>
-  <li>Use <code>UNION ALL</code></li>
-  <li>Write another subquery for the rest of the items we need to display. This is the recursive part. This second subquery will reference the first item using the column name given, and the name of the common table expression.</li>
+  <li>Write an initial subquery for the first row we need to display an alias it.</li>
+  <li>Write <code>UNION ALL</code>.</li>
+  <li>Write another subquery for the rest of the rows we need to display. This is the recursive part. <strong>This second subquery will reference</strong> (1) the first row(s) using the aliases we gave, and (2) the name of the common table expression.</li>
+  <li>The subquery will also have some kind of end/termination condition, using a <code>WHERE</code>, to ensure that our recursion doesn't create an infinite loop.</li>
 </ol>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
-WITH RECURSIVE first_ten_numbers AS
-  ( SELECT  1 AS number
+<p>Okay, maybe now you're like this, right?</p>
+<div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/mEV42F38lur6PbfapW" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/abcnetwork-abc-celebrity-the-dating-game-mEV42F38lur6PbfapW">via GIPHY</a></p>
+
+<p>Don't worry, there's an example coming! 😉</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
+WITH RECURSIVE first_ten_numbers AS -- common table expression
+  ( SELECT  1 AS number -- initial subquery for the first row we need to display
     UNION ALL
-    SELECT  number + 1
-      FROM  first_ten_numbers
-      WHERE number < 10
+    SELECT  number + 1 -- beginning of the subquery for the rest of the rows we need to display
+      FROM  first_ten_numbers -- reference to the first row
+      WHERE number < 10 -- end condition
   )
 
 SELECT      *
   FROM      first_ten_numbers 
   ORDER BY  number ASC;
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
 
-<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Suite of integers from 1 to 25&nbsp;🧂</span></h3>
+<h3 class="h3-big-margin"><span class="easy-problem-text-span">N°1 — Sequence of integers from 1 to 25&nbsp;🧂</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>N/A</p>
 
   <h4>Task</h4>
-  <p>Write a query that will display the suite of integers from 1 to 25.</p>
+  <p>Write a query that will display the sequence of integers from 1 to 25.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
@@ -60,7 +73,8 @@ SELECT      *
       <pre>
         <code class="language-sql">
 WITH RECURSIVE first_25_numbers AS
-  ( SELECT  1 AS number
+  (
+    SELECT  1 AS number
     UNION ALL
     SELECT  number + 1 FROM first_25_numbers WHERE number < 25
   )
@@ -95,7 +109,8 @@ SELECT      *
       <pre>
         <code class="language-sql">
 WITH RECURSIVE fib_n AS
-  ( SELECT  0 AS n,
+  ( 
+    SELECT  0 AS n,
             0 AS fib_value,
             1 AS next_fib_value
     
@@ -126,9 +141,9 @@ SELECT      n,
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display all of the descendants of the <i>Place</i> category.</li>
+    <li>Write a query that will display all of the descendants of the <strong>Place</strong> category.</li>
     <li>The results should be sorted alphabetically in ascending order.</li>
-    <li>You can use one of table functions we wrote earlier to help you (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
+    <li>You can use one of table functions we wrote earlier to make things easier (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
     <li>Hint: one of these table functions won’t work 😉</li>
   </ul>
   
@@ -172,9 +187,9 @@ SELECT      category
 
   <h4>Task</h4>
   <ul>
-    <li>Write a query that will display all of the ascendants of the <i>Curler</i> category.</li>
+    <li>Write a query that will display all of the ascendants of the <strong>Curler</strong> category.</li>
     <li>The results should be sorted by depth level in ascending order (parent, then grand parent).</li>
-    <li>You can use one of table functions we wrote earlier to help you (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
+    <li>You can use one of table functions we wrote earlier to make things easier (<a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-category-using-cte-s" target="_blank">Table function returning Wikipedia list of category and parent category using CTEs</a> or <a href="/lessons/table-functions/#table-function-returning-wikipedia-list-of-category-and-parent-categories-using-subqueries" target="_blank">Table function returning Wikipedia list of category and parent categories using subqueries</a>).</li>
     <li>Hint: one of these table functions won’t work 😉</li>
   </ul>
   
@@ -188,7 +203,8 @@ SELECT      category
       <pre>
         <code class="language-sql">
 WITH RECURSIVE ascendants AS
-  ( SELECT  category,
+  (
+    SELECT  category,
             parent,
             0 AS level
       FROM  example_dataset.subqueries_only_categories()

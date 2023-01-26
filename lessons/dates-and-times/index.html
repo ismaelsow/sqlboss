@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: Dates and times
+quote: "Who controls the past controls the future. Who controls the present controls the past."
 previous_lesson: /lessons/regular-expressions/
 next_lesson: /lessons/null-values/
 ---
@@ -16,16 +17,19 @@ next_lesson: /lessons/null-values/
       <tr><td>DATETIME</td><td>2022-12-24 23:59:59</td></tr>
       <tr><td>TIME</td><td>23:59:59</td></tr>
       <tr><td>TIMESTAMP</td><td>2021-10-11 00:55:34 UTC</td></tr>
-      <tr><td>INTERVAL</td><td>1-2 3 4:5:6</td></tr>
+      <tr><td>INTERVAL</td><td>1-2-3 4:5:6</td></tr>
     </tbody>
   </table>
 </p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">DATE functions</span></h3>
+<p>Most of the functions have self-explanatory names. Type the examples in the BigQuery console, and play with the different options and parameters to familiarize yourself with them. You can find the full documentation for each function here: <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions" target="_blank">https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions</a>.</p>
 <div>
   <p><code>CURRENT_DATE</code></p>
+  <p><strong>Type</strong> the queries below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run them. Don't copy paste. 😉</p>
   <pre><code class="language-sql">SELECT CURRENT_DATE();</code></pre>
   <p>
+  <p><strong>Example results</strong>:</p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
     <tbody>
@@ -33,11 +37,10 @@ next_lesson: /lessons/null-values/
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#current_date" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>EXTRACT</code></p>
-  <pre><code class="language-sql">SELECT  EXTRACT(year FROM CURRENT_DATE());</code></pre>
+  <pre><code class="language-sql">SELECT  EXTRACT(YEAR FROM CURRENT_DATE());</code></pre>
   <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -46,11 +49,12 @@ next_lesson: /lessons/null-values/
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#extract" target="_blank">👉 Check out the official documentation</a></p>
+  <p>You can extract <code>YEAR</code>, <code>MONTH</code>, <code>DAY</code> from a <code>DATE</code>. These options can be used in several other date and time functions as well.</p>
 </div>
 <div style="margin-top:48px">
   <p><code>DATE</code></p>
-  <pre><code class="language-sql">SELECT DATE(2016, 12, 25);</code></pre>
+  <p>This function takes different parameters and returns a <code>DATE</code>.
+  <pre><code class="language-sql">SELECT DATE(2016, 12, 25); -- SELECT DATE('2016-12-25') would also work</code></pre>
   <p>
   <table class="table-with-header">
     <thead><th>f0_</th></thead>
@@ -59,103 +63,95 @@ next_lesson: /lessons/null-values/
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>DATE_ADD</code></p>
-  <pre><code class="language-sql">SELECT DATE_ADD(DATE('2008-12-25'), INTERVAL 5 day) AS five_days_later;</code></pre>
+  <pre><code class="language-sql">SELECT DATE_ADD(DATE('2008-12-25'), INTERVAL 5 DAY) AS five_days_later;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>five_days_later</th></thead>
     <tbody>
       <tr><td>2008-12-30</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_add" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>DATE_SUB</code></p>
-  <pre><code class="language-sql">SELECT DATE_SUB(DATE('2008-12-25'), INTERVAL 5 day) AS five_days_ago;</code></pre>
+  <pre><code class="language-sql">SELECT DATE_SUB(DATE('2008-12-25'), INTERVAL 5 DAY) AS five_days_ago;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>five_days_ago</th></thead>
     <tbody>
       <tr><td>2008-12-20</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_sub" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>DATE_DIFF</code></p>
   <pre>
     <code class="language-sql">
-SELECT  DATE_DIFF(DATE('2010-07-07'),
-        DATE('2008-12-25'), day) AS days_diff;
+SELECT DATE_DIFF(DATE('2010-07-07'), DATE('2008-12-25'), DAY) AS days_diff;
     </code>
   </pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>days_diff</th></thead>
     <tbody>
       <tr><td>559</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_diff" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>DATE_TRUNC</code></p>
   <pre><code class="language-sql">SELECT DATE_TRUNC(DATE('2008-12-25'), MONTH) AS month;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>month</th></thead>
     <tbody>
       <tr><td>2008-12-01</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#date_trunc" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>FORMAT_DATE</code></p>
+  <p><a href="http://127.0.0.1:4000/lessons/dates-and-times/" target="_blank">Read the Format elements for date and time parts</a> page to learn about all the formatting options for this function and others.</p>
   <pre><code class="language-sql">SELECT FORMAT_DATE('%b %d %Y', DATE('2008-12-25')) AS formatted;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>formatted</th></thead>
     <tbody>
       <tr><td>Dec 25 2008</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#format_date" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>LAST_DAY</code></p>
   <pre><code class="language-sql">SELECT LAST_DAY(DATE('2008-11-25'), MONTH) AS last_day;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>last_day</th></thead>
     <tbody>
       <tr><td>2008-11-30</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#last_day" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 <div style="margin-top:48px">
   <p><code>PARSE_DATE</code></p>
-  <pre><code class="language-sql">SELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008');</code></pre>
+  <pre><code class="language-sql">SELECT PARSE_DATE('%A %b %e %Y', 'Thursday Dec 25 2008') AS parsed_date;</code></pre>
   <p>
   <table class="table-with-header">
-    <thead><th>f0_</th></thead>
+    <thead><th>parsed_date</th></thead>
     <tbody>
       <tr><td>2008-12-25</td></tr>
     </tbody>
   </table>
   </p>
-  <p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/date_functions#parse_date" target="_blank">👉 Check out the official documentation</a></p>
 </div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Functions for other date and time types</span></h3>
@@ -339,7 +335,7 @@ SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
-SELECT      LAST_DAY(CAST(created_at AS date), month) AS last_day_of_month,
+SELECT      LAST_DAY(CAST(created_at AS date), MONTH) AS last_day_of_month,
             ROUND(SUM(sale_price), 2) AS gross_revenue
   FROM      bigquery-public-data.thelook_ecommerce.order_items
   GROUP BY  last_day_of_month
@@ -351,7 +347,7 @@ SELECT      LAST_DAY(CAST(created_at AS date), month) AS last_day_of_month,
 </div>
 
 
-<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Top 3 months with the highest average order item sale price in the last 12 months&nbsp;🔥</span></h3>
+<h3 class="h3-big-margin"><span class="hard-problem-text-span">N°6 — Top 3 months with the highest average item sale price in the last 12 months&nbsp;🔥</span></h3>
 <div class="problem">
   <h4>Tables</h4>
   <p>bigquery-public-data.thelook_ecommerce.order_items</p>
@@ -359,7 +355,7 @@ SELECT      LAST_DAY(CAST(created_at AS date), month) AS last_day_of_month,
   <h4>Task</h4>
   <p>Write a query that will:</p>
   <ul>
-    <li>display the top 3 months with the highest average order item sale price in the last 12 months (excluding the current month)</li>
+    <li>display the top 3 months with the highest average item sale price in the last 12 months (excluding the current month)</li>
     <li>sort the results by average order item sale price in descending order</li>
   </ul>
   
@@ -376,8 +372,8 @@ SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
             ROUND(AVG(sale_price), 2) AS average_item_sale_price
   
   FROM      bigquery-public-data.thelook_ecommerce.order_items
-  WHERE     CAST(created_at AS date) < DATE_TRUNC(CURRENT_DATE(), month)
-            AND CAST(created_at AS date) > (DATE_TRUNC(CURRENT_DATE(), month) - MAKE_INTERVAL(month => 12))
+  WHERE     CAST(created_at AS DATE) < DATE_TRUNC(CURRENT_DATE(), MONTH)
+            AND CAST(created_at AS DATE) > (DATE_TRUNC(CURRENT_DATE(), MONTH) - MAKE_INTERVAL(MONTH => 12))
   
   GROUP BY  month_year
   ORDER BY  average_item_sale_price DESC
@@ -409,7 +405,7 @@ SELECT      FORMAT_DATE('%b %Y', created_at) AS month_year,
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
-SELECT      CAST(created_at AS date) AS date_yymmdd,
+SELECT      CAST(created_at AS DATE) AS date_yymmdd,
             COUNT(DISTINCT order_id) AS transactions,
             ROUND(SUM(sale_price), 2) AS revenue
   
@@ -452,17 +448,12 @@ SELECT      EXTRACT(YEAR FROM created_at) AS year,
               AS weekend_transactions,
             
             ROUND(SUM(
-              CASE
-                WHEN FORMAT_DATE('%A', created_at) NOT IN ('Saturday', 'Sunday') THEN sale_price
-                ELSE 0
-              END
+              CASE WHEN FORMAT_DATE('%A', created_at) NOT IN ('Saturday', 'Sunday') THEN sale_price END
             ), 2) AS weekday_revenue,
             
             ROUND(SUM(
               CASE
-                WHEN FORMAT_DATE('%A', created_at) IN ('Saturday', 'Sunday') THEN sale_price
-                ELSE 0
-              END
+                WHEN FORMAT_DATE('%A', created_at) IN ('Saturday', 'Sunday') THEN sale_price END
             ), 2) AS weekend_revenue
   
   FROM      bigquery-public-data.thelook_ecommerce.order_items
@@ -484,7 +475,6 @@ SELECT      EXTRACT(YEAR FROM created_at) AS year,
   <h4>Task</h4>
   <ul>
     <li>Write a query that will display the average delivery time in days, broken down by year, sorted by year in ascending order</li>
-    <li>The delivery time should be displayed with 2 decimals</li>
     <li>Do not include in your calculation the orders that have not been delivered yet</li>
   </ul>
   
@@ -573,7 +563,7 @@ SELECT      FORMAT_DATE('%d/%m/%y', created_at) AS date_ddmmyy,
             ROUND(SUM(sale_price), 2) AS gross_revenue
   
   FROM      bigquery-public-data.thelook_ecommerce.order_items
-  WHERE     CAST(created_at AS date) BETWEEN DATE('2022-01-01') AND DATE('2022-01-31')
+  WHERE     CAST(created_at AS DATE) BETWEEN DATE('2022-01-01') AND DATE('2022-01-31')
   
   GROUP BY  date_ddmmyy
   HAVING    gross_revenue > 10000

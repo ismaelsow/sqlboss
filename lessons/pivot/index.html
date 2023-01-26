@@ -1,26 +1,30 @@
 ---
 layout: lesson
 title: PIVOT
+quote: "First you take a drink, then the drink takes a drink, then the drink takes you."
 previous_lesson: /lessons/percent-rank/
 ---
 
 <p><img src="images/pivot-illustration.png" class="illustration" /></p>
 
-<p>A SQL table is made of column and rows. We can also think about it as dimensions and metrics. Metrics are used to measure things and are number-based. For example, a number of items in inventory. Dimensions are used to describe things, so they are usually text-based, for example, the names of distribution centers, or the categories of products.</p>
+<p>A SQL table is made of columns and rows. We can also think about it as made of dimensions and metrics.</p>
+<p>Metrics are used to measure things and are number-based. For example, a number of items in inventory. Dimensions are used to describe things, so they are usually text-based, for example, the names of distribution centers, or the categories of products.</p>
 
 <p style="background-color:white"><img src="images/dimensions-and-metrics.svg" class="lesson-img" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">PIVOT</span></h3>
-<p>The goal of the pivoting operation is to take some dimension’s values use them as metrics, in new columns:</p>
+<p>The goal of the pivoting operation is to take some dimension’s values and use them as metrics, in new columns:</p>
 <p style="background-color:white"><img src="images/example.svg" class="lesson-img" /></p>
 
-<p>To achieve, this, you can use the <code>PIVOT</code> operator:</p>
-
-<pre>
-  <code class="language-sql">
+<p>To achieve, this, you can use the <code>PIVOT</code> operator.</p>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
+<p>
+  <pre>
+    <code class="language-sql">
 WITH distribution_centers_product_categories AS
   ( SELECT        centers.name AS distribution_center,
                   inventory_items.product_category AS product_category
+
       FROM        bigquery-public-data.thelook_ecommerce.distribution_centers AS centers
       INNER JOIN  bigquery-public-data.thelook_ecommerce.inventory_items AS inventory_items
       ON          centers.id = inventory_items.product_distribution_center_id
@@ -30,6 +34,7 @@ WITH distribution_centers_product_categories AS
   ( SELECT    distribution_center,
               product_category,
               COUNT(*) AS inventory_items
+
       FROM    distribution_centers_product_categories
     GROUP BY  distribution_center, product_category
   )
@@ -49,21 +54,21 @@ WITH distribution_centers_product_categories AS
             )
 
   ORDER BY  RAND();
-  </code>
-</pre>
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-2.png" class="lesson-img" /></p>
 
-<p>The PIVOT operator is part of the FROM clause. Similar to the JOINs, it comes after source table, on which it does the transformation. As you can see above, the PIVOT operator has 3 components:</p>
+<p>The <code>PIVOT</code> operator is part of the <code>FROM</code> clause. Similar to the <code>JOIN</code>s, it comes after the source table, from which it does the transformation. As you can see above, the <code>PIVOT</code> operator has 3 components:</p>
 <ol>
   <li>How the new metrics should be calculated (in the example above: <code>SUM(inventory_items)</code>).</li>
-  <li>The dimension in which the values should be taken to be used as metrics (in the example above: <code>FOR product_category</code>).</li>
+  <li>The dimension whose values should be taken to be used as metrics (in the example above: <code>FOR product_category</code>).</li>
   <li>The specific values we want to use as metrics (in the example above: <code>IN ( 'Jeans', 'Swim', 'Leggings', 'Shorts', 'Pants' )</code>).</li>
 </ol>
 
 <p>Good to know:</p>
-<blockquote>The same results can be accomplished by using a combination of <code>CASE WHEN</code> and <code>GROUP BY</code>. This will be the topic of one of our practice problems for this lesson.</blockquote>
-
-<h3 class="h3-big-margin"><span class="grey-text-span">Learn more</span></h3>
-<p><a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#pivot_operator" target="_blank">👉 PIVOT operator</a></p>
+<blockquote>The same results can be accomplished by using a combination of <code>CASE WHEN</code> and <code>GROUP BY</code>. That will be the topic of one of our practice problems for this lesson.</blockquote>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -75,7 +80,7 @@ WITH distribution_centers_product_categories AS
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>Using the built-in <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#pivot_operator" target="_blank">PIVOT operator</a>, write a query that will display, by user, in January 2021, the number of occurrences of each of the following event types (event_name):</p>
+  <p>Using the built-in <code>PIVOT</code> operator, write a query that will display, by user, in January 2021, the number of occurrences of each of the following event types (<strong>event_name</strong> column):</p>
   <ul>
     <li>session_start</li>
     <li>page_view</li>
@@ -132,7 +137,7 @@ SELECT      *
   <p>bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*</p>
 
   <h4>Task</h4>
-  <p>WITHOUT using the built-in PIVOT operator, write a query that will display, by user, in January 2021, the number of occurrences of each of the following event types (event_name):</p>
+  <p><code>WITHOUT</code> using the built-in <code>PIVOT</code> operator, write a query that will display, by user, in January 2021, the number of occurrences of each of the following event types (event_name):</p>
   <ul>
     <li>session_start</li>
     <li>page_view</li>

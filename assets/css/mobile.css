@@ -148,6 +148,10 @@ li {
 }
 
 /* LESSONS */
+img.illustration {
+  max-width: 100%;
+}
+
 .hide-control, .show-control {
   font-size: 48px;
 }
@@ -162,4 +166,14 @@ pre.language-sql {
 
 code.language-sql {
   font-size: 0.65em;
+}
+.lesson-navigation {
+  display: flex;
+  flex-direction: column;
+}
+.lesson-navigation * {
+  font-size: 0.9em;
+}
+.lesson-navigation div {
+  padding-bottom: 24px;
 }

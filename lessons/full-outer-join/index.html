@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: FULL OUTER JOIN
+quote: "Through the Unknown, we'll find the New."
 previous_lesson: /lessons/left-join-and-right-join/
 next_lesson: /lessons/self-join/
 ---
@@ -8,33 +9,30 @@ next_lesson: /lessons/self-join/
 <p><img src="images/full-outer-join.svg" class="illustration" /></p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Visual representation</span></h3>
-<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a></p>
+<p>A <code>FULL OUTER JOIN</code>, or simply <code>OUTER JOIN</code>, is a type of <code>JOIN</code> where <strong>matching rows, AND non-matching rows from the left table</strong>, are combined with  <strong>matching rows, AND non-matching rows</strong> from the right table to create a new table. <strong>No rows are ignored, all rows from both tables are included</strong>.<p>
+<p>The matching is usually done using an identifier column that's present in both tables. For example, rows where <code>table_1.primary_key_x = table_2.foreign_key_x</code>.</p>
+<p>The syntax looks like this: <code>SELECT column A, column B, ..., column N FROM table_1 FULL OUTER JOIN table_2 ON matching_set_of_conditions</code>.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<table class="table-with-header">
-  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Join tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a> to see a visual representation of how it works.</p>
+<p>Now observe carefully the results of the following queries.</p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">Example</span></h3>
-<pre>
-  <code class="language-sql">
-SELECT            *
+<h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p>👉 Check out <a href="https://joins.spathon.com/" target="_blank">Visual JOIN</a> to see a visual representation of how it works.</p>
+<p>
+  <pre>
+    <code class="language-sql">
+SELECT            users.id AS users_id, events.user_id AS events_user_id, events.id AS events_id
   FROM            bigquery-public-data.thelook_ecommerce.users
   FULL OUTER JOIN bigquery-public-data.thelook_ecommerce.events
-  ON              users.id = events.user_id;
-  --WHERE users.id IS NULL OR events.id IS NULL;
-  </code>
-</pre>
+  ON              users.id = events.user_id
+  
+  WHERE           users.id IS NULL OR events.user_id IS NULL
+  ORDER BY        RAND();
+    </code>
+  </pre>
+</p>
+<p><strong>Example results</strong>:</p>
+<p><img src="images/example-1.png" class="lesson-img" /><p>
 
 
 <!-- PRACTICE PROBLEMS -->
@@ -47,14 +45,14 @@ SELECT            *
   <p>bigquery-public-data.thelook_ecommerce.events</p>
 
   <h4>Task</h4>
-  <p>Write a query that will show the number of users with no events and number of events with no users.</p>
+  <p>Write a query that will show the number of users with no events and the number of events with no users.</p>
   
   <h4>Example results</h4>
   <div class="table-wrapper">
     <table class="table-with-header">
-      <thead><th>user_count</th><th>event_count</th></thead>
+      <thead><th>users_with_no_events</th><th>events_with_no_users</th></thead>
       <tbody>
-        <tr><td>20154</td><td>1124900</td></tr>
+        <tr><td>20008</td><td>1125749</td></tr>
       </tbody>
     </table>
   </div>
@@ -65,11 +63,11 @@ SELECT            *
     <div class="practice-problems-instructions collapsible-item">
       <pre>
         <code class="language-sql">
-SELECT            COUNT(DISTINCT users.id) AS user_count,
-                  COUNT(DISTINCT events.id) AS event_count
+SELECT            COUNT(DISTINCT users.id) AS users_with_no_events,
+                  COUNT(DISTINCT events.id) AS events_with_no_users
   
-  FROM            bigquery-public-data.thelook_ecommerce.users users
-  FULL OUTER JOIN bigquery-public-data.thelook_ecommerce.events events
+  FROM            bigquery-public-data.thelook_ecommerce.users
+  FULL OUTER JOIN bigquery-public-data.thelook_ecommerce.events
   ON              users.id = events.user_id
   
   WHERE           events.id IS NULL

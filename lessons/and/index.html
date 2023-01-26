@@ -1,16 +1,18 @@
 ---
 layout: lesson
 title: AND
+quote: "Sometimes, only one person is missing, and the whole world seems depopulated."
 previous_lesson: /lessons/is-null/
 next_lesson: /lessons/or/
 ---
 
 <p><img src="images/and.png" class="illustration" /></p>
 
-<p>We can combine multiple conditions in the WHERE clause. We use the AND keyword to specify conditions that ALL need to be true.</p>
+<p>We can combine multiple conditions in our <code>WHERE</code> clause. We use the <code>AND</code> keyword to specify conditions that <strong>ALL</strong> need to be true.</p>
 
 <!-- Example 1 -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 1</span></h3>
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  id, email, country, traffic_source
@@ -19,6 +21,7 @@ SELECT  id, email, country, traffic_source
   LIMIT 10;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/example-1.png" class="lesson-img" /></p>
 
 
@@ -59,7 +62,7 @@ SELECT  *
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays 10 orders of more than 2 items, created in August 2022 and made by women.</p>
+  <p>Write a query that displays up to 10 orders of more than 2 items, created in August 2022 and made by women.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-2.png" class="lesson-img" /></p>

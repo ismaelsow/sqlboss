@@ -1,6 +1,7 @@
 ---
 layout: lesson
 title: LIMIT
+quote: "On the whole human beings want to be good, but not too good, and not quite all the time."
 previous_lesson: /lessons/select-from/
 next_lesson: /lessons/where-and-comparison-operators/
 ---
@@ -9,6 +10,8 @@ next_lesson: /lessons/where-and-comparison-operators/
 
 <!-- Limiting the number of results returned -->
 <h3 class="h3-big-margin"><span class="grey-text-span">Limiting the number of results returned</span></h3>
+<p>Instead of returning the entire content of the table, we can specify the number of rows we want to display using the <code>LIMIT</code> clause. The <code>LIMIT</code> clause only accepts regular integers like 5, 12, 47000 etc.
+<p><strong>Type</strong> the query below in the <a href="https://console.cloud.google.com/bigquery" target="_blank">BigQuery console</a> and run it. Don't copy paste. 😉</p>
 <pre>
   <code class="language-sql">
 SELECT  *
@@ -16,6 +19,7 @@ SELECT  *
   LIMIT 3;
   </code>
 </pre>
+<p><strong>Example results</strong>:</p>
 <p><img src="images/limit-number-of-results-returned-2.png" class="lesson-img" /></p>
 
 <!-- PRACTICE PROBLEMS -->
@@ -27,7 +31,7 @@ SELECT  *
   <p>bigquery-public-data.thelook_ecommerce.orders</p>
 
   <h4>Task</h4>
-  <p>Write a query that displays all columns from the orders table and uses the <code>LIMIT</code> command to restrict the result set to only 5 rows.</p>
+  <p>Write a query that displays all columns from the orders table and uses the <code>LIMIT</code> clause to restrict the result set to only 5 rows.</p>
   
   <h4>Example results</h4>
   <p><img src="images/result-1.png" class="lesson-img" /></p>
