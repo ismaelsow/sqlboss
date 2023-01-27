@@ -41,17 +41,20 @@ SELECT  column_name, data_type
 </table>
 
 <!-- SQL order of operations -->
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
-<table class="table-with-header">
-  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>SELECT</td><td>Displays the results.</td></tr>
-    <tr><td>3</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL conceptual order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the <strong>logical</strong> order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+    <tbody>
+      <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+      <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+      <tr><td>4</td><td>SELECT</td><td>Displays the results.</td></tr>
+      <tr><td>3</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Note that this is a conceptual, logical view of the process. In practice, the database engine will optimize the way it processes the query depending on various factors. In BigQuery, we should always refer to the official Google Standard SQL documentation on <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#alias_visibility" target="_blank">alias visibility rules</a>. Please read them. 😉</p>
 
 <!-- PRACTICE PROBLEMS -->
 {% include practice_problems_intructions.html %}
@@ -261,7 +264,13 @@ SELECT  id,
   LIMIT 10;
         </code>
       </pre>
-      <p>We can not use the <strong>profit_margin_ratio_per_product</strong> alias in our <code>WHERE</code> clause because aliases are defined in the <code>SELECT</code> step of the order of operations. The <code>SELECT</code> step happens after the <code>WHERE</code> step. That's why the alias is not available in the <code>WHERE</code> step, as well as in all the steps that come before <code>SELECT</code>. The solution is simply to reuse the required calculation in the <code>WHERE</code> clause, since the calculation only uses prexisting column names.</p>
+      <p>We can not use the <strong>profit_margin_ratio_per_product</strong> alias in our <code>WHERE</code> clause because, as per <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#select-list_aliases" target="_blank">Google Standard SQL's alias visibility rules</a>, aliases defined in the <code>SELECT</code> list are visible only to the following clauses:</p>
+      <ul>
+        <li><code>GROUP BY</code></li>
+        <li><code>ORDER BY</code></li>
+        <li><code>HAVING</code></li>
+      </ul>
+      <p>The solution is simply to reuse the required calculation in the <code>WHERE</code> clause, since the calculation only uses prexisting column names.</p>
     </div>
   </div>
 </div>

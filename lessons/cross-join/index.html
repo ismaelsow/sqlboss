@@ -8,21 +8,26 @@ next_lesson: /lessons/inner-join/
 
 <p><img src="images/cross-join-illustration.png" class="illustration" /></p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<p>A <code>JOIN</code> is an operation that combines columns from one table with columns from another table, to form a new table with the combined columns. Here's the <strong>full view</strong> of the SQL order of execution, including <code>JOIN</code>.</p>
-<table class="table-with-header">
-  <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>JOIN</td><td>Joins tables.</td></tr>
-    <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
-    <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<p>A <code>JOIN</code> is an operation that combines columns from one table with columns from another table, to form a new table with the combined columns.</p>
+
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL conceptual order of operations</span></h3>
+<p>Here's the <strong>full view</strong> of the SQL conceptual order of operations, including <code>JOIN</code>.</p>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+    <tbody>
+      <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+      <tr><td>2</td><td>JOIN</td><td>Joins tables.</td></tr>
+      <tr><td>3</td><td>WHERE</td><td>Filters the data.</td></tr>
+      <tr><td>4</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+      <tr><td>5</td><td>HAVING</td><td>Filters the aggregated data.</td></tr>
+      <tr><td>6</td><td>SELECT</td><td>Returns the final data.</td></tr>
+      <tr><td>7</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+      <tr><td>8</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Note that this is a conceptual, logical view of the process. In practice, the database engine will optimize the way it processes the query depending on various factors. In BigQuery, we should always refer to the official Google Standard SQL documentation on <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#alias_visibility" target="_blank">alias visibility rules</a>. Please read them. 😉</p>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">CROSS JOIN</span></h3>
 <p>A <code>CROSS JOIN</code> is specific type of <code>JOIN</code> that combines every rows from one table with every rows from another table, to form a new table. In maths, this is called a <a href="https://en.wikipedia.org/wiki/Cartesian_product" target="_blank">cartesian product</a>.

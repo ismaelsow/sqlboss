@@ -44,19 +44,22 @@ SELECT      country,
 <p><strong>Example results</strong>:</p>
 <p><img src="images/example-2.png" class="lesson-img" /></p>
 
-<h3 class="h3-big-margin"><span class="grey-text-span">SQL order of operations</span></h3>
-<p>Here is a <strong>partial</strong> view of the order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
-<table class="table-with-header">
-<thead><th>Step</th><th>Clause</th><th>Description</th></thead>
-  <tbody>
-    <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
-    <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
-    <tr><td>3</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
-    <tr><td>4</td><td>SELECT</td><td>Returns the final data.</td></tr>
-    <tr><td>5</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
-    <tr><td>6</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
-  </tbody>
-</table>
+<h3 class="h3-big-margin"><span class="grey-text-span">SQL conceptual order of operations</span></h3>
+<p>Here is a <strong>partial</strong> view of the <strong>logical</strong> order in which the database engine evaluates the components of our <code>SELECT</code> queries.</p>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>Step</th><th>Clause</th><th>Description</th></thead>
+    <tbody>
+      <tr><td>1</td><td>FROM</td><td>Chooses the data to get the data from.</td></tr>
+      <tr><td>2</td><td>WHERE</td><td>Filters the data.</td></tr>
+      <tr><td>3</td><td>GROUP BY</td><td>Aggregates the data.</td></tr>
+      <tr><td>4</td><td>SELECT</td><td>Returns the final data.</td></tr>
+      <tr><td>5</td><td>ORDER BY</td><td>Sorts the final data.</td></tr>
+      <tr><td>6</td><td>LIMIT</td><td>Limits the number of rows displayed.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>Note that this is a conceptual, logical view of the process. In practice, the database engine will optimize the way it processes the query depending on various factors. In BigQuery, we should always refer to the official Google Standard SQL documentation on <a href="https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#alias_visibility" target="_blank">alias visibility rules</a>. Please read them. 😉</p>
 
 
 <!-- PRACTICE PROBLEMS -->
