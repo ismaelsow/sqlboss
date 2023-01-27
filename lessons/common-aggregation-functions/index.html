@@ -20,12 +20,15 @@ SELECT  COUNT(*) AS distribution_centers_count
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>distribution_centers_count</th></thead>
-  <tbody>
-    <tr><td>10</td></tr>
-  </tbody>
-</table>
+
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>distribution_centers_count</th></thead>
+    <tbody>
+      <tr><td>10</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 2</span></h3>
 <p>Here we count the total number of rows in the distribution_centers table, and the number of rows with non-<code>NULL</code> values in the user_id column.</p>
@@ -38,12 +41,14 @@ SELECT    COUNT(*) AS total_row_count,
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>total_row_count</th><th>user_id_count</th></thead>
-  <tbody>
-    <tr><td>2435634</td><td>1311042</td></tr>
-  </tbody>
-</table>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>total_row_count</th><th>user_id_count</th></thead>
+    <tbody>
+      <tr><td>2435634</td><td>1311042</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 3</span></h3>
 <p>The <code>SUM</code> function performs an addition of all the values in a specific column. <code>NULL</code> values are ignored.</p>
@@ -55,12 +60,14 @@ SELECT  SUM(num_of_item) AS total_items_sold
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>total_items_sold</th></thead>
-  <tbody>
-    <tr><td>182427</td></tr>
-  </tbody>
-</table>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>total_items_sold</th></thead>
+    <tbody>
+      <tr><td>182427</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 4</span></h3>
 <p>The <code>MIN</code> function returns the smallest of all the values in a specific column. <code>NULL</code> values are ignored.</p>
@@ -72,12 +79,14 @@ SELECT  MIN(age) AS youngest
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>youngest</th></thead>
-  <tbody>
-    <tr><td>12</td></tr>
-  </tbody>
-</table>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>youngest</th></thead>
+    <tbody>
+      <tr><td>12</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 5</span></h3>
 <p>The <code>MAX</code> function returns the biggest of all the values in a specific column. <code>NULL</code> values are ignored.</p>
@@ -89,12 +98,14 @@ SELECT  MAX(age) AS oldest
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>oldest</th></thead>
-  <tbody>
-    <tr><td>70</td></tr>
-  </tbody>
-</table>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>oldest</th></thead>
+    <tbody>
+      <tr><td>70</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <h3 class="h3-big-margin"><span class="grey-text-span">Example 6</span></h3>
 <p>The <code>AVG</code> function returns the average of all the values in a specific column. <code>NULL</code> values are ignored.</p>
@@ -105,12 +116,14 @@ SELECT  AVG(age) AS average_age
   </code>
 </pre>
 <p><strong>Example results</strong>:</p>
-<table class="table-with-header">
-  <thead><th>average_age</th></thead>
-  <tbody>
-    <tr><td>40.965139999999963</td></tr>
-  </tbody>
-</table>
+<div class="table-wrapper">
+  <table class="table-with-header">
+    <thead><th>average_age</th></thead>
+    <tbody>
+      <tr><td>40.965139999999963</td></tr>
+    </tbody>
+  </table>
+</div>
 
 
 <!-- PRACTICE PROBLEMS -->
