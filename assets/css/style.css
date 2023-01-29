@@ -43,7 +43,7 @@ h1, h2, h3, h4, div, p, ul, li, a, span, blockquote, figure, figcaption {
   padding-left: 16px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, p.lesson-quote {
   font-family: 'Plus Jakarta Display';
   font-weight: 700;
   color: #050038;
@@ -65,12 +65,20 @@ h4 {
   border-radius: 12px;
 }
 
-h1 {
+h1, p.lesson-quote {
   padding-top: 128px;
   font-size: 58px;
   line-height: 72px;
   letter-spacing: -0.6px;
   max-width: max-content;
+}
+h1.lesson-title {
+  font-size: 48px;
+  line-height: 58px;
+  letter-spacing: -0.5px;
+  padding-top: 48px;
+  max-width: max-content;
+  margin-bottom: 24px;
 }
 
 .intro {
