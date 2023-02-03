@@ -94,6 +94,10 @@ p.lesson-quote {
   letter-spacing: -0.6px;
   max-width: max-content;
 }
+p.lesson-quote span.green-text-span {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
 
 .intro {
   padding-top: 24px;
