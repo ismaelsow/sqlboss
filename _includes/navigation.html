@@ -1,5 +1,11 @@
 <div style="display:flex;flex-direction:row;justify-content:space-between;align-items:center">
-  <div><a href="/" style="text-decoration:none"><img src="/assets/images/banner.png" class="logo" /></a></div>
+  <div><a href="/" style="text-decoration:none">
+      {% if page.url == '/' %}
+        <img src="/assets/images/logo-white.png" class="logo" />
+      {% else %}
+        <img src="/assets/images/banner.png" class="logo" />
+      {% endif %}
+    </a></div>
   <div style="display:flex;flex-direction:row;justify-content:left;align-items:center" class="menu-links">
     <div><a class="login" href="#">Login</a></div>
     <div><a class="logout" href="#">Logout</a></div>
