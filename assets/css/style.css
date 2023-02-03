@@ -32,6 +32,11 @@ body {
   color: #1d1d1b;
 }
 
+body.landing-page {
+  background-color: #1d1d1b;
+  color: white;
+}
+
 h1, h2, h3, h4, div, p, ul, li, a, span, blockquote, figure, figcaption {
   word-wrap: break-word !important;
 }
@@ -66,7 +71,7 @@ h4 {
   border-radius: 12px;
 }
 
-h1, p.lesson-quote {
+h1 {
   padding-top: 128px;
   font-size: 58px;
   line-height: 72px;
@@ -80,6 +85,14 @@ h1.lesson-title {
   padding-top: 48px;
   max-width: max-content;
   margin-bottom: 24px;
+}
+
+p.lesson-quote {
+  padding-top: 48px;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.6px;
+  max-width: max-content;
 }
 
 .intro {
@@ -112,6 +125,11 @@ a:hover {
 
 img {
   max-width: 100%;
+}
+
+/* NAVIGATION */
+.logout, .customer-lesson-navigation  {
+  display: none;
 }
 
 

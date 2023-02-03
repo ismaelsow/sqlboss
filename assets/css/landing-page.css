@@ -1,0 +1,36 @@
+body.landing-page h1, h2, h3, h4, div, p, ul, li, a, span, blockquote, figure, figcaption, .chapter {
+  color: white;
+}
+
+body.landing-page a, body.landing-page a:hover, body.landing-page a:visited {
+  color: white;
+}
+
+body.landing-page blockquote *,
+body.landing-page .highlighted-section h1, 
+body.landing-page .highlighted-section h2,
+body.landing-page .highlighted-section h3,
+body.landing-page .highlighted-section h4, 
+body.landing-page .highlighted-section div, 
+body.landing-page .highlighted-section p, 
+body.landing-page .highlighted-section ul, 
+body.landing-page .highlighted-section li, 
+body.landing-page .highlighted-section a, 
+body.landing-page .highlighted-section blockquote *, 
+body.landing-page .highlighted-section figure, 
+body.landing-page .highlighted-section figcaption,
+body.landing-page .pricing-plan h1, 
+body.landing-page .pricing-plan h2,
+body.landing-page .pricing-plan h3,
+body.landing-page .pricing-plan h4, 
+body.landing-page .pricing-plan div, 
+body.landing-page .pricing-plan p, 
+body.landing-page .pricing-plan ul, 
+body.landing-page .pricing-plan li, 
+body.landing-page .pricing-plan a, 
+body.landing-page .pricing-plan blockquote *, 
+body.landing-page .pricing-plan figure, 
+body.landing-page .pricing-plan figcaption,
+body.landing-page .pricing-plan .pricing-subtitle * {
+  color: #1d1d1b;
+}

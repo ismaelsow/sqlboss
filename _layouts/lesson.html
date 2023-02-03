@@ -24,15 +24,29 @@
       </div>  
     </section> 
 
-    <section class="container"style="padding-top:56px">
+    <section class="container customer-lesson-navigation" style="padding-top:56px">
       <div class="row">
         <div class="col-lg-3"></div>
         <div class="col-xs-12 col-lg-6">
           <div class="lesson-navigation">
             <div><a href="{{ page.previous_lesson }}">⇐ Previous lesson</a></div>
-            <div><a href="#">Get full access</a></div>
             {% if page.next_lesson %}
               <div><a href="{{ page.next_lesson }}">Next lesson ⇒</a></div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+      </div> 
+    </section>
+
+    <section class="container prospect-lesson-navigation" style="padding-top:56px">
+      <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-xs-12 col-lg-6">
+          <div class="lesson-navigation">
+            <div><a href="{{ page.previous_lesson }}">⇐ Back home</a></div>
+            {% if page.next_lesson %}
+            <div><a href="{{ page.next_lesson }}" class="see-sample">See sample ⇒</a></div>
             {% endif %}
           </div>
         </div>
