@@ -28,7 +28,8 @@ body {
   font-size: 18px;
   line-height: 28px;
   letter-spacing: 0px;
-  background-color: white; /* #FFFBF5; */
+  background-color: white;
+  color: #1d1d1b;
 }
 
 h1, h2, h3, h4, div, p, ul, li, a, span, blockquote, figure, figcaption {
@@ -422,6 +423,12 @@ figcaption a {
   background-color: #efede1;
   padding: 12px;
   word-wrap: break-word;
+}
+
+.highlighted-section {
+  background-color: #efede1;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 pre.language-sql {
