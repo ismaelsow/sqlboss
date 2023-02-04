@@ -136,6 +136,13 @@ img {
   display: none;
 }
 
+.fixed-see-sample-button {
+  position:fixed;
+  left:30px;
+  bottom:30px;
+  z-index: 1000;
+}
+
 
 /* CONTENT SECTION */
 .chapter {

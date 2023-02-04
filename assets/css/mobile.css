@@ -185,3 +185,8 @@ code.language-sql {
 .lesson-navigation div {
   padding-bottom: 24px;
 }
+
+/* NAVIGATION */
+button.btn.btn-warning.see-sample.fixed-see-sample-button {
+  font-size: 48px;
+}

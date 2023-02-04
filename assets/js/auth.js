@@ -1,7 +1,4 @@
 window.lessonPaths = [
-  "/lessons/readme/",
-  "/lessons/key-concepts/",
-  "/lessons/big-query-setup-and-dataset-exploration/",
   "/lessons/select-from/",
   "/lessons/limit/",
   "/lessons/where-and-comparison-operators/",
@@ -95,6 +92,9 @@ function displayProspectNavigation() {
 
 function displayCustomerNavigation() {
   document.querySelector(".login").style.display = "none";
+  document.querySelectorAll(".see-sample").forEach(function(item) {
+    item.style.display = "none";
+  });
   document.querySelector(".logout").style.display = "block";
   if (document.location.pathname.includes("/lessons/")) {
     document.querySelector(".prospect-lesson-navigation").style.display = "none";
