@@ -103,7 +103,7 @@ function displayCustomerNavigation() {
 }
 
 function authorizeCustomerId(customerId) {
-  let spreadsheetId = '1BSUG63sPzLkK4naMKkHQ6QkdWgDBuGv7xcEovV-8TFs';
+  let spreadsheetId = '114HO1SHQE2BeRNB-yp8oxCrcTxz1zktbbCMD2fx9A-I';
   let tabName = 'Sheet1';
   let apiKey = 'AIzaSyDA-3vkJBHtZgKYgaoAddqAiJ4XVpMApMY';
   let url = 'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + tabName + '?alt=json&key=' + apiKey;
@@ -114,7 +114,6 @@ function authorizeCustomerId(customerId) {
   .then(response => response.json())
   .then((response) => {
     if (response.values[1].includes(customerId)) {
-      console.log("OK");
       displayCustomerNavigation();
     }
     else {
