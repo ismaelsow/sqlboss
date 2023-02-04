@@ -67,7 +67,7 @@ function goToSample(event) {
 
 function redirectToHomeIfNotSample() {
   displayProspectNavigation();
-  if (document.location.pathname === '/') {
+  if (!document.location.pathname.includes("/lessons/")) {
     return;
   }
   if (document.location.href.includes("sample=true") && parseInt(localStorage.getItem("sampleCredit")) === 1) {
