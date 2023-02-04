@@ -471,3 +471,36 @@ code.language-sql {
   font-size: 16px;
   margin-top: 48px;
 }
+
+/* FIREBASE */
+#firebaseui-auth-container {
+  position: absolute;
+  top: 256px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 512px;
+}
+
+.firebaseui-title {
+  font-weight: bold;
+}
+
+.mdl-button--raised.mdl-button--colored, .mdl-button--raised.mdl-button--colored:hover {
+  background-color: #1d1d1b;
+}
+
+.mdl-button--raised.mdl-button--colored:hover {
+  opacity: 0.8;
+}
+
+.firebaseui-container.mdl-card {
+    border-radius: 8px;
+}
+
+div.firebaseui-textfield.mdl-textfield.mdl-js-textfield mdl-textfield--floating-label.is-upgraded {
+  border-bottom-color: #1d1d1b;
+}
+
+.firebaseui-textfield.mdl-textfield .firebaseui-label::after {
+    background-color: #1d1d1b;
+}

@@ -148,6 +148,14 @@ var uiConfig = {
 
 
 window.onload = function(event) {
+
+  document.querySelector("body").addEventListener("click", function(event) {
+    let firebasePopup = document.querySelector("#firebaseui-auth-container");
+    if (firebasePopup.clientHeight > 0) {
+      document.querySelector("#firebaseui-auth-container").style.display = "none";
+    }
+  });
+
   document.querySelectorAll(".see-sample").forEach(function(item) {
     item.addEventListener("click", function(e) {
       e.preventDefault();
@@ -157,7 +165,17 @@ window.onload = function(event) {
 
   document.querySelector(".login").addEventListener("click", function(event) {
     event.preventDefault();
-    ui.start('#firebaseui-auth-container', uiConfig);
+    event.stopPropagation();
+    if (document.querySelector("#firebaseui-auth-container").style.display === "none") {
+      document.querySelector("#firebaseui-auth-container").style.display = "block";
+    }
+    else {
+      ui.start('#firebaseui-auth-container', uiConfig);
+    }
+  });
+
+  document.querySelector("#firebaseui-auth-container").addEventListener("click", function(event) {
+    event.stopPropagation();
   });
 
   document.querySelector(".logout").addEventListener("click", function(event) {
