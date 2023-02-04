@@ -1,6 +1,6 @@
 <div style="display:flex;flex-direction:row;justify-content:space-between;align-items:center">
   <div><a href="/" style="text-decoration:none">
-      {% if page.url == '/' %}
+      {% if page.page_type == 'landing_page' %}
         <img src="/assets/images/logo-white.png" class="logo" />
       {% else %}
         <img src="/assets/images/banner.png" class="logo" />
