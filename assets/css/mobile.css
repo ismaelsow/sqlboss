@@ -46,10 +46,11 @@ div, p, ol, ul, li {
 }
 
 h1, p.lesson-quote {
-  font-size: 128px;
-  line-height: 148px;
-  padding-top: 256px;
-  padding-bottom: 56px;
+  font-size: 64px;
+  line-height: 74px;
+  margin-top: 48px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   letter-spacing: -0.2px;
   max-width: min-content;
 }
