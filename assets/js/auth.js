@@ -113,7 +113,8 @@ function authorizeCustomerId(customerId) {
   })
   .then(response => response.json())
   .then((response) => {
-    if (response.values[1].includes(customerId)) {
+    let customerIds = response.values.slice(1).map(x => x[0]);
+    if ((customerIds).includes(customerId)) {
       displayCustomerNavigation();
     }
     else {
@@ -128,7 +129,7 @@ const firebaseConfig = {
   projectId: "sql-boss",
   storageBucket: "sql-boss.appspot.com",
   messagingSenderId: "264513429608",
-  appId: "1:264513429608:web:fe4e1c73a2ef16aad61bdd"
+  appId: "1:264513429608:web:fe4e1c73a2ef16aad61bdd",
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -142,7 +143,9 @@ var uiConfig = {
       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
       signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
     },
-  ]
+  ],
+  signInFlow: 'popup',
+  signInSuccessUrl: (window.location.hostname === 'localhost') ? 'http://localhost:4000' : 'https://sqlboss.co/'
 };
 
 
