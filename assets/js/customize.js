@@ -20,6 +20,12 @@ window.addClicktoEnlargeImages = function() {
 };
 
 
+window.resizeIframe = function(event) {
+    event.target.width = "100%";
+    event.target.style.height = `${event.target.clientWidth * 0.7}px`;
+};
+
+
 document.addEventListener("DOMContentLoaded", () => {
   if (mobileCheck()) {
     var head = document.getElementsByTagName('HEAD')[0];
@@ -60,6 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
         parentItem.querySelector(".collapsible-item").style.display = "block";
       }
     });
+  });
+
+  Array.from(document.querySelectorAll(".interactive-chart")).forEach((iframeItem) => {
+    iframeItem.onload = window.resizeIframe;
   });
 });
 

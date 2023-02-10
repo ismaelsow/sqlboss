@@ -513,3 +513,14 @@ div.firebaseui-textfield.mdl-textfield.mdl-js-textfield mdl-textfield--floating-
 .firebaseui-textfield.mdl-textfield .firebaseui-label::after {
     background-color: #1d1d1b;
 }
+
+
+/* BLOG */
+div.interactive-chart-wrapper {
+  width: 100%;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+iframe.interactive-chart { 
+  width: 100%;
+}
