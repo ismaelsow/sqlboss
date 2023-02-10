@@ -4,5 +4,4 @@ _site
 .jekyll-metadata
 vendor
 *.DS_Store
-*data_visualizations*
 .Rproj.user
