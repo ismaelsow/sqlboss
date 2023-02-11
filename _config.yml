@@ -4,6 +4,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   SQL Boss is a free SQL course + interview prep platform that focuses on <strong>practice. If you read the 50+ short lessons and do the 180 carefully paced practice problems, you'll get good at SQL pretty fast.
 #baseurl: "" # the subpath of your site, e.g. /blog
 #url: "" # the base hostname & protocol for your site, e.g. http://example.com
+permalink: pretty
 twitter_username: jekyllrb
 github_username:  jekyll
 
