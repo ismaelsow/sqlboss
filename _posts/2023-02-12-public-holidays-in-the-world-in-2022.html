@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "Public Holidays in the World in 2022"
+---
+
+<p>On which days do humans celebrate their public holidays? I was wondering if nations tended to cluster along certain dates and time periods when it comes to public holidays. Below is a calendar heatmap of the public holidays of the UN member states in 2022.</p>
+
+<div class="interactive-chart-wrapper">
+  <iframe src="/assets/iframes/public-holidays.html" class="interactive-chart"></iframe>
+</div>
+
+<p>The 3 most celebrated public holidays, based on the gregorian calendar, are:</p>
+<ul>
+  <li><strong>New Year's Day (Jan 1st):</strong> celebrated in 156 countries.</li>
+  <li><strong>Christmas (Dec 25th):</strong> celebrated in 121 countries.</li>
+  <li><strong>Labor Day (May 1st):</strong> celebrated in 121 countries.</li>
+</ul>
+<h3>Sources and tools</h3>
+<p><strong>Sources:</strong></p>
+<ul>
+  <li><a href="https://www.un.org/en/about-us/member-states" target="_blank">United Nations Member States</a></li>
+  <li><a href="https://holidayapi.com/" target="_blank">Holiday API</a></li>
+</ul>
+
+<p><strong>Tools:</strong></p>
+<ul>
+  <li>Python for data collection</li>
+  <li>Google BigQuery, SQL for data preparation and analysis.</li>
+  <li>R, and RStudio for creating the chart.</li>
+  <li>Pixelmator for some last visual touches.</li>
+</ul>
+
+<script>
+  setTimeout(() => {
+    document.querySelector("iframe").contentWindow.location.reload();
+  }, 2000);
+</script>
